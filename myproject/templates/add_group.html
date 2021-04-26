@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="jumbotron">
+  <h1>Add a group</h1>
+  <p>Add a new group with the form below:</p>
+  <form method="POST">
+      {# This hidden_tag is a CSRF security feature. #}
+      {{ form.hidden_tag() }}
+      {{ form.name.label }} {{ form.name() }}<br>
+      {{ form.regionorsubject.label }} {{ form.regionorsubject() }}<br>
+      {{ form.city.label }} {{ form.city() }}<br><br>
+
+      {{ form.submit() }}
+  </form>
+
+</div>
+{% endblock %}
+
+
+

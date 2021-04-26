@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="jumbotron">
+  <h1>Here is a list of all The groups.</h1>
+  <ol>
+    {% for gru in groups  %}
+    <li>{{gru}}</li>
+    {% endfor %}
+  </ol>
+
+</div>
+{% endblock %}

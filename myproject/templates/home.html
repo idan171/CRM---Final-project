@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+</br>
+
+<img src="https://res.cloudinary.com/people-matters/image/upload/fl_immutable_cache,w_624,h_351,q_auto,f_auto/v1593444438/1593444437.jpg" class="rounded mx-auto d-block" alt="Responsive image">
+
+</br>
+<div class="alert alert-warning" role="alert">
+  <body style="background-color:rgba(179, 8, 8, 0.836);">
+  {% if current_user.is_authenticated %}
+    <h1 style="text-align:center;">Hi {{ current_user.username }}</h1>
+  {% else %}
+
+
+  <div class="d-flex justify-content-center">
+    <a href="{{ url_for('new_condidate') }}" class="btn btn-info" role="button">הצטרפות חניכות חדשות</a>
+
+  </div>
+</body>
+</br>
+
+
+  </div>
+{% endif %}
+
+</div>
+
+</br>
+
+{% endblock %}
+

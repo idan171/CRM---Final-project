@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="jumbotron">
+  <h1>Here is a list of all available students.</h1>
+  <ol>
+    {% for stu in students_list  %}
+    <li>{{stu}}</li>
+    {% endfor %}
+  </ol>
+
+</div>
+<div class="jumbotron">
+  <h1>Are you sure?</h1>
+  <p>Fill out the form:</p>
+  <form method="POST">
+      {# This hidden_tag is a CSRF security feature. #}
+      {{ form.hidden_tag() }}
+      {{ form.student_emails.label }} {{ form.student_emails() }}
+      {{ form.submit() }}
+  </form>
+</div>
+{% endblock %}

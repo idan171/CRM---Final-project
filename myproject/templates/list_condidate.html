@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="jumbotron">
+<h1>Here is a list of all available Condidates:</h1>
+<ol>
+  {% for c in condidates_list  %}
+  <li>{{c}}</li>
+  {% endfor %}
+</ol>
+
+ </div>
+{% endblock %}

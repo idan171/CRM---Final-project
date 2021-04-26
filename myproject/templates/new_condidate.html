@@ -1,0 +1,16 @@
+{% extends "home.html" %}
+{% block content %}
+<div class="jumbotron">
+  <h1>השאר פרטים:</h1>
+  <p>Fill all the fields</p>
+  <form method="POST">
+      {# This hidden_tag is a CSRF security feature. #}
+      {{ form.hidden_tag() }}
+      {{ form.group_id.label }} {{ form.group_id() }}
+  </br>
+      {{ form.emailc.label }} {{ form.emailc() }}
+  </br>
+      {{ form.submit() }}
+  </form>
+</div>
+{% endblock %}

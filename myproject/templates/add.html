@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="jumbotron">
+  <h1>פתח תיק חניך</h1>
+  <p>לאחר פגישת הכרות, השלם את כל הפרטים</p>
+  <form method="POST">
+      {# This hidden_tag is a CSRF security feature. #}
+      {{ form.hidden_tag() }}
+      {{ form.emails.label }} {{ form.emails() }}
+  </br>
+      {{ form.firstname.label }} {{ form.firstname() }}
+  </br>
+      {{ form.lastname.label }} {{ form.lastname() }}
+  </br>
+      {{ form.dateofbirth.label }} {{form.dateofbirth() }}
+  </br>
+    {{ form.pronouns.label }} {{ form.pronouns() }}
+    </br>
+    {{ form.citys.label }} {{form.citys() }}
+    </br>
+    {{ form.addresss.label }} {{form.addresss() }}
+    </br>
+    {{ form.nutritions.label }} {{ form.nutritions() }}
+    </br>
+    {{ form.phonenums.label }} {{form.phonenums() }}
+    </br>
+    {{ form.schoolname.label }} {{form.schoolname() }}
+    </br>
+    </br>
+      {{ form.submit() }}
+  </form>
+</div>
+{% endblock %}
