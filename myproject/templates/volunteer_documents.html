@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="jumbotron">
+  <h1>Add a document</h1>
+  <p>Add a new document with the form below:</p>
+  <form method="POST" enctype="multipart/form-data">
+      {# This hidden_tag is a CSRF security feature. #}
+      {{form.hidden_tag()}}
+
+      {{form.IDV.label}} {{form.IDV()}} <br>
+      {{form.Dname.label}} {{form.Dname()}} <br>
+      {{form.DocDescription.label}} {{form.DocDescription()}} <br>
+      {{form.Document.label}} {{form.Document()}} <br>
+
+      {{ form.submit() }}
+  </form>
+</div>
+<table>
+  <tr>
+    <td>
+      <div class="jumbotron">
+        <h2>  רשימת מסמכים  </h2>
+        <ul>
+          {% for d in Dname  %}
+          <li>{{d}}</li>
+          {% endfor %}
+        </ul>
+      
+      </div>
+    </td>
+    <td>
+      <div class="jumbotron">
+        <h2>  רשימת מתנדבים  </h2>
+        <ul>
+          {% for v in volunteers_list  %}
+          <li>{{v}}</li>
+          {% endfor %}
+        </ul>
+      
+      </div>
+    </td>
+  </tr>
+</table>
+
+
+{% endblock %}

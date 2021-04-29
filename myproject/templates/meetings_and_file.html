@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="jumbotron">
+  <h1>שויך קובץ לפגישה</h1>
+  <p></p>
+  <form method="POST" enctype="multipart/form-data">
+    {{form.csrf_token}}
+    {{form.hidden_tag()}}
+
+    {{form.IDF.label}} {{form.IDF()}} <br>
+    {{form.IDM.label}} {{form.IDM()}} <br>
+
+      {{ form.submit() }}
+  </form>
+</div>
+<table>
+  <tr>
+    <td>
+      <div class="jumbotron">
+        <h2>  רשימת פגישות  </h2>
+        <ul>
+          {% for m in meetings  %}
+          <li>{{m}}</li>
+          {% endfor %}
+        </ul>
+      
+      </div>
+    </td>
+    <td>
+        <div class="jumbotron">
+            <h2>   קבצים משוייכים לפגישות  </h2>
+            <ul>
+              {% for m in meetings_and_file  %}
+              <li>{{m}}</li>
+              {% endfor %}
+            </ul>
+          
+          </div>
+    </td>
+  </tr>
+</table>
+
+
+{% endblock %}

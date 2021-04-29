@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, SelectField, IntegerField, RadioField
+from wtforms import StringField, PasswordField, SubmitField, SelectField, IntegerField, RadioField, FileField
 from wtforms.validators import DataRequired,Email,EqualTo
 from wtforms import ValidationError
 from myproject.models import User
@@ -71,8 +71,8 @@ class DelForm(FlaskForm):
 
 class DelGroupForm(FlaskForm):
 
-    group_id = StringField('ID of Group')
-    submit = SubmitField('Remove Group')
+    student_in_group_id = StringField('ID of student In Group')
+    submit = SubmitField('Remove Student from Group')
 
 class AddStuGroupForm(FlaskForm):
 
@@ -89,4 +89,72 @@ class NewCondidateForm(FlaskForm):
     # stimes = StringField('start time')
     submit = SubmitField('Send')
 
+class AddVolunteerForm(FlaskForm):
+    IDV = StringField('ID Of Volunteer:')
+    FnameV = StringField('First Name of Volunteer:')
+    SnameV = StringField('Last Name of Volunteer:')
+    DateOfBirthV = StringField('Date of Birth:')
+    PronounsV = SelectField('Pronoun', choices = [('בחר/י מתוך הרשימה', 'בחר/י מתוך הרשימה'),('את', 'את'), ('אתה', 'אתה'), ('מעורבת', 'מעורבת')])
+    CityV = StringField('City:')
+    AdressV = StringField('Address:')
+    NutritionV = SelectField('Nutrition', choices = [('בחר/י מתוך הרשימה', 'בחר/י מתוך הרשימה'),('צמחוני', 'צמחוני'), ('טבעוני', 'טבעוני'), ('אוכל כל', 'אוכל כל')])
+    PhoneNumV = StringField('Phone Number:')
+    StatusV = SelectField('Nutrition', choices = [('בחר/י מתוך הרשימה', 'בחר/י מתוך הרשימה'),('פעיל', 'פעיל'), ('לא פעיל', 'לא פעיל'), ('הודח ', 'הודח  ')])
+    submit = SubmitField('Send')
 
+class VolunteersInGroupsForm(FlaskForm):
+    IDV = StringField('ID Of Volunteer:')
+    IDG = StringField('ID Of Group:')
+    #TimeS = StringField('Current Date:')
+    TimeF = StringField('Current Date:')
+
+    submit = SubmitField('בצע שידוך  (:')
+
+class VolunteerDocumentsForm(FlaskForm):
+    IDV = StringField('ID Of Volunteer:')
+    Dname = SelectField('Document Name:', choices = [('אחר', 'אחר'),('אישור משטרה', 'אישור משטרה'), ('תעודת זהות', 'תעודת זהות'), (' מסמכי מתנדב', ' מסמכי מתנדב')])
+    DocDescription = StringField('Document Description:')
+    Document = FileField('Document')
+
+    submit = SubmitField(' העלה מסמך  (:')
+
+class VolunteersInPossForm(FlaskForm):
+    IDV = StringField('ID Of Volunteer:')
+    IDP = StringField('ID of the Poss:')
+
+    submit = SubmitField(' שייך תפקיד למתנדב (:')
+
+class AddPossForm(FlaskForm):
+    IDP = StringField('ID of the Poss:')
+    PossName = StringField('Poss Name:')
+    PossDescription = StringField('Poss Description:')
+    #AddTime = StringField('Current Date:')
+    
+    submit = SubmitField('Add Poss')
+    
+class MeetingsForm(FlaskForm):
+    Mdate = StringField('תאריך:')
+    Mtime = StringField('שעה:')
+    IDG = StringField('ID of Group')
+    Occurence = SelectField('סטטס פגישה?', choices = [('1','ממתין'),('2','בוטל'),('3','בוצע')])
+    Platform = SelectField('סוג פגישה:', choices = [('1','פרונטאלי'),('2','מקוון')])
+    Rate = SelectField('דרוג:', choices = [('1','1'),('2','2'),('3','3'),('4','4'),('5','5')])
+    Pros = StringField('נקודות לשימור:')
+    Cons = StringField('נקודות לשיפור:')
+
+    submit = SubmitField('צור פגישה')
+
+class MFileForm(FlaskForm):
+    IDM = StringField('ID of Meetings:') 
+    FileName = StringField('שם הקובץ:') 
+    FileDescription = StringField('תאור הקובץ:')
+    TheFile = FileField('מסמך:')
+
+    submit = SubmitField('העלה קובץ')
+
+class StudentsInMeetingForm(FlaskForm):
+    IDM = StringField('ID of Meetings:') 
+    EmaillS = StringField('אימייל של החניך:') 
+    Attendance = StringField('נוכחות:')
+
+    submit = SubmitField('סמן')

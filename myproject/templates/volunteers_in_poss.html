@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="jumbotron">
+  <h1>שיוך מתנדב לתפקיד:</h1>
+  <p>מלא את הפרטים הבאים</p>
+  <form method="POST">
+      {# This hidden_tag is a CSRF security feature. #}
+      {{ form.hidden_tag() }}
+
+      {{ form.IDV.label }} {{ form.IDV() }}
+        </br>
+      {{ form.IDP.label }} {{ form.IDP() }}
+  
+      {{ form.submit() }}
+  </form>
+</div>
+<table >
+    <tr>
+        <td>
+            <table >
+                <tr>
+                    <td>
+                        <div class="jumbotron">
+                        <h2>Here is a list of all the Volunteers.</h2>
+                        <ul>
+                          {% for v in volunteers_list  %}
+                          <li>{{v}}</li>
+                          {% endfor %}
+                        </ul>
+                      
+                      </div> 
+                     </td>
+                      <td>
+                        <div class="jumbotron">
+                            <h2>  רשימת תפקידים  </h2>
+                            <ul>
+                              {% for P in poss_list  %}
+                              <li>{{P}}</li>
+                              {% endfor %}
+                            </ul>
+                          
+                          </div>
+                      </td>
+                      <td>
+                        <div class="jumbotron">
+                            <h2>רשימת מתנדבים מקושרים </h2>
+                            <ul>
+                              {% for v in volunteers_in_poss  %}
+                              <li>{{v}}</li>
+                              {% endfor %}
+                            </ul>
+                          
+                          </div>
+                      </td>
+                </tr>
+            </table>
+            
+        </td>
+    </tr>
+</table>
+
+
+
+
+
+{% endblock %}

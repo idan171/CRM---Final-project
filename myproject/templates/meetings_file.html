@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="jumbotron">
+  <h1>Add a Meetings File</h1>
+  <p>Add a new Meetings File with the form below:</p>
+  <form method="POST" enctype="multipart/form-data">
+    {{form.csrf_token}}
+    {{form.hidden_tag()}}
+
+    {{form.IDM.label}} {{form.IDM()}} <br>
+    {{form.FileName.label}} {{form.FileName()}} <br>
+    {{form.FileDescription.label}} {{form.FileDescription()}} <br>
+    {{form.TheFile.label}} {{form.TheFile()}} <br>
+
+
+      {{ form.submit() }}
+  </form>
+</div>
+<table>
+  <tr>
+    <td>
+      <div class="jumbotron">
+        <h2>  רשימת מסמכים  </h2>
+        <ul>
+          {% for F in the_file  %}
+          <li>{{F}}</li>
+          {% endfor %}
+        </ul>
+      
+      </div>
+    </td>
+    <td>
+     
+    </td>
+  </tr>
+</table>
+
+
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="jumbotron">
+  <h1>Here is a list of all of the possition.</h1>
+  <ol>
+    {% for PossName in poss  %}
+    <li>{{PossName}}</li>
+    {% endfor %}
+  </ol>
+
+</div>
+{% endblock %}

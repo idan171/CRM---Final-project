@@ -34,6 +34,119 @@ class User(db.Model, UserMixin):
         # https://stackoverflow.com/questions/23432478/flask-generate-password-hash-not-constant-output
         return check_password_hash(self.password_hash,password)
 
+
+class VolunteerDocuments(db.Model):
+    IDD = db.Column(db.Integer,primary_key = True)
+
+    IDV = db.Column(db.Integer,db.ForeignKey('volunteers.IDV'))
+    Dname = db.Column(db.Text)
+    DocDescription = db.Column(db.String(500))
+    Document = db.Column(db.LargeBinary)
+    DateAdded = db.Column(db.Text)
+
+    def __init__(self,IDV,Dname,DocDescription,image,DateAdded):
+       
+        self.IDV = IDV
+        self.Dname = Dname
+        self.DocDescription = DocDescription
+        self.image = image
+        self.DateAdded = DateAdded
+
+    def __repr__(self):
+        return f"Document Name: {self.Dname}, Description: {self.DocDescription} "
+
+
+class VolunteersInPoss(db.Model):
+    id = db.Column(db.Integer,primary_key=True)
+
+    IDV = db.Column(db.Integer,db.ForeignKey('volunteers.IDV'))
+    IDP = db.Column(db.Integer,db.ForeignKey('poss.IDP'))
+    TimeS = db.Column(db.Text)
+    #TimeF = db.Column(db.Text)
+
+    def __init__(self,IDV,IDP,TimeS):
+        self.IDV = IDV
+        self.IDP = IDP
+        self.TimeS = TimeS
+        #self.TimeF = TimeF
+
+    def __repr__(self):
+        return f"ID Volunteer: {self.IDV} , ID Poss: {self.IDP}"   
+
+class MFile(db.Model):
+    __tablename__ = 'mfile'
+
+    IDF = db.Column(db.Integer,primary_key= True)
+    IDM = db.Column(db.Integer,db.ForeignKey('meetings.IDM'))
+    Filename = db.Column(db.Text)
+    FileDescription = db.Column(db.Text)
+    TheFile = db.Column(db.LargeBinary)
+    AddTime = db.Column(db.Text)
+
+    def __init__(self,IDM,FileName,FileDescription,image,AddTime):
+        self.IDM = IDM
+        self.FileName = FileName
+        self.FileDescription = FileDescription
+        self.image = image
+        self.AddTime = AddTime
+
+    def __repr__(self):
+        return f"and ID of Meetings: {self.IDM}.."    
+
+
+class Volunteers(db.Model):
+    IDV = db.Column(db.Integer,primary_key = True)
+    FnameV = db.Column(db.Text)
+    SnameV = db.Column(db.Text)
+    DateOfBirthV = db.Column(db.Text)
+    PronounsV = db.Column(db.Text)
+    CityV = db.Column(db.Text)
+    AdressV = db.Column(db.Text)
+    NutritionV = db.Column(db.Text)
+    PhoneNumV = db.Column(db.String(10))
+    StatusV = db.Column(db.Text)
+    DateAdded = db.Column(db.Text)
+
+    volunteersingroups = db.relationship('VolunteersInGroups',backref='volunteers',lazy='dynamic')
+    volunteerDocuments = db.relationship('VolunteerDocuments',backref='volunteers',lazy='dynamic')
+    volunteersinPoss = db.relationship('VolunteersInPoss',backref='volunteers',lazy='dynamic')
+
+
+    def __init__(self,IDV,FnameV,SnameV,DateOfBirthV,PornounsV,CityV,AdressV,NutritionV,PhoneNumV,StatusV,DateAdded ):
+        self.IDV = IDV
+        self.FnameV = FnameV
+        self.SnameV = SnameV
+        self.DateOfBirthV = DateOfBirthV
+        self.PornounsV = PornounsV
+        self.CityV = CityV
+        self.AdressV = AdressV
+        self.NutritionV = NutritionV
+        self.PhoneNumV = PhoneNumV
+        self.StatusV = StatusV
+        self.DateAdded = DateAdded
+
+    def __repr__(self):
+        return f"Volunteer Name: {self.FnameV} {self.SnameV} Volunteer ID: {self.IDV} "
+
+class Poss(db.Model):
+    IDP = db.Column(db.Integer,primary_key= True)
+    PossName = db.Column(db.Text)
+    PossDescription = db.Column(db.Text)
+    AddTime = db.Column(db.Text)
+
+    volunteersinPoss = db.relationship('VolunteersInPoss',backref='poss',lazy='dynamic')
+
+    def __init__(self,PossName,PossDescription,AddTime):
+        #self.IDP = IDP
+        self.PossName = PossName
+        self.PossDescription = PossDescription
+        self.AddTime = AddTime
+
+    def __repr__(self):
+        return f"Poss Name: {self.PossName}, ID Poss: {self.IDP}."
+
+
+
 class Student(db.Model):
 
     __tablename__ = 'students'
@@ -53,6 +166,7 @@ class Student(db.Model):
     details = db.Column(db.String(500))
 
     studentsingroups = db.relationship('StudentInGroup',backref='student',lazy=False)
+    Studentsinmeeting = db.relationship('StudentsInMeeting',backref='student',lazy=False)
 
     def __init__(self,emails,firstname,lastname,dateofbirth,pronouns,citys,addresss,nutritions,phonenums,schoolname,dateaddeds,statuss,parents,details):
         self.emails = emails
@@ -87,6 +201,8 @@ class Group(db.Model):
     city = db.Column(db.Text)
     
     condidates = db.relationship('Condidate',backref='condidate',lazy=False)
+    volunteersinGroups = db.relationship('VolunteersInGroups',backref='group',lazy='dynamic')
+    Meetings = db.relationship('Meetings',backref='group',lazy='dynamic')
 
     def __init__(self,name,regionorsubject,city):
         self.name = name
@@ -95,6 +211,26 @@ class Group(db.Model):
 
     def __repr__(self):
         return f"Group Name: {self.name}"
+
+
+class VolunteersInGroups(db.Model):
+    id = db.Column(db.Integer,primary_key=True)
+
+    #IDV = db.relationship('Volunteers',backref='VolunteersInGroups',uselist=False)
+    IDV = db.Column(db.Integer,db.ForeignKey('volunteers.IDV'))
+    #IDG = db.relationship('Group',backref='VolunteersInGroups',uselist=False)
+    IDG = db.Column(db.Integer,db.ForeignKey('groups.id'))
+    TimeS = db.Column(db.Text)
+    TimeF = db.Column(db.Text)
+
+    def __init__(self,IDV,IDG,TimeS,TimeF):
+        self.IDV = IDV
+        self.IDG = IDG
+        self.TimeS = TimeS
+        self.TimeF = TimeF
+
+    def __repr__(self):
+        return f"ID Volunteer: {self.IDV}, ID Group: {self.IDG}, Aedd date: {self.TimeS} "
 
 class Age(db.Model):
 
@@ -157,9 +293,52 @@ class StudentInGroup(db.Model):
         self.group_id = group_id
 
     def __repr__(self):
-        return f"the name of the student is {self.student_emails} and he is in group: {self.group_id}"
+        return f"the name of the student is {self.student_emails} and he is in group: {self.group_id} and the id of the row is: {self.id}"
 
+class Meetings(db.Model):
+    IDM = db.Column(db.Integer,primary_key= True)
+    Mdate = db.Column(db.Text)
+    Mtime = db.Column(db.Text)
+    IDG = db.Column(db.Integer,db.ForeignKey('groups.id'))
+    Occurence = db.Column(db.Text) 
+    Platform = db.Column(db.Text)
+    Rate = db.Column(db.Text)
+    Pros = db.Column(db.String(500))
+    Cons = db.Column(db.String(500))
+    DateAdded = db.Column(db.Text)
 
+    mfile = db.relationship('MFile',backref='meetings',lazy='dynamic')
+    studentsinMeeting = db.relationship('StudentsInMeeting',backref='meetings',lazy='dynamic')
+
+    def __init__(self,Mdate,Mtime,IDG,Occurence,Platform,Rate,Pros,Cons,DateAdded):
+        self.Mdate = Mdate
+        self.Mtime = Mtime
+        self.IDG = IDG
+        self.Occurence= Occurence
+        self.Platform = Platform
+        self.Rate = Rate
+        self.Pros = Pros
+        self.Cons = Cons
+        self.DateAdded = DateAdded
+
+    def __repr__(self):
+        return f"ID Meeting: {self.IDM}, ID Group {self.IDG} "
+
+class StudentsInMeeting(db.Model):
+    id = db.Column(db.Integer,primary_key= True)
+    IDM = db.Column(db.Integer,db.ForeignKey('meetings.IDM'))
+    EmailS = db.Column(db.String(10),db.ForeignKey('students.emails'))
+    Attendance = db.Column(db.Text)
+
+    def __init__(self,IDM,EmailS,Attendance):
+        self.IDM = IDM
+        self.EmailS = EmailS
+        self.Attendance = Attendance
+
+    def __repr__(self):
+        return f"Student Email: {self.EmailS}, ID of Meeting: {self.IDM}. "   
+        
+         
 user_test1 = Age(namea='ז')
 user_test2 = Age(namea='ח')
 user_test3 = Age(namea='ט')

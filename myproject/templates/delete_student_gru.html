@@ -7,7 +7,8 @@
   <form method="POST">
       {# This hidden_tag is a CSRF security feature. #}
       {{ form.hidden_tag() }}
-      {{ form.group_id.label }} {{ form.group_id() }}
+      {{ form.student_in_group_id.label }} {{ form.student_in_group_id() }}
+
       {{ form.submit() }}
   </form>
 </div>

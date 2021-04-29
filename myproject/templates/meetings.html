@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="jumbotron">
+  <h1>יצירת פגישה:</h1>
+  <p>מלא את הפרטים הבאים</p>
+  <form method="POST">
+      {# This hidden_tag is a CSRF security feature. #}
+      {{ form.hidden_tag() }}
+
+      {{ form.Mdate.label }} {{ form.Mdate() }}
+    </br>
+      {{ form.Mtime.label }} {{ form.Mtime() }}
+    </br>
+        {{ form.Platform.label }} {{ form.Platform() }}  
+    </br>
+        {{ form.IDG.label }} {{ form.IDG() }}
+    </br>
+        {{ form.Occurence.label }} {{ form.Occurence() }}
+    </br>
+
+
+        {{ form.Rate.label }} {{ form.Rate() }}
+    </br>
+         {{ form.Pros.label }} {{ form.Pros() }}
+    </br>
+        {{ form.Cons.label }} {{ form.Cons() }}
+    </br>  
+       
+  
+      {{ form.submit() }}
+
+  </form>
+</div>
+<table >
+    <tr>
+        <td>
+            <table >
+                <tr>
+                      <td>
+                        <div class="jumbotron">
+                            <h2>  רשימת קבוצות  </h2>
+                            <ul>
+                              {% for g in group  %}
+                              <li>{{g}}</li>
+                              {% endfor %}
+                            </ul>
+                          
+                          </div>
+                      </td>
+                      <td>
+                        <div class="jumbotron">
+                            <h2>רשימת  פגישיות </h2>
+                            <ul>
+                              {% for m in meetings  %}
+                              <li>{{m}}</li>
+                              {% endfor %}
+                            </ul>
+                          
+                          </div>
+                      </td>
+                </tr>
+            </table>
+            
+        </td>
+    </tr>
+</table>
+
+
+
+
+
+{% endblock %}

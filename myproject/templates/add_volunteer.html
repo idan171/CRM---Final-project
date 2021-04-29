@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="jumbotron">
+  <h1>Add new Volunteer:</h1>
+  <p>Fill all the fields</p>
+  <form method="POST">
+      {# This hidden_tag is a CSRF security feature. #}
+      {{ form.hidden_tag() }}
+
+      {{ form.IDV.label }} {{ form.IDV() }}
+        </br>
+      {{ form.FnameV.label }} {{ form.FnameV() }}
+
+      {{ form.SnameV.label }} {{ form.SnameV() }}
+
+      {{ form.DateOfBirthV.label }} {{ form.DateOfBirthV() }}
+        </br>
+      {{ form.PronounsV.label }} {{ form.PronounsV() }}
+
+      {{ form.CityV.label }} {{ form.CityV() }}
+
+      {{ form.AdressV.label }} {{ form.AdressV() }}
+        </br>
+      {{ form.NutritionV.label }} {{ form.NutritionV() }}
+
+      {{ form.PhoneNumV.label }} {{ form.PhoneNumV() }}
+
+      {{ form.StatusV.label }} {{ form.StatusV() }}
+        </br>
+  
+      {{ form.submit() }}
+  </form>
+</div>
+
+<div class="jumbotron">
+    <h2>Here is a list of all the Volunteers.</h2>
+    <ul>
+      {% for v in volunteers_list  %}
+      <li>{{v}}</li>
+      {% endfor %}
+    </ul>
+  
+  </div>
+{% endblock %}

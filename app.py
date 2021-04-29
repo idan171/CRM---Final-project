@@ -1,12 +1,19 @@
-from myproject.forms import LoginForm, RegistrationForm, AddForm , DelForm, AddGroupForm, AddStuGroupForm, AddAgeGroupForm,NewCondidateForm,DelGroupForm
+from myproject.forms import LoginForm, RegistrationForm, AddForm , DelForm, AddGroupForm, AddStuGroupForm, AddAgeGroupForm, NewCondidateForm, DelGroupForm, AddVolunteerForm, VolunteersInGroupsForm, VolunteerDocumentsForm, AddPossForm, MeetingsForm, MFileForm, VolunteersInPossForm, StudentsInMeetingForm 
 from flask import render_template, redirect, request, url_for, flash,abort
 from flask_login import login_user,login_required,logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from myproject.models import Student, User, Group, StudentInGroup, AgesInGroup, Condidate
+from myproject.models import Student, User, Group, StudentInGroup, AgesInGroup, Condidate, VolunteerDocuments, VolunteersInPoss, MFile, Volunteers, Poss, VolunteersInGroups, Meetings, StudentsInMeeting   
 from myproject import app,db
 from datetime import date
+#from flask_uploads import configure_uploads,IMAGES,UploadSet
+from werkzeug import secure_filename,FileStorage
+from flask_uploads import configure_uploads, IMAGES, UploadSet
 
 app.config['SECRET_KEY'] = 'any secret string'
+app.config['UPLOADED_IMAGES_DEST'] = 'uploads/images'
+
+images = UploadSet('images',IMAGES)
+configure_uploads(app,images)
 
 @app.route('/')
 def home():
@@ -233,27 +240,251 @@ def del_stu():
         return redirect(url_for('list_stu'))
     return render_template('delete.html',students_list=students_list,form=form)
 
-@app.route('/delete_gru', methods=['GET', 'POST'])
-def del_gru():
-    groups_list = Group.query.all()
+@app.route('/delete_student_gru', methods=['GET', 'POST'])
+def delete_student_gru1():
+    groups_list = StudentInGroup.query.all()
 
     form = DelGroupForm()
 
     if form.validate_on_submit():
-        id = form.group_id.data
-        gru = Group.query.get(id)
-        db.session.delete(gru)
+        id1 = form.student_in_group_id.data
+        
+        gru = StudentInGroup.query.get(id1)
+        gru.ftimef = date.today()
+        db.session.add(gru)
         db.session.commit()
 
-        return redirect(url_for('list_gru'))
-    return render_template('delete_gru.html',groups_list=groups_list,form=form)
+        return redirect(url_for('list_stu'))
+    return render_template('delete_student_gru.html',groups_list=groups_list,form=form)
 
+
+
+#student in group list (can use for anything!)
+@app.route('/QA')
+def Check():
+    studentsingroup_list = StudentInGroup.query.all()
+    studentsingroup_list2 = StudentInGroup.query.filter_by(group_id = '1').all()
+
+    return render_template('QA.html',studentsingroup_list=studentsingroup_list,studentsingroup_list2=studentsingroup_list2)
 
 
 @app.route('/Thank_you')
 def Thank_you():
     # Grab a list of students from database.
     return render_template('Thank_you.html')
+
+@app.route('/volunteer', methods=['GET', 'POST'])
+def add_volunteer():
+    volunteers_list = Volunteers.query.all()
+    form = AddVolunteerForm()
+
+    if form.validate_on_submit():
+        
+        IDV = form.IDV.data
+        FnameV = form.FnameV.data
+        SnameV = form.SnameV.data
+        DateOfBirthV = form.DateOfBirthV.data
+        PronounsV = form.PronounsV.data
+        CityV = form.CityV.data
+        AdressV = form.AdressV.data
+        NutritionV = form.NutritionV.data
+        PhoneNumV = form.PhoneNumV.data
+        StatusV = form.StatusV.data
+        DateAdded = date.today()
+
+
+        # Add new volunteer to database
+        new_volunteer = Volunteers(IDV,FnameV,SnameV,DateOfBirthV,PronounsV,CityV,AdressV,NutritionV,PhoneNumV,StatusV,DateAdded)
+        db.session.add(new_volunteer)
+        db.session.commit()
+
+        return redirect(url_for('list_volunteers'))
+
+    return render_template('add_volunteer.html',form=form, volunteers_list=volunteers_list)
+
+@app.route('/list_volunteers')
+def list_volunteers():
+    # Grab a list of Volunteers from database.
+    volunteers_list = Volunteers.query.all()
+    return render_template('list_volunteers.html',volunteers_list=volunteers_list)
+
+@app.route('/add_poss', methods=['GET', 'POST'])
+def add_poss():
+
+    poss_list = Poss.query.all()
+
+    form = AddPossForm()
+
+    if form.validate_on_submit():
+        
+        PossName = form.PossName.data
+        PossDescription = form.PossDescription.data
+        AddTime = date.today()
+        # Add new poss to database
+        new_poss = Poss(PossName,PossDescription,AddTime)
+        db.session.add(new_poss)
+        db.session.commit()
+
+        return redirect(url_for('list_poss'))
+        
+    return render_template('add_poss.html',form=form,poss_list=poss_list)
+
+@app.route('/list_poss')
+def list_poss():
+    # Grab a list of Possitions from database.
+    poss = Poss.query.all()
+    return render_template('list_poss.html',poss=poss)
+
+@app.route('/volunteer_in_group', methods=['GET', 'POST'])
+def volunteer_in_group():
+
+    volunteer_in_group = VolunteersInGroups.query.all()
+    group = Group.query.all()
+    volunteers_list = Volunteers.query.all()
+
+
+    form = VolunteersInGroupsForm()
+
+    if form.validate_on_submit():
+        
+        IDV = form.IDV.data
+        IDG = form.IDG.data
+        TimeS = date.today()
+        TimeF = form.TimeF.data
+        # Add new "Volunteers In Groups" to database
+        new_volunteer_in_groups = VolunteersInGroups(IDV,IDG,TimeS,TimeF)
+        db.session.add(new_volunteer_in_groups)
+        db.session.commit()
+
+        return redirect(url_for('volunteer_in_group'))
+        
+    return render_template('volunteer_in_group.html',form=form,volunteer_in_group=volunteer_in_group,group=group,volunteers_list=volunteers_list)
+
+@app.route('/volunteer_documents',methods=['GET', 'POST'])
+def volunteer_documents():
+    Dname = VolunteerDocuments.query.all()
+    volunteers_list = Volunteers.query.all()
+
+    form = VolunteerDocumentsForm()
+    if form.validate_on_submit():
+        IDV = form.IDV.data
+        Dname = form.Dname.data
+        DocDescription = form.DocDescription.data 
+        Document = images.save(form.Document.data)
+        DateAdded = date.today()
+        #aa = form.Document.data
+        
+        #Document = images.save(form.document.data)
+
+        # Add new "VolunteerDocuments" to database
+        volunteer_documents = VolunteerDocuments(IDV,Dname,DocDescription,Document,DateAdded)
+        db.session.add(volunteer_documents)
+        db.session.commit()
+
+        
+        return redirect(url_for('volunteer_documents'))
+        
+    return render_template('volunteer_documents.html',form=form,Dname=Dname,volunteers_list=volunteers_list)
+
+@app.route('/volunteers_in_poss', methods=['GET', 'POST'])
+def volunteers_in_poss():
+
+    volunteers_in_poss = VolunteersInPoss.query.all()
+    poss_list = Poss.query.all()
+    volunteers_list = Volunteers.query.all()
+
+    form = VolunteersInPossForm()
+    if form.validate_on_submit():
+        IDV = form.IDV.data
+        IDP = form.IDP.data
+        TimeS = date.today()
+        #TimeF = ''#form.TimeF.data
+       
+
+        new_volunteers_in_poss = VolunteersInPoss(IDV,IDP,TimeS)
+        db.session.add(new_volunteers_in_poss)
+        db.session.commit()
+            
+        return redirect(url_for('volunteers_in_poss'))
+
+    return render_template('volunteers_in_poss.html',form=form,volunteers_in_poss=volunteers_in_poss,poss_list=poss_list,volunteers_list=volunteers_list)
+
+@app.route('/meetings', methods=['GET', 'POST'])
+def meetings():
+
+    group = Group.query.all()
+    meetings = Meetings.query.all()
+
+    form = MeetingsForm()
+
+    if form.validate_on_submit():
+        Mdate = form.Mdate.data
+        Mtime = form.Mtime.data
+        IDG = form.IDG.data
+        Occurence = form.Occurence.data
+        Platform = form.Platform.data
+        Rate = form.Rate.data
+        Pros = form.Pros.data
+        Cons = form.Cons.data
+        DateAdded = date.today()       
+
+        new_meetings = Meetings(Mdate,Mtime,IDG,Occurence,Platform,Rate,Pros,Cons,DateAdded)
+        db.session.add(new_meetings)
+        db.session.commit()
+            
+        return redirect(url_for('meetings'))
+
+    return render_template('meetings.html',form=form,group=group,meetings=meetings)
+
+@app.route('/meetings_file',methods=['GET', 'POST'])
+def meetings_file():
+
+    the_file = MFile.query.all()
+    meetings = Meetings.query.all()
+
+    form = MFileForm()
+    if form.validate_on_submit():
+        IDM = form.IDM.data
+        FileName = form.FileName.data
+        FileDescription = form.FileDescription.data
+        TheFile = images.save(form.TheFile.data)
+        AddTime = date.today()
+
+        # Add new "meetings file" to database
+        new_meetings_file = MFile(IDM,FileName,FileDescription,TheFile,AddTime)
+        db.session.add(new_meetings_file)
+        db.session.commit()
+
+
+        return redirect(url_for('meetings_file'))
+        
+    return render_template('meetings_file.html',form=form,the_file=the_file,meetings=meetings)
+
+
+
+
+@app.route('/students_in_meeting', methods=['GET', 'POST'])
+def students_in_meeting():
+
+    meetings = Meetings.query.all()
+    students = Student.query.all()
+    students_in_meeting = StudentsInMeeting.query.all()
+
+    form = StudentsInMeetingForm()
+
+    if form.validate_on_submit():
+        IDM = form.IDM.data
+        EmaillS = form.EmaillS.data
+        Attendance = form.Attendance.data
+
+        new_students_in_meeting = StudentsInMeeting(IDM,EmaillS,Attendance)
+        db.session.add(new_students_in_meeting)
+        db.session.commit()
+            
+        return redirect(url_for('students_in_meeting'))
+
+    return render_template('students_in_meeting.html',form=form,meetings=meetings,students=students,students_in_meeting=students_in_meeting)
+
 
 
 if __name__ == '__main__':
