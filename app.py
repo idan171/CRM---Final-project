@@ -134,10 +134,12 @@ def new_condidate():
     if form.validate_on_submit():
         group_id = form.group_id.data
         emailc = form.emailc.data
+        pronounc = form.pronounc.data
+        phonenumc = form.phonenumc.data
         stimes = date.today()
 
         # Add new group to database
-        new_con = Condidate(group_id,emailc,stimes)
+        new_con = Condidate(group_id,emailc,pronounc,phonenumc,stimes)
 
         db.session.add(new_con)
 

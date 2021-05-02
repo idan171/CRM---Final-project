@@ -76,7 +76,7 @@ class DelGroupForm(FlaskForm):
 
 class AddStuGroupForm(FlaskForm):
 
-    group_id = StringField('ID of Group')
+    group_id = SelectField('קבוצה:', choices = [('1','תל אביב(ז׳-ט׳)'), ('2','גבעתיים(ז׳-ט׳)'),('3','רחובות(י׳-י״ב)')])
     student_emails = StringField("Email of Student: ")
     # stimes = StringField('start time')
     # ftimef = StringField('finish time')
@@ -84,8 +84,11 @@ class AddStuGroupForm(FlaskForm):
 
 class NewCondidateForm(FlaskForm):
 #לשנות לסלקט ולא לסטרינג ולדאוג שהמשתמש יבחר קבוצה ויוזן איי די.
-    group_id = StringField('ID of Group that you want to assign')
-    emailc = StringField("Email of you: ")
+    #group_id = StringField('ID of Group that you want to assign')
+    group_id = SelectField('קבוצה:', choices = [('1','תל אביב(ז׳-ט׳)'), ('2','גבעתיים(ז׳-ט׳)'),('3','רחובות(י׳-י״ב)')])
+    emailc = StringField("אימייל: ")
+    pronounc = SelectField('לשון פניה', choices = [('בחר/י מתוך הרשימה', 'בחר/י מתוך הרשימה'),('את', 'את'), ('אתה', 'אתה'), ('מעורבת', 'מעורבת')])
+    phonenumc = StringField('מספר טלפון:')
     # stimes = StringField('start time')
     submit = SubmitField('Send')
 
@@ -104,7 +107,8 @@ class AddVolunteerForm(FlaskForm):
 
 class VolunteersInGroupsForm(FlaskForm):
     IDV = StringField('ID Of Volunteer:')
-    IDG = StringField('ID Of Group:')
+    IDG = SelectField('קבוצה:', choices = [('1','תל אביב(ז׳-ט׳)'), ('2','גבעתיים(ז׳-ט׳)'),('3','רחובות(י׳-י״ב)')])
+    emailc = StringField("אימייל: ")
     #TimeS = StringField('Current Date:')
     TimeF = StringField('Current Date:')
 
@@ -120,7 +124,7 @@ class VolunteerDocumentsForm(FlaskForm):
 
 class VolunteersInPossForm(FlaskForm):
     IDV = StringField('ID Of Volunteer:')
-    IDP = StringField('ID of the Poss:')
+    IDP = SelectField('תפקיד בארגון:', choices = [('1','מדריכ/ה'), ('2','ספריית הדרכה'),('3','מחלקת הדרכה - בתי ספר'),('4','רכז/ת חינוך'),('5','רכז/ת פעילות')])
 
     submit = SubmitField(' שייך תפקיד למתנדב (:')
 

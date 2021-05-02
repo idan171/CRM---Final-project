@@ -266,13 +266,17 @@ class Condidate(db.Model):
     id = db.Column(db.Integer,primary_key= True)
     group_id = db.Column(db.Integer,db.ForeignKey('groups.id'))
     emailc = db.Column(db.String(64), unique=True, index=True)
+    pronounc = db.Column(db.Text)
+    phonenumc = db.Column(db.String(10))
     stimes = db.Column(db.Text)
 
 
 
-    def __init__(self,group_id,emailc,stimes):
+    def __init__(self,group_id,emailc,pronounc,phonenumc,stimes):
         self.group_id = group_id
         self.emailc = emailc
+        self.pronounc = pronounc
+        self.phonenumc = phonenumc
         self.stimes = stimes
 
 class StudentInGroup(db.Model):

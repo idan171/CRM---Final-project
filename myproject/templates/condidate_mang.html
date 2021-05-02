@@ -16,9 +16,14 @@
       {# This hidden_tag is a CSRF security feature. #}
       {{ form.hidden_tag() }}
       {{ form.group_id.label }} {{ form.group_id() }}
-  </br>
+    </br>
       {{ form.emailc.label }} {{ form.emailc() }}
-  </br>
+    </br>
+    {{ form.pronounc.label }} {{ form.pronounc() }}
+    </br>
+    {{ form.phonenumc.label }} {{ form.phonenumc() }}
+    </br>
+
       {{ form.submit() }}
   </form>
 </div>
