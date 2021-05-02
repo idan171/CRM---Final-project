@@ -156,15 +156,23 @@ def condidate_mang():
         emailc = form.emailc.data
         stimes = date.today()
 
+        #group_id_3 = Group.query.filter_by(id =form.group_id.data).all()
+        #print(group_id_3)
+        #print(group_id)
+
         # Add new group to database
         new_con = Condidate(group_id,emailc,stimes)
 
         db.session.add(new_con)
 
         db.session.commit()
-        
+
+
         return redirect(url_for('list_condidate'))
     return render_template('condidate_mang.html',form=form,condidates_list=condidates_list)
+
+#read with filter:  students = Student.query.filter_by(citys = 'Ramat Gan').all()
+
 
 @app.route('/list_condidate')
 def list_condidate():

@@ -83,7 +83,7 @@ class AddStuGroupForm(FlaskForm):
     submit = SubmitField('Add him')
 
 class NewCondidateForm(FlaskForm):
-
+#לשנות לסלקט ולא לסטרינג ולדאוג שהמשתמש יבחר קבוצה ויוזן איי די.
     group_id = StringField('ID of Group that you want to assign')
     emailc = StringField("Email of you: ")
     # stimes = StringField('start time')

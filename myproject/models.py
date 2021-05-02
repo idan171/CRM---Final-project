@@ -210,7 +210,7 @@ class Group(db.Model):
         self.city = city
 
     def __repr__(self):
-        return f"Group Name: {self.name}"
+        return f"Group Name: {self.name} Group ID: {self.id}"
 
 
 class VolunteersInGroups(db.Model):
