@@ -108,6 +108,35 @@ def add_stu():
 
     return render_template('add.html',form=form)
 
+@app.route('/edit_stu/<string:emails>', methods=['GET', 'POST'])
+def edit_stu(emails):
+    form = AddForm()
+    name_to_update = Student.query.get_or_404(emails)
+    if request.method == "POST":
+        name_to_update.firstname = request.form['firstname']
+        name_to_update.lastname = request.form['lastname']
+        name_to_update.dateofbirth = request.form['dateofbirth']
+        name_to_update.pronouns = request.form['pronouns']
+        name_to_update.citys = request.form['citys']
+        name_to_update.addresss = request.form['addresss']
+        name_to_update.nutritions = request.form['nutritions']
+        name_to_update.phonenums = request.form['phonenums']
+        name_to_update.schoolname = request.form['schoolname']
+        name_to_update.parents = request.form['parents']
+        name_to_update.details = request.form['details']
+
+        try:
+            db.session.commit()
+            flash("Student Updated Successfully!")
+            return render_template("list.html",form=form,name_to_update=name_to_update)
+
+        except:
+             flash("Error! Looks like there is a problem, please try again!")
+             return render_template("edit_stu.html",form=form,name_to_update=name_to_update)
+
+
+    return render_template('edit_stu.html', form=form)
+
 @app.route('/add_group', methods=['GET', 'POST'])
 def add_group():
 

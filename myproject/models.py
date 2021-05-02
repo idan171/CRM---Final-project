@@ -358,6 +358,5 @@ db.session.add(user_test5)
 db.session.add(user_test6)
 
 
-
 db.create_all()
 db.session.commit()
