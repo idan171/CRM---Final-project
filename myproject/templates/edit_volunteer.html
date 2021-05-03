@@ -1,42 +1,33 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="jumbotron">
-  <h1>Add new Volunteer:</h1>
+  <h1>עדון פרטי מתנדב:</h1>
   <p>Fill all the fields</p>
   <form method="POST">
       {# This hidden_tag is a CSRF security feature. #}
       {{ form.hidden_tag() }}
 
-      {{ form.IDV.label }} {{ form.IDV() }}
-        </br>
       {{ form.FnameV.label }} {{ form.FnameV() }}
-    </br>
 
       {{ form.SnameV.label }} {{ form.SnameV() }}
-    </br>
 
       {{ form.DateOfBirthV.label }} {{ form.DateOfBirthV() }}
         </br>
       {{ form.PronounsV.label }} {{ form.PronounsV() }}
-    </br>
 
       {{ form.CityV.label }} {{ form.CityV() }}
-    </br>
 
       {{ form.AdressV.label }} {{ form.AdressV() }}
         </br>
       {{ form.NutritionV.label }} {{ form.NutritionV() }}
-    </br>
 
       {{ form.PhoneNumV.label }} {{ form.PhoneNumV() }}
-    </br>
 
-      {{ form.StatusV.label }} {{ form.StatusV() }}
         </br>
-      </br>
-
-      {{ form.submit() }}
+  
+      {{ form.submit(value="עדכון") }}
   </form>
+</div>
 
-  </div>
+
 {% endblock %}

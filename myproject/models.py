@@ -150,7 +150,7 @@ class Poss(db.Model):
 class Student(db.Model):
 
     __tablename__ = 'students'
-    emails = db.Column(db.String(10),primary_key = True)
+    emails = db.Column(db.String(64),primary_key = True)
     firstname = db.Column(db.Text)
     lastname = db.Column(db.Text)
     dateofbirth = db.Column(db.Text)

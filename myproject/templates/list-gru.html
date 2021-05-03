@@ -1,12 +1,44 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="jumbotron">
-  <h1>Here is a list of all The groups.</h1>
-  <ol>
-    {% for gru in groups  %}
-    <li>{{gru}}</li>
-    {% endfor %}
-  </ol>
+  <h1>רשימת הקבוצות בארגון</h1>
+
+</br>
+
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">ID</th>
+        <th scope="col">Group Name</th>
+        <th scope="col">Region</th>
+        <th scope="col">City</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      {% for gru in groups  %}
+      <tr>
+        <th scope="row"><ol></ol></th>
+        <td> 
+          {{gru.id}}
+        </td>
+        <td>
+          <a href="#"></a> {{gru.name}} </a>
+        </td>
+        <td>
+          {{gru.regionorsubject}}
+        </td>
+        <td>
+          {{gru.city}}
+        </td>
+      </tr>
+      {% endfor %}
+
+    </tbody>
+  </table>
+
+
 
 </div>
 {% endblock %}

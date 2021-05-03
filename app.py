@@ -8,6 +8,8 @@ from datetime import date
 #from flask_uploads import configure_uploads,IMAGES,UploadSet
 from werkzeug import secure_filename,FileStorage
 from flask_uploads import configure_uploads, IMAGES, UploadSet
+from sqlalchemy import or_
+
 
 app.config['SECRET_KEY'] = 'any secret string'
 app.config['UPLOADED_IMAGES_DEST'] = 'uploads/images'
@@ -103,7 +105,6 @@ def add_stu():
         # Add new Student to database
         db.session.add(new_stu)
         db.session.commit()
-
         return redirect(url_for('list_stu'))
 
     return render_template('add.html',form=form)
@@ -128,7 +129,7 @@ def edit_stu(emails):
         try:
             db.session.commit()
             flash("Student Updated Successfully!")
-            return render_template("list.html",form=form,name_to_update=name_to_update)
+            return render_template("list_stu.html",form=form,name_to_update=name_to_update)
 
         except:
              flash("Error! Looks like there is a problem, please try again!")
@@ -136,6 +137,34 @@ def edit_stu(emails):
 
 
     return render_template('edit_stu.html', form=form)
+
+
+@app.route('/edit_volunteer/<int:IDV>', methods=['GET', 'POST'])
+def edit_volunteer(IDV):
+    form = AddVolunteerForm()
+    vol_to_update = Volunteers.query.get_or_404(IDV)
+    if request.method == "POST":
+        vol_to_update.FnameV = request.form['FnameV']
+        vol_to_update.SnameV = request.form['SnameV']
+        vol_to_update.DateOfBirthV = request.form['DateOfBirthV']
+        vol_to_update.PronounsV = request.form['PronounsV']
+        vol_to_update.CityV = request.form['CityV']
+        vol_to_update.AdressV = request.form['AdressV']
+        vol_to_update.NutritionV = request.form['NutritionV']
+        vol_to_update.PhoneNumV = request.form['PhoneNumV']
+
+        try:
+            db.session.commit()
+            flash("Volunteer Updated Successfully!")
+            return render_template("list_volunteer.html",form=form,vol_to_update=vol_to_update)
+
+        except:
+             flash("Error! Looks like there is a problem, please try again!")
+             return render_template("edit_volunteer.html",form=form,vol_to_update=vol_to_update)
+
+
+    return render_template('edit_volunteer.html', form=form)
+
 
 @app.route('/add_group', methods=['GET', 'POST'])
 def add_group():
@@ -255,6 +284,35 @@ def list_stu():
 
 #read with filter:  students = Student.query.filter_by(citys = 'Ramat Gan').all()
 #read without filter:     students = Student.query.all()
+
+@app.route('/search', methods=['GET', 'POST'])
+def search():
+    if request.method =='POST':
+        form = request.form
+        search_value = form['search_string']
+        search = "%{0}%".format(search_value)
+        results = Student.query.filter(or_(Student.firstname.like(search),
+                                            Student.phonenums.like(search))).all()
+        return render_template('list.html',students_list=results,legend="Search Results")
+    else:
+        return redirect('/')
+
+        # חיפוש רק לפי שדה אחד. בדוגמא למעלה זה חיפוש בכמה שדות
+        #results = Student.query.filter(Student.firstname.like(search)).all()
+@app.route('/search_volunteer', methods=['GET', 'POST'])
+def search_volunteer():
+    if request.method =='POST':
+        form = request.form
+        search_value = form['vol_string']
+        search = "%{0}%".format(search_value)
+        results = Volunteers.query.filter(or_(Volunteers.FnameV.like(search),
+                                            Volunteers.SnameV.like(search),
+                                            Volunteers.IDV.like(search),
+                                            Volunteers.CityV.like(search))).all()
+        return render_template('list_volunteers.html',volunteers_list=results,legend="Search Results")
+    else:
+        return redirect('/')
+
 
 @app.route('/list-gru')
 def list_gru():

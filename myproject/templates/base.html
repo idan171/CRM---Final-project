@@ -23,8 +23,8 @@
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
           <a class="dropdown-item" href="{{ url_for('add_stu') }}">Add Student</a>
-          <a class="dropdown-item" href="{{ url_for('del_stu') }}">Delete Student</a>
           <a class="dropdown-item" href="{{ url_for('list_stu') }}">List of Student & Edit</a>
+          <a class="dropdown-item" href="{{ url_for('del_stu') }}">Delete Student</a>
 
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="{{ url_for('student_in_group') }}">Student in Group</a>
@@ -41,6 +41,8 @@
         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
           <a class="dropdown-item" href="{{ url_for('add_group') }}">Add Groups</a>
           <a class="dropdown-item" href="{{ url_for('add_age_group') }}">Ages IN Group</a>
+          <a class="dropdown-item" href="{{ url_for('list_gru') }}">List of Groups</a>
+
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="{{ url_for('add_poss') }}">Add Poss</a>
 
@@ -54,13 +56,13 @@
       </a>
       <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
         <a class="dropdown-item" href="{{ url_for('add_volunteer') }}">Add Volunteer</a>
+        <a class="dropdown-item" href="{{ url_for('list_volunteers') }}">List of Volunteer</a>
         <a class="dropdown-item" href="{{ url_for('volunteer_documents') }}">Volunteer Documents</a>
         <a class="dropdown-item" href="{{ url_for('volunteers_in_poss') }}">Volunteers Poss</a>
         <a class="dropdown-item" href="{{ url_for('volunteer_in_group') }}">Volunteer In Group</a>
 
       </div>
     </li>
-
   </li>
 
 <li class="nav-item dropdown">
@@ -80,7 +82,7 @@
        
     {% else %}
       <li class="nav-link"><a href="{{ url_for('login') }}">Log In</a></li>
-      <li class="nav-link"><a href="{{ url_for('register') }}">Register</a></li>
+      <li class="nav-link"><a href="{{ url_for('register') }}">Sign up</a></li>
     {% endif %}
   </div>
 </nav>
