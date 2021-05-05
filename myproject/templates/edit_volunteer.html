@@ -7,23 +7,22 @@
       {# This hidden_tag is a CSRF security feature. #}
       {{ form.hidden_tag() }}
 
-      {{ form.FnameV.label }} {{ form.FnameV() }}
-
-      {{ form.SnameV.label }} {{ form.SnameV() }}
-
-      {{ form.DateOfBirthV.label }} {{ form.DateOfBirthV() }}
-        </br>
-      {{ form.PronounsV.label }} {{ form.PronounsV() }}
-
-      {{ form.CityV.label }} {{ form.CityV() }}
-
-      {{ form.AdressV.label }} {{ form.AdressV() }}
-        </br>
-      {{ form.NutritionV.label }} {{ form.NutritionV() }}
-
-      {{ form.PhoneNumV.label }} {{ form.PhoneNumV() }}
-
-        </br>
+      {{ form.FnameV.label }} {{ form.FnameV(value=vol_to_update.FnameV) }}
+    </br>
+      {{ form.SnameV.label }} {{ form.SnameV(value=vol_to_update.SnameV) }}
+    </br>
+      {{ form.DateOfBirthV.label }} {{ form.DateOfBirthV(value=vol_to_update.DateOfBirthV) }}
+    </br>
+      {{ form.PronounsV.label }} {{ form.PronounsV(value=vol_to_update.PronounsV) }}
+    </br>
+      {{ form.CityV.label }} {{ form.CityV(value=vol_to_update.CityV) }}
+    </br>
+      {{ form.AdressV.label }} {{ form.AdressV(value=vol_to_update.AdressV) }}
+    </br>
+      {{ form.NutritionV.label }} {{ form.NutritionV(value=vol_to_update.NutritionV) }}
+    </br>
+      {{ form.PhoneNumV.label }} {{ form.PhoneNumV(value=vol_to_update.PhoneNumV) }}
+    </br>
   
       {{ form.submit(value="עדכון") }}
   </form>

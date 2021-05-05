@@ -27,9 +27,9 @@
           <a class="dropdown-item" href="{{ url_for('del_stu') }}">Delete Student</a>
 
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="{{ url_for('student_in_group') }}">Student in Group</a>
-          <a class="dropdown-item" href="{{ url_for('delete_student_gru1') }}">Delete Student In Group</a>
-          <a class="dropdown-item" href="{{ url_for('Check') }}">Student in Group List</a>
+          <a class="dropdown-item" href="{{ url_for('student_in_group') }}">Asign Student to Group</a>
+          <a class="dropdown-item" href="{{ url_for('list_stu_in_group') }}">Search Student in Group</a>
+          <a class="dropdown-item" href="{{ url_for('delete_student_gru1') }}">Delete Student from Group</a>
 
 
         </div>
@@ -56,10 +56,11 @@
       </a>
       <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
         <a class="dropdown-item" href="{{ url_for('add_volunteer') }}">Add Volunteer</a>
-        <a class="dropdown-item" href="{{ url_for('list_volunteers') }}">List of Volunteer</a>
+        <a class="dropdown-item" href="{{ url_for('list_volunteers') }}">List of Volunteer & Edit</a>
         <a class="dropdown-item" href="{{ url_for('volunteer_documents') }}">Volunteer Documents</a>
         <a class="dropdown-item" href="{{ url_for('volunteers_in_poss') }}">Volunteers Poss</a>
-        <a class="dropdown-item" href="{{ url_for('volunteer_in_group') }}">Volunteer In Group</a>
+        <a class="dropdown-item" href="{{ url_for('volunteer_in_group') }}">Asign Volunteer to Group</a>
+        <a class="dropdown-item" href="{{ url_for('list_vol_in_group') }}">Search Volunteer in Group</a>
 
       </div>
     </li>

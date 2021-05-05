@@ -6,27 +6,25 @@
       {# This hidden_tag is a CSRF security feature. #}
       {{ form.hidden_tag() }}
 
-      {{ form.firstname.label }} {{ form.firstname() }}
+      {{ form.firstname.label }} {{ form.firstname(value=name_to_update.firstname) }}
   </br>
-      {{ form.lastname.label }} {{ form.lastname() }}
+      {{ form.lastname.label }} {{ form.lastname(value=name_to_update.lastname) }}
   </br>
-      {{ form.dateofbirth.label }} {{form.dateofbirth() }}
-  </br>
-    {{ form.pronouns.label }} {{ form.pronouns() }}
+    {{ form.pronouns.label }} {{ form.pronouns(value=name_to_update.pronouns) }}
     </br>
-    {{ form.citys.label }} {{form.citys() }}
+    {{ form.citys.label }} {{form.citys(value=name_to_update.citys) }}
     </br>
-    {{ form.addresss.label }} {{form.addresss() }}
+    {{ form.addresss.label }} {{form.addresss(value=name_to_update.addresss) }}
     </br>
-    {{ form.nutritions.label }} {{ form.nutritions() }}
+    {{ form.nutritions.label }} {{ form.nutritions(value=name_to_update.nutritions) }}
     </br>
-    {{ form.phonenums.label }} {{form.phonenums() }}
+    {{ form.phonenums.label }} {{form.phonenums(value=name_to_update.phonenums) }}
     </br>
-    {{ form.schoolname.label }} {{form.schoolname() }}
+    {{ form.schoolname.label }} {{form.schoolname(value=name_to_update.schoolname) }}
     </br>
-    {{ form.parents.label }} {{form.parents() }}
+    {{ form.parents.label }} {{form.parents(value=name_to_update.parents) }}
     </br>
-    {{ form.details.label }} {{form.details() }}
+    {{ form.details.label }} {{form.details(value=name_to_update.details) }}
 
     </br>
       {{ form.submit(value="עדכון") }}

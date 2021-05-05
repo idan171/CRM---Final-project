@@ -10,57 +10,62 @@
       {{ form.IDV.label }} {{ form.IDV() }}
         </br>
       {{ form.IDG.label }} {{ form.IDG() }}
-  
+    </br>
+    {{ form.statusV.label }} {{ form.statusV() }}
+
       {{ form.submit() }}
   </form>
+</br>
+</br>
+<h6>לעריכה, לחץ על פרטי החניך:</h6>
+
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">ID OF Volunteer</th>
+            <th scope="col">First Name</th>
+            <th scope="col">Last Name</th>
+            <th scope="col">ID OF Group</th>
+            <th scope="col">Group Name</th>
+            <th scope="col">Statuse in group</th>
+
+          </tr>
+        </thead>
+      </br>
+
+        <tbody>
+          {% for V in volunteer_in_group  %}
+          <tr>
+            <th scope="row"><ol></ol></th>
+            <td> 
+              <a href="">{{V.IDV}}</a>
+            </td>
+            <td>
+            </td>
+            <td>
+
+            </td>
+            <td>
+              {{V.IDG}}
+
+            </td>
+
+          </td>
+          <td>
+
+          </td>
+          <td>
+            {{V.statusV}}
+
+          </td>
+          </tr>
+          {% endfor %}
+
+        </tbody>
+      </table>
+
 </div>
-<table >
-    <tr>
-        <td>
-            <table >
-                <tr>
-                    <td>
-                        <div class="jumbotron">
-                        <h2>Here is a list of all the Volunteers.</h2>
-                        <ul>
-                          {% for v in volunteers_list  %}
-                          <li>{{v}}</li>
-                          {% endfor %}
-                        </ul>
-                      
-                      </div> 
-                     </td>
-                      <td>
-                        <div class="jumbotron">
-                            <h2>  רשימת קבוצות  </h2>
-                            <ul>
-                              {% for g in group  %}
-                              <li>{{g}}</li>
-                              {% endfor %}
-                            </ul>
-                          
-                          </div>
-                      </td>
-                      <td>
-                        <div class="jumbotron">
-                            <h2>רשימת מתנדבים מקושרים </h2>
-                            <ul>
-                              {% for v in volunteer_in_group  %}
-                              <li>{{v}}</li>
-                              {% endfor %}
-                            </ul>
-                          
-                          </div>
-                      </td>
-                </tr>
-            </table>
-            
-        </td>
-    </tr>
-</table>
-
-
-
 
 
 {% endblock %}

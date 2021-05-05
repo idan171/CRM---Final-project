@@ -222,15 +222,14 @@ class VolunteersInGroups(db.Model):
     IDG = db.Column(db.Integer,db.ForeignKey('groups.id'))
     TimeS = db.Column(db.Text)
     TimeF = db.Column(db.Text)
+    statusV = db.Column(db.Text)
 
-    def __init__(self,IDV,IDG,TimeS,TimeF):
+    def __init__(self,IDV,IDG,TimeS,TimeF,statusV):
         self.IDV = IDV
         self.IDG = IDG
         self.TimeS = TimeS
         self.TimeF = TimeF
-
-    def __repr__(self):
-        return f"ID Volunteer: {self.IDV}, ID Group: {self.IDG}, Aedd date: {self.TimeS} "
+        self.statusV = statusV
 
 class Age(db.Model):
 
@@ -288,13 +287,15 @@ class StudentInGroup(db.Model):
     group_id = db.Column(db.Integer,db.ForeignKey('groups.id'))
     stimes = db.Column(db.Text)
     ftimef = db.Column(db.Text)
-  
+    statusg = db.Column(db.Text)
 
-    def __init__(self,stimes,ftimef,student_emails,group_id):
+
+    def __init__(self,stimes,ftimef,student_emails,group_id,statusg):
         self.stimes = stimes
         self.ftimef = ftimef
         self.student_emails = student_emails
         self.group_id = group_id
+        self.statusg = statusg
 
     def __repr__(self):
         return f"the name of the student is {self.student_emails} and he is in group: {self.group_id} and the id of the row is: {self.id}"

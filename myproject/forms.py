@@ -78,6 +78,7 @@ class AddStuGroupForm(FlaskForm):
 
     group_id = SelectField('קבוצה:', choices = [('1','תל אביב(ז׳-ט׳)'), ('2','גבעתיים(ז׳-ט׳)'),('3','רחובות(י׳-י״ב)')])
     student_emails = StringField("Email of Student: ")
+    statusg = SelectField('סטטוס פעילות בקבוצה:', choices = [('פעיל','פעיל'),('לא פעיל','לא פעיל')])
     # stimes = StringField('start time')
     # ftimef = StringField('finish time')
     submit = SubmitField('Add him')
@@ -111,6 +112,7 @@ class VolunteersInGroupsForm(FlaskForm):
     emailc = StringField("אימייל: ")
     #TimeS = StringField('Current Date:')
     TimeF = StringField('Current Date:')
+    statusV = SelectField('סטטוס פעילות בקבוצה:', choices = [('פעיל','פעיל'),('לא פעיל','לא פעיל')])
 
     submit = SubmitField('בצע שידוך  (:')
 

@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="jumbotron">
+  <h1>חיפוש מתנדבים, קבוצות ותפקידים</h1>
+</br>
+
+
+  <form method ="POST">
+    <input type="text" autofocus="autofocus" name="vol_string">
+    <input type="submit" formaction="/search_stuingroup" value="Search / Return">
+
+  </form>
+</br>
+<h6>לעריכה, לחץ על פרטי החניך:</h6>
+
+
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">ID OF Volunteer</th>
+        <th scope="col">First Name</th>
+        <th scope="col">Last Name</th>
+        <th scope="col">ID OF Group</th>
+        <th scope="col">Group Name</th>
+        <th scope="col">Statuse in group</th>
+        <th scope="col">Poss</th>
+
+
+      </tr>
+    </thead>
+</br>
+
+    <tbody>
+      {% for V in vol_in_group_list  %}
+      <tr>
+        <th scope="row"><ol></ol></th>
+        <td> 
+          <a href="">{{V.IDV}}</a>
+        </td>
+        <td>
+        </td>
+        <td>
+
+        </td>
+        <td>
+          {{V.IDG}}
+
+        </td>
+
+      </td>
+      <td>
+
+      </td>
+      <td>
+        {{V.statusV}}
+
+      </td>
+      </tr>
+      {% endfor %}
+
+    </tbody>
+  </table>
+
+
+</div>
+{% endblock %}

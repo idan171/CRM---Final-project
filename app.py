@@ -111,12 +111,13 @@ def add_stu():
 
 @app.route('/edit_stu/<string:emails>', methods=['GET', 'POST'])
 def edit_stu(emails):
+    students_list = Student.query.all()
     form = AddForm()
     name_to_update = Student.query.get_or_404(emails)
     if request.method == "POST":
+
         name_to_update.firstname = request.form['firstname']
         name_to_update.lastname = request.form['lastname']
-        name_to_update.dateofbirth = request.form['dateofbirth']
         name_to_update.pronouns = request.form['pronouns']
         name_to_update.citys = request.form['citys']
         name_to_update.addresss = request.form['addresss']
@@ -129,18 +130,31 @@ def edit_stu(emails):
         try:
             db.session.commit()
             flash("Student Updated Successfully!")
-            return render_template("list_stu.html",form=form,name_to_update=name_to_update)
+            return render_template("list.html",form=form,name_to_update=name_to_update,students_list=students_list)
 
         except:
              flash("Error! Looks like there is a problem, please try again!")
-             return render_template("edit_stu.html",form=form,name_to_update=name_to_update)
+             return render_template("edit_stu.html",form=form,name_to_update=name_to_update,students_list=students_list)
 
 
-    return render_template('edit_stu.html', form=form)
+    return render_template('edit_stu.html',form=form,name_to_update=name_to_update)
+
+@app.route('/search_stuingroup', methods=['GET', 'POST'])
+def search_stuingroup():
+    if request.method =='POST':
+        form1 = request.form
+        search_value = form1['vol_string']
+        search = "%{0}%".format(search_value)
+        results = StudentInGroup.query.filter(or_(StudentInGroup.student_emails.like(search),
+                                            StudentInGroup.statusg.like(search))).all()
+        return render_template('list_stu_in_group.html',stu_in_group_list=results,legend="Search Results")
+    else:
+        return redirect('/')
 
 
 @app.route('/edit_volunteer/<int:IDV>', methods=['GET', 'POST'])
 def edit_volunteer(IDV):
+    volunteers_list = Volunteers.query.all()
     form = AddVolunteerForm()
     vol_to_update = Volunteers.query.get_or_404(IDV)
     if request.method == "POST":
@@ -156,14 +170,14 @@ def edit_volunteer(IDV):
         try:
             db.session.commit()
             flash("Volunteer Updated Successfully!")
-            return render_template("list_volunteer.html",form=form,vol_to_update=vol_to_update)
+            return render_template("list_volunteers.html",form=form,vol_to_update=vol_to_update,volunteers_list=volunteers_list)
 
         except:
              flash("Error! Looks like there is a problem, please try again!")
-             return render_template("edit_volunteer.html",form=form,vol_to_update=vol_to_update)
+             return render_template("edit_volunteer.html",form=form,vol_to_update=vol_to_update,volunteers_list=volunteers_list)
 
 
-    return render_template('edit_volunteer.html', form=form)
+    return render_template('edit_volunteer.html',form=form,vol_to_update=vol_to_update)
 
 
 @app.route('/add_group', methods=['GET', 'POST'])
@@ -260,6 +274,7 @@ def add_age_group():
     
 @app.route('/student_in_group', methods=['GET', 'POST'])
 def student_in_group():
+    stu_in_group_list = StudentInGroup.query.all()
     form = AddStuGroupForm()
 
     if form.validate_on_submit():
@@ -267,14 +282,44 @@ def student_in_group():
         ftimef = ''#form.ftimef.data
         student_emails = form.student_emails.data
         group_id = form.group_id.data
-        new_studentingroup = StudentInGroup(stimes,ftimef,student_emails,group_id)
+        statusg = form.statusg.data
+        
+        new_studentingroup = StudentInGroup(stimes,ftimef,student_emails,group_id,statusg)
         db.session.add(new_studentingroup)
         db.session.commit()
             
-        return redirect(url_for('list_stu'))
+        return redirect(url_for('student_in_group'))
 
-    return render_template('student_in_group.html',form=form)
+    return render_template('student_in_group.html',form=form,stu_in_group_list=stu_in_group_list)
 
+@app.route('/list_stu_in_group')
+def list_stu_in_group():
+    # Grab a list of students from database.
+    stu_in_group_list = StudentInGroup.query.all()
+    return render_template('list_stu_in_group.html',stu_in_group_list=stu_in_group_list)
+
+
+@app.route('/edit_stuingroup/<int:id>', methods=['GET', 'POST'])
+def edit_stuingroup(id):
+    stu_in_group_list = StudentInGroup.query.all()
+    form = AddStuGroupForm()
+    line_to_update = StudentInGroup.query.get_or_404(id)
+    if request.method == "POST":
+        line_to_update.group_id = request.form['group_id']
+        line_to_update.student_emails = request.form['student_emails']
+        line_to_update.statusg = request.form['statusg']
+
+        try:
+            db.session.commit()
+            flash("Student in Group Updated Successfully!")
+            return render_template("student_in_group.html",form=form,line_to_update=line_to_update,stu_in_group_list=stu_in_group_list)
+
+        except:
+             flash("Error! Looks like there is a problem, please try again!")
+             return render_template("edit_stuingroup.html",form=form,line_to_update=line_to_update,stu_in_group_list=stu_in_group_list)
+
+
+    return render_template('edit_stuingroup.html', form=form,line_to_update=line_to_update)
 
 @app.route('/list')
 def list_stu():
@@ -354,15 +399,6 @@ def delete_student_gru1():
         return redirect(url_for('list_stu'))
     return render_template('delete_student_gru.html',groups_list=groups_list,form=form)
 
-
-
-#student in group list (can use for anything!)
-@app.route('/QA')
-def Check():
-    studentsingroup_list = StudentInGroup.query.all()
-    studentsingroup_list2 = StudentInGroup.query.filter_by(group_id = '1').all()
-
-    return render_template('QA.html',studentsingroup_list=studentsingroup_list,studentsingroup_list2=studentsingroup_list2)
 
 
 @app.route('/Thank_you')
@@ -448,14 +484,25 @@ def volunteer_in_group():
         IDG = form.IDG.data
         TimeS = date.today()
         TimeF = form.TimeF.data
+        statusV = form.statusV.data
         # Add new "Volunteers In Groups" to database
-        new_volunteer_in_groups = VolunteersInGroups(IDV,IDG,TimeS,TimeF)
+        new_volunteer_in_groups = VolunteersInGroups(IDV,IDG,TimeS,TimeF,statusV)
         db.session.add(new_volunteer_in_groups)
         db.session.commit()
 
         return redirect(url_for('volunteer_in_group'))
         
     return render_template('volunteer_in_group.html',form=form,volunteer_in_group=volunteer_in_group,group=group,volunteers_list=volunteers_list)
+
+
+
+@app.route('/list_vol_in_group')
+def list_vol_in_group():
+    # Grab a list of students from database.
+    vol_in_group_list = VolunteersInGroups.query.all()
+    return render_template('list_vol_in_group.html',vol_in_group_list=vol_in_group_list)
+
+
 
 @app.route('/volunteer_documents',methods=['GET', 'POST'])
 def volunteer_documents():
