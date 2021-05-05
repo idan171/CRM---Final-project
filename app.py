@@ -139,6 +139,46 @@ def edit_stu(emails):
 
     return render_template('edit_stu.html',form=form,name_to_update=name_to_update)
 
+
+
+@app.route('/edit_volingroup/<int:id>', methods=['GET', 'POST'])
+def edit_volingroup(id):
+    volunteer_in_group = VolunteersInGroups.query.all()
+    form = VolunteersInGroupsForm()
+    volingro_to_update = VolunteersInGroups.query.get_or_404(id)
+    if request.method == "POST":
+        volingro_to_update.IDV = request.form['IDV']
+        volingro_to_update.IDG = request.form['IDG']
+        volingro_to_update.statusV = request.form['statusV']
+      
+        try:
+            db.session.commit()
+            flash("Student in group Updated Successfully!")
+            return render_template("volunteer_in_group.html",form=form,volingro_to_update=volingro_to_update,volunteer_in_group=volunteer_in_group)
+
+        except:
+             flash("Error! Looks like there is a problem, please try again!")
+             return render_template("edit_volingroup.html",form=form,volingro_to_update=volingro_to_update,volunteer_in_group=volunteer_in_group)
+
+
+    return render_template('edit_volingroup.html',form=form,volingro_to_update=volingro_to_update)
+
+@app.route('/search_volingroup', methods=['GET', 'POST'])
+def search_volingroup():
+    if request.method =='POST':
+        form2 = request.form
+        search_value = form2['volg_string']
+        search = "%{0}%".format(search_value)
+        results = VolunteersInGroups.query.filter(or_(VolunteersInGroups.IDV.like(search),
+                                                        VolunteersInGroups.IDG.like(search),
+                                                        VolunteersInGroups.statusV.like(search))).all()
+        return render_template('list_vol_in_group.html',vol_in_group_list=results,legend="Search Results")
+    else:
+        return redirect('/')
+
+
+
+
 @app.route('/search_stuingroup', methods=['GET', 'POST'])
 def search_stuingroup():
     if request.method =='POST':
