@@ -35,15 +35,18 @@
       </br>
 
         <tbody>
-          {% for V in volunteer_in_group  %}
+          {% for V in vol_in_group_list  %}
           <tr>
-            <th scope="row"><ol></ol></th>
+            <th scope="row"><ol>{{V.VolunteersInGroups.id}}</ol></th>
             <td> 
-              <a href="{{url_for('edit_volingroup', id=V.id)}}">{{V.IDV}}</a>
+              <a href="{{url_for('edit_volingroup', id=V.VolunteersInGroups.id)}}">{{V.IDV}}</a>
             </td>
             <td>
+              {{V.FnameV}}
+
             </td>
             <td>
+              {{V.SnameV}}
 
             </td>
             <td>
@@ -53,6 +56,7 @@
 
           </td>
           <td>
+            {{V.name}}
 
           </td>
           <td>

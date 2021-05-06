@@ -3,7 +3,7 @@
 <div class="jumbotron">
   <h1>רשימת מתנדבים ועובדים בארגון:</h1>
 </br>
-  <p>חיפוש לפי שם / תעודת זהות / עיר מגורים</p>
+  <p>חיפוש לפי שם / תעודת זהות / תפקיד</p>
   
   <form method ="POST">
     <input type="text" autofocus="autofocus" name="vol_string">
@@ -11,7 +11,7 @@
 
   </form>
 </br>
-<p>לעריכת פרטים, לחצ/י על שם המתנדב/ת:</p>
+<p>לצפיה או ערכית פרטים, לחצ/י על שם המתנדב/ת:</p>
 
   <table class="table table-hover">
     <thead>
@@ -21,12 +21,13 @@
         <th scope="col">First Name</th>
         <th scope="col">Last Name</th>
         <th scope="col">Poss</th>
+        <th scope="col">Time begin</th>
         <th scope="col">Status</th>
 
       </tr>
     </thead>
     <tbody>
-      {% for V in volunteers_list  %}
+      {% for V in volunteers_poss_list2  %}
 
       <tr>
         <th scope="row"><ol></ol></th>
@@ -41,14 +42,17 @@
           {{V.SnameV}}
         </td>
         <td>
-          {{POSS}}
+          {{V.PossName}}
+        </td>
+        <td>
+          {{V.TimeS}}
         </td>
         <td>
           {{V.StatusV}}
         </td>
       </tr>
       {% endfor %}
-
+      
     </tbody>
   </table>
 

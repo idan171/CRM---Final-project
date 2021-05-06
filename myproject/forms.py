@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, SelectField, IntegerField, RadioField, FileField
 from wtforms.validators import DataRequired,Email,EqualTo
 from wtforms import ValidationError
-from myproject.models import User, Group
+from myproject.models import User, Group, Poss
 
 #classes for login and register process:
 class LoginForm(FlaskForm):
@@ -77,14 +77,14 @@ class DelGroupForm(FlaskForm):
 class AddStuGroupForm(FlaskForm):
 
     group_list = list(Group.query.all())
-    groups = [(g.id, g.name) for g in group_list]
+    groups = [(int(g.id), g.name) for g in group_list]
 
     group_id = SelectField('קבוצה:', choices = groups)
     student_emails = StringField("Email of Student: ")
     statusg = SelectField('סטטוס פעילות בקבוצה:', choices = [('פעיל','פעיל'),('לא פעיל','לא פעיל')])
     # stimes = StringField('start time')
     # ftimef = StringField('finish time')
-    submit = SubmitField('Add him')
+    submit = SubmitField('Add himm')
 
 class NewCondidateForm(FlaskForm):
 #לשנות לסלקט ולא לסטרינג ולדאוג שהמשתמש יבחר קבוצה ויוזן איי די.
@@ -131,8 +131,11 @@ class VolunteerDocumentsForm(FlaskForm):
     submit = SubmitField(' העלה מסמך  (:')
 
 class VolunteersInPossForm(FlaskForm):
+    poss_list = list(Poss.query.all())
+    posss = [(p.IDP, p.PossName) for p in poss_list]
+
     IDV = StringField('ID Of Volunteer:')
-    IDP = SelectField('תפקיד בארגון:', choices = [('1','מדריכ/ה'), ('2','ספריית הדרכה'),('3','מחלקת הדרכה - בתי ספר'),('4','רכז/ת חינוך'),('5','רכז/ת פעילות')])
+    IDP = SelectField('תפקיד בארגון:', choices = posss )
 
     submit = SubmitField(' שייך תפקיד למתנדב (:')
 

@@ -5,10 +5,10 @@
   <form method="POST">
       {# This hidden_tag is a CSRF security feature. #}
       {{ form.hidden_tag() }}
-
-      {{ form.IDV.label }} {{ form.IDV(value=volingro_to_update.IDV) }}
-  </br>
       {{ form.IDG.label }} {{ form.IDG(value=volingro_to_update.IDG) }}
+  </br>
+  {{ form.IDV.label }} {{ form.IDV(value=volingro_to_update.IDV) }}
+
   </br>
       {{ form.statusV.label }} {{form.statusV(value=volingro_to_update.statusV) }}
   </br>

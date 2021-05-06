@@ -14,51 +14,16 @@
       {{ form.submit() }}
   </form>
 </div>
-<table >
-    <tr>
-        <td>
-            <table >
-                <tr>
-                    <td>
-                        <div class="jumbotron">
-                        <h2>Here is a list of all the Volunteers.</h2>
-                        <ul>
-                          {% for v in volunteers_list  %}
-                          <li>{{v}}</li>
-                          {% endfor %}
-                        </ul>
-                      
-                      </div> 
-                     </td>
-                      <td>
-                        <div class="jumbotron">
-                            <h2>  רשימת תפקידים  </h2>
-                            <ul>
-                              {% for P in poss_list  %}
-                              <li>{{P}}</li>
-                              {% endfor %}
-                            </ul>
+<div class="jumbotron">
+<h2> רשימת מתנדבים מקושרים - נדרש להציג את כל מי שלא מקושר!</h2>
+  <ul>
+    {% for v in volunteers_in_poss  %}
+    <li>{{v}}</li>
+    {% endfor %}
+  </ul>
                           
-                          </div>
-                      </td>
-                      <td>
-                        <div class="jumbotron">
-                            <h2>רשימת מתנדבים מקושרים </h2>
-                            <ul>
-                              {% for v in volunteers_in_poss  %}
-                              <li>{{v}}</li>
-                              {% endfor %}
-                            </ul>
-                          
-                          </div>
-                      </td>
-                </tr>
-            </table>
-            
-        </td>
-    </tr>
-</table>
-
+</div>
+</td>
 
 
 

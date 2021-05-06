@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="jumbotron">
-  <h1>חיפוש מתנדבים, קבוצות ותפקידים</h1>
+  <h1>חיפוש מתנדבים לפי קבוצה</h1>
 </br>
 
 
@@ -24,7 +24,6 @@
         <th scope="col">ID OF Group</th>
         <th scope="col">Group Name</th>
         <th scope="col">Statuse in group</th>
-        <th scope="col">Poss</th>
 
 
       </tr>
@@ -32,7 +31,7 @@
 </br>
 
     <tbody>
-      {% for V in vol_in_group_list  %}
+      {% for V in searchvol_in_group_list  %}
       <tr>
         <th scope="row"><ol></ol></th>
         <td> 
@@ -40,23 +39,26 @@
 
         </td>
         <td>
-        </td>
-        <td>
+         {{V.FnameV}}
 
         </td>
         <td>
-          {{V.IDG}}
+          {{V.SnameV}}
 
         </td>
+        <td>
+          {{V.IDG}} 
+        </td>
 
-      </td>
       <td>
+        {{V.name}} 
 
       </td>
       <td>
         {{V.statusV}}
 
       </td>
+
       </tr>
       {% endfor %}
 

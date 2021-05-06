@@ -143,25 +143,31 @@ def edit_stu(emails):
 
 @app.route('/edit_volingroup/<int:id>', methods=['GET', 'POST'])
 def edit_volingroup(id):
-    volunteer_in_group = VolunteersInGroups.query.all()
+    vol_in_group_list = VolunteersInGroups.query.join(Group, VolunteersInGroups.IDG==Group.id).join(Volunteers, VolunteersInGroups.IDV==Volunteers.IDV)\
+    .add_columns(VolunteersInGroups.IDG,VolunteersInGroups.id, VolunteersInGroups.IDV, VolunteersInGroups.statusV, Group.id, Group.name,VolunteersInGroups.TimeS,VolunteersInGroups.TimeF,Volunteers.IDV,Volunteers.FnameV,Volunteers.SnameV,Volunteers.PronounsV,Volunteers.DateAdded,Volunteers.StatusV )\
+    .filter(VolunteersInGroups.IDG == Group.id,VolunteersInGroups.IDV==Volunteers.IDV)
+    
+    #editvol_in_group_list = VolunteersInGroups.query.all()
     form = VolunteersInGroupsForm()
     volingro_to_update = VolunteersInGroups.query.get_or_404(id)
     if request.method == "POST":
-        volingro_to_update.IDV = request.form['IDV']
         volingro_to_update.IDG = request.form['IDG']
+        volingro_to_update.IDV = request.form['IDV']
         volingro_to_update.statusV = request.form['statusV']
       
         try:
             db.session.commit()
             flash("Student in group Updated Successfully!")
-            return render_template("volunteer_in_group.html",form=form,volingro_to_update=volingro_to_update,volunteer_in_group=volunteer_in_group)
+            return render_template("volunteer_in_group.html",form=form,volingro_to_update=volingro_to_update,vol_in_group_list=vol_in_group_list)
 
         except:
              flash("Error! Looks like there is a problem, please try again!")
-             return render_template("edit_volingroup.html",form=form,volingro_to_update=volingro_to_update,volunteer_in_group=volunteer_in_group)
+             return render_template("edit_volingroup.html",form=form,volingro_to_update=volingro_to_update,vol_in_group_list=vol_in_group_list)
 
 
     return render_template('edit_volingroup.html',form=form,volingro_to_update=volingro_to_update)
+
+
 
 @app.route('/search_volingroup', methods=['GET', 'POST'])
 def search_volingroup():
@@ -169,34 +175,46 @@ def search_volingroup():
         form2 = request.form
         search_value = form2['volg_string']
         search = "%{0}%".format(search_value)
-        results = VolunteersInGroups.query.filter(or_(VolunteersInGroups.IDV.like(search),
-                                                        VolunteersInGroups.IDG.like(search),
+        results = (VolunteersInGroups.query.join(Group, VolunteersInGroups.IDG==Group.id).join(Volunteers, VolunteersInGroups.IDV==Volunteers.IDV).join(VolunteersInPoss, VolunteersInGroups.IDV==VolunteersInPoss.IDV)\
+    .add_columns(VolunteersInGroups.IDG, VolunteersInGroups.IDV, VolunteersInGroups.statusV, Group.id, Group.name,VolunteersInGroups.TimeS,VolunteersInGroups.TimeF,Volunteers.IDV,Volunteers.FnameV,Volunteers.SnameV,Volunteers.PronounsV,Volunteers.DateAdded,Volunteers.StatusV,VolunteersInPoss.IDP)\
+    .filter(VolunteersInGroups.IDG == Group.id,VolunteersInGroups.IDV==Volunteers.IDV)).filter(or_(VolunteersInGroups.IDV.like(search),
+                                                        Group.name.like(search),
                                                         VolunteersInGroups.statusV.like(search))).all()
-        return render_template('list_vol_in_group.html',vol_in_group_list=results,legend="Search Results")
+        return render_template('list_vol_in_group.html',searchvol_in_group_list=results,legend="Search Results")
     else:
         return redirect('/')
+
+
 
 
 
 
 @app.route('/search_stuingroup', methods=['GET', 'POST'])
 def search_stuingroup():
-    stu_in_group_list2 = StudentInGroup.query.join(Group, StudentInGroup.group_id==Group.id)\
-    .add_columns(StudentInGroup.group_id, StudentInGroup.student_emails, StudentInGroup.statusg, Group.id, Group.name,StudentInGroup.stimes,StudentInGroup.ftimef, StudentInGroup.statusg )\
-    .filter(StudentInGroup.group_id == Group.id)
+    
+
+    
     if request.method =='POST':
         form1 = request.form
         search_value = form1['vol_string']
         search = "%{0}%".format(search_value)
-        results = StudentInGroup.query.filter(or_(StudentInGroup.student_emails.like(search),
+        results = (StudentInGroup.query.join(Group, StudentInGroup.group_id==Group.id)\
+        .add_columns(StudentInGroup.group_id, StudentInGroup.student_emails, StudentInGroup.statusg, Group.id, Group.name,StudentInGroup.stimes,StudentInGroup.ftimef, StudentInGroup.statusg )\
+        .filter(StudentInGroup.group_id == Group.id)).filter(or_(StudentInGroup.student_emails.like(search),Group.name.like(search),
                                             StudentInGroup.statusg.like(search))).all()
-        return render_template('list_stu_in_group.html',stu_in_group_list2=stu_in_group_list2,stu_in_group_list=results,legend="Search Results")
+        return render_template('list_stu_in_group.html',searchstu_in_group_list=results,legend="Search Results")
     else:
         return redirect('/')
 
 
 @app.route('/edit_volunteer/<int:IDV>', methods=['GET', 'POST'])
 def edit_volunteer(IDV):
+  #  volunteers_poss_list = VolunteersInPoss.query.join(Volunteers, VolunteersInPoss.IDV==Volunteers.IDV).join(Poss, VolunteersInPoss.IDP==Poss.IDP)\
+   # .add_columns(VolunteersInPoss.IDP, Poss.PossName, VolunteersInPoss.TimeS, Volunteers.IDV, Volunteers.FnameV, Volunteers.SnameV,Volunteers.StatusV)\
+    #.filter(VolunteersInPoss.IDV==Volunteers.IDV,VolunteersInPoss.IDP==Poss.IDP)
+    volunteers_poss_list2 = Volunteers.query.join(VolunteersInPoss, Volunteers.IDV==VolunteersInPoss.IDV, isouter=True).join(Poss, VolunteersInPoss.IDP==Poss.IDP,isouter=True)\
+    .add_columns(VolunteersInPoss.IDP, Poss.PossName, VolunteersInPoss.TimeS, Volunteers.IDV, Volunteers.FnameV, Volunteers.SnameV,Volunteers.StatusV)\
+   
     volunteers_list = Volunteers.query.all()
     form = AddVolunteerForm()
     vol_to_update = Volunteers.query.get_or_404(IDV)
@@ -213,11 +231,11 @@ def edit_volunteer(IDV):
         try:
             db.session.commit()
             flash("Volunteer Updated Successfully!")
-            return render_template("list_volunteers.html",form=form,vol_to_update=vol_to_update,volunteers_list=volunteers_list)
+            return render_template("list_volunteers.html",form=form,vol_to_update=vol_to_update,volunteers_list=volunteers_list,volunteers_poss_list2=volunteers_poss_list2)
 
         except:
              flash("Error! Looks like there is a problem, please try again!")
-             return render_template("edit_volunteer.html",form=form,vol_to_update=vol_to_update,volunteers_list=volunteers_list)
+             return render_template("edit_volunteer.html",form=form,vol_to_update=vol_to_update,volunteers_list=volunteers_list,volunteers_poss_list2=volunteers_poss_list2)
 
 
     return render_template('edit_volunteer.html',form=form,vol_to_update=vol_to_update)
@@ -318,25 +336,28 @@ def add_age_group():
 @app.route('/student_in_group', methods=['GET', 'POST'])
 def student_in_group():
     stu_in_group_list = StudentInGroup.query.join(Group, StudentInGroup.group_id==Group.id)\
-    .add_columns(StudentInGroup.group_id, StudentInGroup.student_emails, StudentInGroup.statusg, Group.id, Group.name,StudentInGroup.stimes,StudentInGroup.ftimef, StudentInGroup.statusg )\
+    .add_columns(StudentInGroup.group_id,StudentInGroup.student_emails,StudentInGroup.id, StudentInGroup.statusg, Group.id, Group.name,StudentInGroup.stimes,StudentInGroup.ftimef, StudentInGroup.statusg )\
     .filter(StudentInGroup.group_id == Group.id)
     #.paginate(page, 1, False)
 
+    print(stu_in_group_list[0])
     form = AddStuGroupForm()
     
-    if form.validate_on_submit():
-        stimes = date.today()
-        ftimef = ''#form.ftimef.data
-        student_emails = form.student_emails.data
-        group_id = form.group_id.data
-        statusg = form.statusg.data
-        
-        new_studentingroup = StudentInGroup(stimes,ftimef,student_emails,group_id,statusg)
-        db.session.add(new_studentingroup)
-        db.session.commit()
-        print('added')
+    if form.is_submitted():
+        form.group_id.data = int(form.group_id.data)
+        if form.validate():
+            stimes = date.today()
+            ftimef = ''#form.ftimef.data
+            student_emails = form.student_emails.data
+            group_id = form.group_id.data
+            statusg = form.statusg.data
             
-        return redirect(url_for('student_in_group'))
+            new_studentingroup = StudentInGroup(stimes,ftimef,student_emails,group_id,statusg)
+            db.session.add(new_studentingroup)
+            db.session.commit()
+            print('added')
+                
+            return redirect(url_for('student_in_group'))
 
     return render_template('student_in_group.html',form=form,stu_in_group_list=stu_in_group_list)
 
@@ -344,12 +365,18 @@ def student_in_group():
 def list_stu_in_group():
     # Grab a list of students from database.
     stu_in_group_list = StudentInGroup.query.all()
-    return render_template('list_stu_in_group.html',stu_in_group_list=stu_in_group_list)
+    searchstu_in_group_list = StudentInGroup.query.join(Group, StudentInGroup.group_id==Group.id)\
+    .add_columns(StudentInGroup.group_id, StudentInGroup.student_emails, StudentInGroup.statusg, Group.id, Group.name,StudentInGroup.stimes,StudentInGroup.ftimef, StudentInGroup.statusg )\
+    .filter(StudentInGroup.group_id == Group.id)
+    return render_template('list_stu_in_group.html',stu_in_group_list=stu_in_group_list,searchstu_in_group_list=searchstu_in_group_list)
 
 
 @app.route('/edit_stuingroup/<int:id>', methods=['GET', 'POST'])
 def edit_stuingroup(id):
-    stu_in_group_list = StudentInGroup.query.all()
+    stu_in_group_list = StudentInGroup.query.join(Group, StudentInGroup.group_id==Group.id)\
+    .add_columns(StudentInGroup.group_id,StudentInGroup.student_emails,StudentInGroup.id, StudentInGroup.statusg, Group.id, Group.name,StudentInGroup.stimes,StudentInGroup.ftimef, StudentInGroup.statusg )\
+    .filter(StudentInGroup.group_id == Group.id)
+
     form = AddStuGroupForm()
     line_to_update = StudentInGroup.query.get_or_404(id)
     if request.method == "POST":
@@ -398,11 +425,13 @@ def search_volunteer():
         form = request.form
         search_value = form['vol_string']
         search = "%{0}%".format(search_value)
-        results = Volunteers.query.filter(or_(Volunteers.FnameV.like(search),
+        results = (Volunteers.query.join(VolunteersInPoss, Volunteers.IDV==VolunteersInPoss.IDV, isouter=True).join(Poss, VolunteersInPoss.IDP==Poss.IDP,isouter=True)\
+    .add_columns(VolunteersInPoss.IDP, Poss.PossName, VolunteersInPoss.TimeS, Volunteers.IDV, Volunteers.FnameV, Volunteers.SnameV,Volunteers.StatusV)).filter(or_(Volunteers.FnameV.like(search),
                                             Volunteers.SnameV.like(search),
+                                            Poss.PossName.like(search),
                                             Volunteers.IDV.like(search),
                                             Volunteers.CityV.like(search))).all()
-        return render_template('list_volunteers.html',volunteers_list=results,legend="Search Results")
+        return render_template('list_volunteers.html',volunteers_poss_list2=results,legend="Search Results")
     else:
         return redirect('/')
 
@@ -487,7 +516,19 @@ def add_volunteer():
 def list_volunteers():
     # Grab a list of Volunteers from database.
     volunteers_list = Volunteers.query.all()
-    return render_template('list_volunteers.html',volunteers_list=volunteers_list)
+
+    volunteers_poss_list2 = Volunteers.query.join(VolunteersInPoss, Volunteers.IDV==VolunteersInPoss.IDV, isouter=True).join(Poss, VolunteersInPoss.IDP==Poss.IDP,isouter=True)\
+    .add_columns(VolunteersInPoss.IDP, Poss.PossName, VolunteersInPoss.TimeS, Volunteers.IDV, Volunteers.FnameV, Volunteers.SnameV,Volunteers.StatusV)\
+    # .filter(Volunteers.IDV==VolunteersInPoss.IDV)
+
+    #volunteers_poss_list = VolunteersInPoss.query.join(Volunteers, VolunteersInPoss.IDV==Volunteers.IDV).join(Poss, VolunteersInPoss.IDP==Poss.IDP)\
+    #.add_columns(VolunteersInPoss.IDP, Poss.PossName, VolunteersInPoss.TimeS, Volunteers.IDV, Volunteers.FnameV, Volunteers.SnameV,Volunteers.StatusV)\
+    #.filter(VolunteersInPoss.IDV==Volunteers.IDV,VolunteersInPoss.IDP==Poss.IDP)
+
+    searchvol_in_group_list = VolunteersInGroups.query.join(Group, VolunteersInGroups.IDG==Group.id).join(Volunteers, VolunteersInGroups.IDV==Volunteers.IDV).join(VolunteersInPoss, VolunteersInGroups.IDV==VolunteersInPoss.IDV)\
+    .add_columns(VolunteersInGroups.IDG, VolunteersInGroups.IDV, VolunteersInGroups.statusV, Group.id, Group.name,VolunteersInGroups.TimeS,VolunteersInGroups.TimeF,Volunteers.IDV,Volunteers.FnameV,Volunteers.SnameV,Volunteers.PronounsV,Volunteers.DateAdded,Volunteers.StatusV,VolunteersInPoss.IDP )\
+    .filter(VolunteersInGroups.IDG == Group.id,VolunteersInGroups.IDV==Volunteers.IDV)
+    return render_template('list_volunteers.html',volunteers_list=volunteers_list,searchvol_in_group_list=searchvol_in_group_list,volunteers_poss_list2=volunteers_poss_list2)
 
 @app.route('/add_poss', methods=['GET', 'POST'])
 def add_poss():
@@ -516,31 +557,44 @@ def list_poss():
     poss = Poss.query.all()
     return render_template('list_poss.html',poss=poss)
 
+
+
+
+    
+   
+
+
+
 @app.route('/volunteer_in_group', methods=['GET', 'POST'])
 def volunteer_in_group():
 
     volunteer_in_group = VolunteersInGroups.query.all()
     group = Group.query.all()
     volunteers_list = Volunteers.query.all()
-
+    
+    vol_in_group_list = VolunteersInGroups.query.join(Group, VolunteersInGroups.IDG==Group.id).join(Volunteers, VolunteersInGroups.IDV==Volunteers.IDV)\
+    .add_columns(VolunteersInGroups.IDG, VolunteersInGroups.IDV, VolunteersInGroups.statusV, Group.id, Group.name,VolunteersInGroups.TimeS,VolunteersInGroups.TimeF,Volunteers.IDV,Volunteers.FnameV,Volunteers.SnameV,Volunteers.PronounsV,Volunteers.DateAdded,Volunteers.StatusV )\
+    .filter(VolunteersInGroups.IDG == Group.id,VolunteersInGroups.IDV==Volunteers.IDV)
+    #.paginate(page, 1, False)
 
     form = VolunteersInGroupsForm()
 
-    if form.validate_on_submit():
-        
-        IDV = form.IDV.data
-        IDG = form.IDG.data
-        TimeS = date.today()
-        TimeF = form.TimeF.data
-        statusV = form.statusV.data
-        # Add new "Volunteers In Groups" to database
-        new_volunteer_in_groups = VolunteersInGroups(IDV,IDG,TimeS,TimeF,statusV)
-        db.session.add(new_volunteer_in_groups)
-        db.session.commit()
+    if form.is_submitted():
+        form.IDG.data = int(form.IDG.data)
+        if form.validate():        
+            IDV = form.IDV.data
+            IDG = form.IDG.data
+            TimeS = date.today()
+            TimeF = form.TimeF.data
+            statusV = form.statusV.data
+            # Add new "Volunteers In Groups" to database
+            new_volunteer_in_groups = VolunteersInGroups(IDV,IDG,TimeS,TimeF,statusV)
+            db.session.add(new_volunteer_in_groups)
+            db.session.commit()
 
-        return redirect(url_for('volunteer_in_group'))
+            return redirect(url_for('volunteer_in_group'))
         
-    return render_template('volunteer_in_group.html',form=form,volunteer_in_group=volunteer_in_group,group=group,volunteers_list=volunteers_list)
+    return render_template('volunteer_in_group.html',form=form,volunteer_in_group=volunteer_in_group,group=group,volunteers_list=volunteers_list,vol_in_group_list=vol_in_group_list)
 
 
 
@@ -548,7 +602,10 @@ def volunteer_in_group():
 def list_vol_in_group():
     # Grab a list of students from database.
     vol_in_group_list = VolunteersInGroups.query.all()
-    return render_template('list_vol_in_group.html',vol_in_group_list=vol_in_group_list)
+    searchvol_in_group_list = VolunteersInGroups.query.join(Group, VolunteersInGroups.IDG==Group.id).join(Volunteers, VolunteersInGroups.IDV==Volunteers.IDV).join(VolunteersInPoss, VolunteersInGroups.IDV==VolunteersInPoss.IDV)\
+    .add_columns(VolunteersInGroups.IDG, VolunteersInGroups.IDV, VolunteersInGroups.statusV, Group.id, Group.name,VolunteersInGroups.TimeS,VolunteersInGroups.TimeF,Volunteers.IDV,Volunteers.FnameV,Volunteers.SnameV,Volunteers.PronounsV,Volunteers.DateAdded,Volunteers.StatusV,VolunteersInPoss.IDP )\
+    .filter(VolunteersInGroups.IDG == Group.id,VolunteersInGroups.IDV==Volunteers.IDV)
+    return render_template('list_vol_in_group.html',vol_in_group_list=vol_in_group_list,searchvol_in_group_list=searchvol_in_group_list)
 
 
 
@@ -586,16 +643,19 @@ def volunteers_in_poss():
     volunteers_list = Volunteers.query.all()
 
     form = VolunteersInPossForm()
-    if form.validate_on_submit():
-        IDV = form.IDV.data
-        IDP = form.IDP.data
-        TimeS = date.today()
-        #TimeF = ''#form.TimeF.data
-       
 
-        new_volunteers_in_poss = VolunteersInPoss(IDV,IDP,TimeS)
-        db.session.add(new_volunteers_in_poss)
-        db.session.commit()
+    if form.is_submitted():
+        form.IDP.data = int(form.IDP.data)
+        if form.validate():
+            IDV = form.IDV.data
+            IDP = form.IDP.data
+            TimeS = date.today()
+            #TimeF = ''#form.TimeF.data
+        
+
+            new_volunteers_in_poss = VolunteersInPoss(IDV,IDP,TimeS)
+            db.session.add(new_volunteers_in_poss)
+            db.session.commit()
             
         return redirect(url_for('volunteers_in_poss'))
 
