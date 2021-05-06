@@ -181,13 +181,16 @@ def search_volingroup():
 
 @app.route('/search_stuingroup', methods=['GET', 'POST'])
 def search_stuingroup():
+    stu_in_group_list2 = StudentInGroup.query.join(Group, StudentInGroup.group_id==Group.id)\
+    .add_columns(StudentInGroup.group_id, StudentInGroup.student_emails, StudentInGroup.statusg, Group.id, Group.name,StudentInGroup.stimes,StudentInGroup.ftimef, StudentInGroup.statusg )\
+    .filter(StudentInGroup.group_id == Group.id)
     if request.method =='POST':
         form1 = request.form
         search_value = form1['vol_string']
         search = "%{0}%".format(search_value)
         results = StudentInGroup.query.filter(or_(StudentInGroup.student_emails.like(search),
                                             StudentInGroup.statusg.like(search))).all()
-        return render_template('list_stu_in_group.html',stu_in_group_list=results,legend="Search Results")
+        return render_template('list_stu_in_group.html',stu_in_group_list2=stu_in_group_list2,stu_in_group_list=results,legend="Search Results")
     else:
         return redirect('/')
 
@@ -314,9 +317,13 @@ def add_age_group():
     
 @app.route('/student_in_group', methods=['GET', 'POST'])
 def student_in_group():
-    stu_in_group_list = StudentInGroup.query.all()
-    form = AddStuGroupForm()
+    stu_in_group_list = StudentInGroup.query.join(Group, StudentInGroup.group_id==Group.id)\
+    .add_columns(StudentInGroup.group_id, StudentInGroup.student_emails, StudentInGroup.statusg, Group.id, Group.name,StudentInGroup.stimes,StudentInGroup.ftimef, StudentInGroup.statusg )\
+    .filter(StudentInGroup.group_id == Group.id)
+    #.paginate(page, 1, False)
 
+    form = AddStuGroupForm()
+    
     if form.validate_on_submit():
         stimes = date.today()
         ftimef = ''#form.ftimef.data
@@ -327,6 +334,7 @@ def student_in_group():
         new_studentingroup = StudentInGroup(stimes,ftimef,student_emails,group_id,statusg)
         db.session.add(new_studentingroup)
         db.session.commit()
+        print('added')
             
         return redirect(url_for('student_in_group'))
 

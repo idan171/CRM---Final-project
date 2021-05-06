@@ -283,7 +283,7 @@ class StudentInGroup(db.Model):
     __tablename__ = 'studentsingroups'
 
     id = db.Column(db.Integer,primary_key= True)
-    student_emails = db.Column(db.String(10),db.ForeignKey('students.emails'))
+    student_emails = db.Column(db.String(64),db.ForeignKey('students.emails'))
     group_id = db.Column(db.Integer,db.ForeignKey('groups.id'))
     stimes = db.Column(db.Text)
     ftimef = db.Column(db.Text)
@@ -332,7 +332,7 @@ class Meetings(db.Model):
 class StudentsInMeeting(db.Model):
     id = db.Column(db.Integer,primary_key= True)
     IDM = db.Column(db.Integer,db.ForeignKey('meetings.IDM'))
-    EmailS = db.Column(db.String(10),db.ForeignKey('students.emails'))
+    EmailS = db.Column(db.String(64),db.ForeignKey('students.emails'))
     Attendance = db.Column(db.Text)
 
     def __init__(self,IDM,EmailS,Attendance):

@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, SelectField, IntegerField, RadioField, FileField
 from wtforms.validators import DataRequired,Email,EqualTo
 from wtforms import ValidationError
-from myproject.models import User
+from myproject.models import User, Group
 
 #classes for login and register process:
 class LoginForm(FlaskForm):
@@ -76,7 +76,10 @@ class DelGroupForm(FlaskForm):
 
 class AddStuGroupForm(FlaskForm):
 
-    group_id = SelectField('קבוצה:', choices = [('1','תל אביב(ז׳-ט׳)'), ('2','גבעתיים(ז׳-ט׳)'),('3','רחובות(י׳-י״ב)')])
+    group_list = list(Group.query.all())
+    groups = [(g.id, g.name) for g in group_list]
+
+    group_id = SelectField('קבוצה:', choices = groups)
     student_emails = StringField("Email of Student: ")
     statusg = SelectField('סטטוס פעילות בקבוצה:', choices = [('פעיל','פעיל'),('לא פעיל','לא פעיל')])
     # stimes = StringField('start time')
@@ -107,8 +110,11 @@ class AddVolunteerForm(FlaskForm):
     submit = SubmitField('Send')
 
 class VolunteersInGroupsForm(FlaskForm):
+    group_list = list(Group.query.all())
+    groups = [(g.id, g.name) for g in group_list]
+
     IDV = StringField('ID Of Volunteer:')
-    IDG = SelectField('קבוצה:', choices = [('1','תל אביב(ז׳-ט׳)'), ('2','גבעתיים(ז׳-ט׳)'),('3','רחובות(י׳-י״ב)')])
+    IDG = SelectField('קבוצה:', choices = groups)
     emailc = StringField("אימייל: ")
     #TimeS = StringField('Current Date:')
     TimeF = StringField('Current Date:')
