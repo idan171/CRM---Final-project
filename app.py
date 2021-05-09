@@ -105,7 +105,7 @@ def add_stu():
         # Add new Student to database
         db.session.add(new_stu)
         db.session.commit()
-        return redirect(url_for('list_stu'))
+        return redirect(url_for('student_in_group'))
 
     return render_template('add.html',form=form)
 
@@ -227,7 +227,7 @@ def edit_volunteer(IDV):
         vol_to_update.AdressV = request.form['AdressV']
         vol_to_update.NutritionV = request.form['NutritionV']
         vol_to_update.PhoneNumV = request.form['PhoneNumV']
-
+        vol_to_update.StatusV = request.form['StatusV']
         try:
             db.session.commit()
             flash("Volunteer Updated Successfully!")
@@ -264,21 +264,23 @@ def add_group():
 def new_condidate():
     form = NewCondidateForm()
 
-    if form.validate_on_submit():
-        group_id = form.group_id.data
-        emailc = form.emailc.data
-        pronounc = form.pronounc.data
-        phonenumc = form.phonenumc.data
-        stimes = date.today()
+    if form.is_submitted():
+        form.group_id.data = int(form.group_id.data)
+        if form.validate():
+            group_id = form.group_id.data
+            emailc = form.emailc.data
+            pronounc = form.pronounc.data
+            phonenumc = form.phonenumc.data
+            stimes = date.today()
 
-        # Add new group to database
-        new_con = Condidate(group_id,emailc,pronounc,phonenumc,stimes)
+            # Add new group to database
+            new_con = Condidate(group_id,emailc,pronounc,phonenumc,stimes)
 
-        db.session.add(new_con)
+            db.session.add(new_con)
 
-        db.session.commit()
-        
-        return redirect(url_for('Thank_you'))
+            db.session.commit()
+            
+            return redirect(url_for('Thank_you'))
     return render_template('new_condidate.html',form=form)
 
 @app.route('/condidate_mang', methods=['GET', 'POST'])
@@ -286,24 +288,28 @@ def condidate_mang():
     condidates_list = Condidate.query.all()
     form = NewCondidateForm()
 
-    if form.validate_on_submit():
-        group_id = form.group_id.data
-        emailc = form.emailc.data
-        stimes = date.today()
+    if form.is_submitted():
+        form.group_id.data = int(form.group_id.data)
+        if form.validate():
+            group_id = form.group_id.data
+            emailc = form.emailc.data
+            pronounc = form.pronounc.data
+            phonenumc = form.phonenumc.data
+            stimes = date.today()
 
-        #group_id_3 = Group.query.filter_by(id =form.group_id.data).all()
-        #print(group_id_3)
-        #print(group_id)
+            #group_id_3 = Group.query.filter_by(id =form.group_id.data).all()
+            #print(group_id_3)
+            #print(group_id)
 
-        # Add new group to database
-        new_con = Condidate(group_id,emailc,stimes)
+            # Add new group to database
+            new_con = Condidate(group_id,emailc,stimes,pronounc,phonenumc)
 
-        db.session.add(new_con)
+            db.session.add(new_con)
 
-        db.session.commit()
+            db.session.commit()
 
 
-        return redirect(url_for('list_condidate'))
+            return redirect(url_for('list_condidate'))
     return render_template('condidate_mang.html',form=form,condidates_list=condidates_list)
 
 #read with filter:  students = Student.query.filter_by(citys = 'Ramat Gan').all()
@@ -335,12 +341,13 @@ def add_age_group():
     
 @app.route('/student_in_group', methods=['GET', 'POST'])
 def student_in_group():
+    groups = Group.query.all()
+
     stu_in_group_list = StudentInGroup.query.join(Group, StudentInGroup.group_id==Group.id)\
     .add_columns(StudentInGroup.group_id,StudentInGroup.student_emails,StudentInGroup.id, StudentInGroup.statusg, Group.id, Group.name,StudentInGroup.stimes,StudentInGroup.ftimef, StudentInGroup.statusg )\
     .filter(StudentInGroup.group_id == Group.id)
     #.paginate(page, 1, False)
 
-    print(stu_in_group_list[0])
     form = AddStuGroupForm()
     
     if form.is_submitted():
@@ -359,7 +366,7 @@ def student_in_group():
                 
             return redirect(url_for('student_in_group'))
 
-    return render_template('student_in_group.html',form=form,stu_in_group_list=stu_in_group_list)
+    return render_template('student_in_group.html',form=form,stu_in_group_list=stu_in_group_list,groups=groups)
 
 @app.route('/list_stu_in_group')
 def list_stu_in_group():
@@ -613,6 +620,9 @@ def list_vol_in_group():
 def volunteer_documents():
     Dname = VolunteerDocuments.query.all()
     volunteers_list = Volunteers.query.all()
+    volunteer_and_doc = Volunteers.query.join(VolunteerDocuments, Volunteers.IDV==VolunteerDocuments.IDV, isouter=True)\
+    .add_columns(Volunteers.IDV, Volunteers.FnameV, Volunteers.SnameV, Volunteers.StatusV, VolunteerDocuments.Dname,VolunteerDocuments.Document,VolunteerDocuments.DateAdded)\
+    #.filter(Volunteers.IDV == VolunteerDocuments.IDV,VolunteersInGroups.IDV==Volunteers.IDV)
 
     form = VolunteerDocumentsForm()
     if form.validate_on_submit():
@@ -633,7 +643,25 @@ def volunteer_documents():
         
         return redirect(url_for('volunteer_documents'))
         
-    return render_template('volunteer_documents.html',form=form,Dname=Dname,volunteers_list=volunteers_list)
+    return render_template('volunteer_documents.html',form=form,Dname=Dname,volunteers_list=volunteers_list,volunteer_and_doc=volunteer_and_doc)
+
+
+@app.route('/search_doc', methods=['GET', 'POST'])
+def search_doc():
+    if request.method =='POST':
+        form3 = request.form2
+        search_value = form3['doc_string']
+        search = "%{0}%".format(search_value)
+        results = Volunteers.query.join(VolunteerDocuments, Volunteers.IDV==VolunteerDocuments.IDV, isouter=True)\
+    .add_columns(Volunteers.IDV, Volunteers.FnameV, Volunteers.SnameV, Volunteers.StatusV, VolunteerDocuments.Dname,VolunteerDocuments.Document,VolunteerDocuments.DateAdded).filter(or_(VolunteerDocuments.Dname.like(search),
+                                                        Volunteers.IDV.like(search))).all()
+                                                       
+        return render_template('volunteer_documents.html',volunteer_and_doc=results,legend="Search Results")
+    else:
+        return redirect('/')
+
+
+
 
 @app.route('/volunteers_in_poss', methods=['GET', 'POST'])
 def volunteers_in_poss():
@@ -641,7 +669,7 @@ def volunteers_in_poss():
     volunteers_in_poss = VolunteersInPoss.query.all()
     poss_list = Poss.query.all()
     volunteers_list = Volunteers.query.all()
-
+   
     form = VolunteersInPossForm()
 
     if form.is_submitted():
@@ -661,32 +689,45 @@ def volunteers_in_poss():
 
     return render_template('volunteers_in_poss.html',form=form,volunteers_in_poss=volunteers_in_poss,poss_list=poss_list,volunteers_list=volunteers_list)
 
-@app.route('/meetings', methods=['GET', 'POST'])
-def meetings():
 
-    group = Group.query.all()
-    meetings = Meetings.query.all()
+
+@app.route('/addmeetings', methods=['GET', 'POST'])
+def addmeetings():
+
+    meetings2 = Meetings.query.all()
 
     form = MeetingsForm()
 
-    if form.validate_on_submit():
-        Mdate = form.Mdate.data
-        Mtime = form.Mtime.data
-        IDG = form.IDG.data
-        Occurence = form.Occurence.data
-        Platform = form.Platform.data
-        Rate = form.Rate.data
-        Pros = form.Pros.data
-        Cons = form.Cons.data
-        DateAdded = date.today()       
+    if form.is_submitted():
+        form.IDG.data = int(form.IDG.data)
+        if form.validate():
+            new_meeting = Meetings(Mdate = form.Mdate.data,
+            Mtime = form.Mtime.data,
+            IDG = form.IDG.data,
+            Occurence = form.Occurence.data,
+            Platform = form.Platform.data,
+            Rate = form.Rate.data,
+            Pros = form.Pros.data,
+            Cons = form.Cons.data,
+            DateAdded = date.today())
 
-        new_meetings = Meetings(Mdate,Mtime,IDG,Occurence,Platform,Rate,Pros,Cons,DateAdded)
-        db.session.add(new_meetings)
-        db.session.commit()
-            
-        return redirect(url_for('meetings'))
 
-    return render_template('meetings.html',form=form,group=group,meetings=meetings)
+            # Add new Student to database
+            db.session.add(new_meeting)
+            db.session.commit()
+            return redirect(url_for('meetings_file'))
+
+    return render_template('meetings.html',form=form,meetings2=meetings2)
+
+
+
+
+
+
+
+
+
+
 
 @app.route('/meetings_file',methods=['GET', 'POST'])
 def meetings_file():

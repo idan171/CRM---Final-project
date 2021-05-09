@@ -16,10 +16,15 @@
   </form>
 
 </br>
-</br>
-</div>
 
-<div class="container">
+<form method ="POST">
+  <input type="text" autofocus="autofocus" name="doc_string">
+  <input type="submit" formaction="/search_doc" value="Search / Return">
+
+</form>
+
+</br>
+
 
 <table class="table table-striped table-primary">
   <thead>
@@ -28,14 +33,13 @@
       <th scope="col">ID</th>
       <th scope="col">First Name</th>
       <th scope="col">Last Name</th>
-      <th scope="col">Police Certificate</th>
-      <th scope="col">ID Document</th>
-
+      <th scope="col">Document Name</th>
+      <th scope="col">Document Name2</th>
 
     </tr>
   </thead>
   <tbody>
-    {% for V in volunteers_list  %}
+    {% for V in volunteer_and_doc  %}
 
     <tr>
       <th scope="row"><ol></ol></th>
@@ -49,30 +53,17 @@
       <td>
         {{V.SnameV}}
       </td>
-
+      <td>
+        {{V.Dname}}
+      </td>
+      <td>
+        {{V.DateAdded}}
+      </td>
     </tr>
     {% endfor %}
 
   </tbody>
-</table>
 
 
 </div>
-<table>
-  <tr>
-    <td>
-      <div class="jumbotron">
-        <h2>  רשימת מסמכים  </h2>
-        <ul>
-          {% for d in Dname  %}
-          <li>{{d}}</li>
-          {% endfor %}
-        </ul>
-      
-      </div>
-    </td>
-  </tr>
-</table>
-
-
 {% endblock %}

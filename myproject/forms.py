@@ -84,12 +84,15 @@ class AddStuGroupForm(FlaskForm):
     statusg = SelectField('סטטוס פעילות בקבוצה:', choices = [('פעיל','פעיל'),('לא פעיל','לא פעיל')])
     # stimes = StringField('start time')
     # ftimef = StringField('finish time')
-    submit = SubmitField('Add himm')
+    submit = SubmitField('Add him')
 
 class NewCondidateForm(FlaskForm):
 #לשנות לסלקט ולא לסטרינג ולדאוג שהמשתמש יבחר קבוצה ויוזן איי די.
     #group_id = StringField('ID of Group that you want to assign')
-    group_id = SelectField('קבוצה:', choices = [('1','תל אביב(ז׳-ט׳)'), ('2','גבעתיים(ז׳-ט׳)'),('3','רחובות(י׳-י״ב)')])
+    group_list = list(Group.query.all())
+    groups = [(int(g.id), g.name) for g in group_list]
+
+    group_id = SelectField('קבוצה:', choices = groups)
     emailc = StringField("אימייל: ")
     pronounc = SelectField('לשון פניה', choices = [('בחר/י מתוך הרשימה', 'בחר/י מתוך הרשימה'),('את', 'את'), ('אתה', 'אתה'), ('מעורבת', 'מעורבת')])
     phonenumc = StringField('מספר טלפון:')
@@ -106,7 +109,7 @@ class AddVolunteerForm(FlaskForm):
     AdressV = StringField('Address:')
     NutritionV = SelectField('Nutrition', choices = [('בחר/י מתוך הרשימה', 'בחר/י מתוך הרשימה'),('צמחוני', 'צמחוני'), ('טבעוני', 'טבעוני'), ('אוכל כל', 'אוכל כל')])
     PhoneNumV = StringField('Phone Number:')
-    StatusV = SelectField('Nutrition', choices = [('בחר/י מתוך הרשימה', 'בחר/י מתוך הרשימה'),('פעיל', 'פעיל'), ('לא פעיל', 'לא פעיל'), ('הודח ', 'הודח  ')])
+    StatusV = SelectField('Status', choices = [('בחר/י מתוך הרשימה', 'בחר/י מתוך הרשימה'),('פעיל', 'פעיל'), ('לא פעיל', 'לא פעיל'), ('הודח ', 'הודח  ')])
     submit = SubmitField('Send')
 
 class VolunteersInGroupsForm(FlaskForm):
@@ -148,9 +151,12 @@ class AddPossForm(FlaskForm):
     submit = SubmitField('Add Poss')
     
 class MeetingsForm(FlaskForm):
+    group_list = list(Group.query.all())
+    groups = [(int(g.id), g.name) for g in group_list]
+
+    IDG = SelectField('קבוצה:', choices = groups)
     Mdate = StringField('תאריך:')
-    Mtime = StringField('שעה:')
-    IDG = StringField('ID of Group')
+    Mtime = StringField('שעת התחלת המפגש:')
     Occurence = SelectField('סטטס פגישה?', choices = [('1','ממתין'),('2','בוטל'),('3','בוצע')])
     Platform = SelectField('סוג פגישה:', choices = [('1','פרונטאלי'),('2','מקוון')])
     Rate = SelectField('דרוג:', choices = [('1','1'),('2','2'),('3','3'),('4','4'),('5','5')])
