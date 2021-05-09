@@ -29,7 +29,6 @@
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="{{ url_for('student_in_group') }}">Asign Student to Group</a>
           <a class="dropdown-item" href="{{ url_for('list_stu_in_group') }}">Search Student in Group</a>
-          <a class="dropdown-item" href="{{ url_for('delete_student_gru1') }}">Delete Student from Group</a>
 
 
         </div>
@@ -71,16 +70,16 @@
     Meetings
   </a>
   <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-    <a class="dropdown-item" href="{{ url_for('meetings') }}">Meetings</a>
+    <a class="dropdown-item" href="{{ url_for('addmeetings') }}">Add Meeting</a>
     <a class="dropdown-item" href="{{ url_for('meetings_file') }}">Meetings File</a>
     <a class="dropdown-item" href="{{ url_for('students_in_meeting') }}">Students In Meeting</a>
 
   </div>
 </li>
-
       <a class="nav-item nav-link" href="{{ url_for('condidate_mang') }}">Condidates</a>
+      <a href="{{ url_for('logout') }}" ustify-content-center class="btn btn-outline-info" role="button" >Management Dashbord</a> 
       <a href="{{ url_for('logout') }}" ustify-content-center class="btn btn-warning" role="button" >Log Out</a> 
-       
+
     {% else %}
       <li class="nav-link"><a href="{{ url_for('login') }}">Log In</a></li>
       <li class="nav-link"><a href="{{ url_for('register') }}">Sign up</a></li>

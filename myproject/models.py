@@ -307,7 +307,7 @@ class Meetings(db.Model):
     IDG = db.Column(db.Integer,db.ForeignKey('groups.id'))
     Occurence = db.Column(db.Text) 
     Platform = db.Column(db.Text)
-    Rate = db.Column(db.Text)
+    Rate = db.Column(db.Integer)
     Pros = db.Column(db.String(500))
     Cons = db.Column(db.String(500))
     DateAdded = db.Column(db.Text)
@@ -325,9 +325,6 @@ class Meetings(db.Model):
         self.Pros = Pros
         self.Cons = Cons
         self.DateAdded = DateAdded
-
-    def __repr__(self):
-        return f"ID Meeting: {self.IDM}, ID Group {self.IDG} "
 
 class StudentsInMeeting(db.Model):
     id = db.Column(db.Integer,primary_key= True)
