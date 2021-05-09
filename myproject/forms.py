@@ -32,23 +32,23 @@ class RegistrationForm(FlaskForm):
 #classes for IGY process:
 
 class AddForm(FlaskForm):
-    emails = StringField('Email of Student:')
-    firstname = StringField('First Name of Student:')
-    lastname = StringField('Last Name of Student:')
-    dateofbirth = StringField('Date of Birth:')
-    pronouns = SelectField('Pronoun', choices = [('בחר/י מתוך הרשימה', 'בחר/י מתוך הרשימה'),('את', 'את'), ('אתה', 'אתה'), ('מעורבת', 'מעורבת')])
-    citys = StringField('City:')
-    addresss = StringField('Address:')
-    nutritions = SelectField('Nutrition', choices = [('בחר/י מתוך הרשימה', 'בחר/י מתוך הרשימה'),('צמחוני', 'צמחוני'), ('טבעוני', 'טבעוני'), ('אוכל כל', 'אוכל כל')])
-    phonenums = StringField('Phone Number:')
-    schoolname = StringField('Name of School:')
+    emails = StringField('דואר אלקטורני:')
+    firstname = StringField('שם פרטי:')
+    lastname = StringField('שם משפחה:')
+    dateofbirth = StringField('תאריך לידה:')
+    pronouns = SelectField('לשון פניה', choices = [('בחר/י מתוך הרשימה', 'בחר/י מתוך הרשימה'),('את', 'את'), ('אתה', 'אתה'), ('מעורבת', 'מעורבת')])
+    citys = StringField('עיר מגורים:')
+    addresss = StringField('כתובת מגורים:')
+    nutritions = SelectField('תזונה', choices = [('בחר/י מתוך הרשימה', 'בחר/י מתוך הרשימה'),('צמחוני', 'צמחוני'), ('טבעוני', 'טבעוני'), ('אוכל כל', 'אוכל כל')])
+    phonenums = StringField('מספר טלפון נייד:')
+    schoolname = StringField('שם בית הספר:')
     dateaddeds = StringField('Current Date:')
-    statuss = StringField('My statuss:')
-    parents = StringField('Family Relationship:')
-    details = StringField('Introductory Meeting Summary:')
+    statuss = StringField('סטטוס פעילות:')
+    parents = StringField('יחסים עם המשפחה:')
+    details = StringField('פרטים נוספים:')
 
 
-    submit = SubmitField('Add Student')
+    submit = SubmitField('הוספת חניכ.ה')
 
 class AddGroupForm(FlaskForm):
 
@@ -66,8 +66,8 @@ class AddAgeGroupForm(FlaskForm):
 
 class DelForm(FlaskForm):
 
-    student_emails = StringField('Email of Students to Remove:')
-    submit = SubmitField('Remove Students')
+    student_emails = StringField('דוא״ל להסרה:')
+    submit = SubmitField('הסרה')
 
 class DelGroupForm(FlaskForm):
 
@@ -80,11 +80,11 @@ class AddStuGroupForm(FlaskForm):
     groups = [(int(g.id), g.name) for g in group_list]
 
     group_id = SelectField('קבוצה:', choices = groups)
-    student_emails = StringField("Email of Student: ")
+    student_emails = StringField("דואר אלקטרוני: ")
     statusg = SelectField('סטטוס פעילות בקבוצה:', choices = [('פעיל','פעיל'),('לא פעיל','לא פעיל')])
     # stimes = StringField('start time')
     # ftimef = StringField('finish time')
-    submit = SubmitField('Add him')
+    submit = SubmitField('הוספה')
 
 class NewCondidateForm(FlaskForm):
 #לשנות לסלקט ולא לסטרינג ולדאוג שהמשתמש יבחר קבוצה ויוזן איי די.

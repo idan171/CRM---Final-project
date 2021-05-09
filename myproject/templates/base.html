@@ -19,16 +19,16 @@
     {% if current_user.is_authenticated %}
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Students
+          חניכימ.ות
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="{{ url_for('add_stu') }}">Add Student</a>
-          <a class="dropdown-item" href="{{ url_for('list_stu') }}">List of Student & Edit</a>
-          <a class="dropdown-item" href="{{ url_for('del_stu') }}">Delete Student</a>
+          <a class="dropdown-item" href="{{ url_for('add_stu') }}">פתיחת תיק חניכ.ה</a>
+          <a class="dropdown-item" href="{{ url_for('list_stu') }}">רשימת חניכימ.ות</a>
+          <a class="dropdown-item" href="{{ url_for('del_stu') }}">מחיקת תיק חניכ.ה</a>
 
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="{{ url_for('student_in_group') }}">Asign Student to Group</a>
-          <a class="dropdown-item" href="{{ url_for('list_stu_in_group') }}">Search Student in Group</a>
+          <a class="dropdown-item" href="{{ url_for('student_in_group') }}">שיוך חניכ.ה לקבוצה</a>
+          <a class="dropdown-item" href="{{ url_for('list_stu_in_group') }}">רשימת חניכימ.ות וקבוצות</a>
 
 
         </div>
