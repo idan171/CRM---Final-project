@@ -720,15 +720,6 @@ def addmeetings():
     return render_template('meetings.html',form=form,meetings2=meetings2)
 
 
-
-
-
-
-
-
-
-
-
 @app.route('/meetings_file',methods=['GET', 'POST'])
 def meetings_file():
 
@@ -779,6 +770,19 @@ def students_in_meeting():
     return render_template('students_in_meeting.html',form=form,meetings=meetings,students=students,students_in_meeting=students_in_meeting)
 
 
+@app.route('/management_dashbord')
+def management_dashbord():
+    guides = VolunteersInPoss.query.filter_by(IDP='1').count()
+    writers = VolunteersInPoss.query.filter_by(IDP='2').count()
+    educations = VolunteersInPoss.query.filter_by(IDP='3').count()
+    activation = VolunteersInPoss.query.filter_by(IDP='4').count()
+
+
+    return render_template('management_dashbord.html',guides=guides,writers=writers,educations=educations,activation=activation)
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
+
