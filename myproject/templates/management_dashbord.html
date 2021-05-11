@@ -7,8 +7,6 @@
 
   <body style=" direction: rtl; text-align: right;">
 
-
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.bundle.min.js'></script>
     <script>
       
         $(document).ready(function() {
@@ -16,16 +14,20 @@
             var myLineChart = new Chart(ctx, {
                 type: 'pie',
                 data: {
-                    labels: ["מדריכימ.ות", "ספרית הדרכה", "רכזי.ות חינוך", "רכזי.ות פעילות"],
+                    labels: ["מדריכימ.ות", "ספרית הדרכה", "רכזי.ות חינוך", "רכזי.ות פעילות","מועמדימ.ות לשיבוץ"],
                     datasets: [{
-                        data: [{{guides}}, {{writers}}, {{educations}}, {{activation}}],
-                        backgroundColor: ["rgba(255, 0, 0, 0.5)", "rgba(100, 255, 0, 0.5)", "rgba(200, 50, 255, 0.5)", "rgba(0, 100, 255, 0.5)"]
+                        data: [{{guides}}, {{writers}}, {{educations}}, {{activation}}, {{waiting}}],
+                        backgroundColor: ["rgba(255, 0, 0, 0.5)", "rgba(100, 255, 0, 0.5)", "rgba(200, 50, 255, 0.5)", "rgba(0, 100, 255, 0.5)", "rgba(256, 165, 100, 100)"],
+                        borderWidth: 1,
+                        borderColor:'#777',
+                        hoverBorderWidth:2,
+                        hoverBorderColor:'#000'
                     }]
                 },
                 options: {
                     title: {
                         display: true,
-                        text: ''
+                        text: 'פילוח מתנדבימ.ות'
                     }
                 }
             });
@@ -52,9 +54,62 @@
             </div>
         </div>
     </div>
+  </br>
+</br>
+</br>
 
+    <div class="container">
+      <canvas id="mychart"></canvas>
+    </div>
 
+    <script>
+      let mychart = document.getElementById('mychart').getContext('2d');
 
+      letbarChart = new Chart(mychart, {
+        type:'bar', //bar, horizontalBar, pie, line, doughnut, radar, polarArea
+        data:{
+          labels:['צפון', 'שרון', 'מרכז', 'שפלה', 'דרום', 'תחום טרנס', 'תחום דתיות', 'תחום אלואן', 'תכנית ניר'],
+          datasets: [{
+            data:[{{zafon}},{{sharon}},{{merkaz}},{{shfela}},{{darom}},{{trans}},{{datiot}},{{allwan}},{{nir}}],
+            label:'סה״כ חניכימ.ות לפי אזור',
+            backgroundColor:'#458af7',
+            fill: false,
+            borderWidth:1,
+            borderColor:'#777',
+            hoverBorderWidth:2,
+            hoverBorderColor:'#000'
+          }, {
+            data:[{{zafon2}},{{sharon2}},{{merkaz2}},{{shfela2}},{{darom2}},{{trans2}},{{datiot2}},{{allwan2}},{{nir2}}],
+            label:'חניכות לא פעילות',
+            backgroundColor:'#FF33AF',
+            fill: true,
+            borderWidth:1,
+            borderColor:'#777',
+            hoverBorderWidth:2,
+            hoverBorderColor:'#000'
+          },{
+            data:[{{zafon3}},{{sharon3}},{{merkaz3}},{{shfela3}},{{darom3}},{{trans3}},{{datiot3}},{{allwan3}},{{nir3}}],
+            label:'חניכות פעילות',
+            backgroundColor:'#33FFB5',
+            fill: true,
+            borderWidth:1,
+            borderColor:'#777',
+            hoverBorderWidth:2,
+            hoverBorderColor:'#000'
+            }]
+        
+        },
+        options: {
+                    title: {
+                        display: true,
+                        text: 'פילוח חניכימ.ות לפי איזורים ותחומים'
+            }
+          }
+        
+        
+      });
+
+    </script>
 </body>
 </br>
 

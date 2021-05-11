@@ -139,6 +139,7 @@ class VolunteersInPossForm(FlaskForm):
 
     IDV = StringField('ID Of Volunteer:')
     IDP = SelectField('תפקיד בארגון:', choices = posss )
+    Statusvp = SelectField('סטטוס פעילות בתפקיד:', choices = [('פעיל','פעיל'),('לא פעיל','לא פעיל')])
 
     submit = SubmitField(' שייך תפקיד למתנדב (:')
 

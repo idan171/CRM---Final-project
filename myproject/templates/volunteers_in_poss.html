@@ -10,21 +10,64 @@
       {{ form.IDV.label }} {{ form.IDV() }}
         </br>
       {{ form.IDP.label }} {{ form.IDP() }}
-  
+         </br>
+      {{ form.Statusvp.label }} {{ form.Statusvp() }}
+    </br>
+
       {{ form.submit() }}
   </form>
 </div>
 <div class="jumbotron">
-<h2> רשימת מתנדבים מקושרים - נדרש להציג את כל מי שלא מקושר!</h2>
-  <ul>
-    {% for v in volunteers_in_poss  %}
-    <li>{{v}}</li>
-    {% endfor %}
-  </ul>
-                          
+<h2> רשימת המתנה, מתנדבים שעברו תהליך מיונים וטרם שובצו בתפקיד:</h2>  
+
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">תעודת זהות</th>
+        <th scope="col">שם פרטי</th>
+        <th scope="col">שם משפחה</th>
+        <th scope="col">לשון פניה</th>
+        <th scope="col">מספר טלפון נייד</th>
+        <th scope="col">מועד מעבר מיונים</th>
+
+      </tr>
+    </thead>
+</br>
+
+    <tbody>
+      {% for v in volunteers_poss_list2  %}
+      <tr>
+        <th scope="row"><ol></ol></th>
+        <td> 
+          {{v.IDV}}
+         </td>
+        <td> 
+         {{v.FnameV}}
+        </td>
+        <td>
+        {{v.SnameV}}
+        </td>
+        <td>
+          {{v.PronounsV}}
+        </td>
+        <td>
+          {{v.PhoneNumV}}
+        </td>
+        <td>
+          {{v.DateAdded}}
+        </td>
+      </tr>
+      {% endfor %}
+
+    </tbody>
+  </table>
+
+
+
+
 </div>
 </td>
-
 
 
 

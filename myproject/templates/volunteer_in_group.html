@@ -18,6 +18,57 @@
 </br>
 </br>
 <h6>לעריכה, לחץ על פרטי החניך:</h6>
+</br>
+<h7>מדריכימ.ות שטרם שובצו לקבוצה:</h7>
+
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">ID OF Guid</th>
+      <th scope="col">First Name</th>
+      <th scope="col">Last Name</th>
+      <th scope="col">City Address</th>
+      <th scope="col">Number</th>
+
+    </tr>
+  </thead>
+</br>
+
+<tbody>
+  {% for G in vol_in_group_list2  %}
+  <tr>
+    <th scope="row"><ol></ol></th>
+    <td> 
+      {{G.IDV}}
+    </td>
+    <td>
+      {{G.FnameV}}
+
+    </td>
+    <td>
+      {{G.SnameV}}
+
+    </td>
+    <td>
+      {{G.CityV}}
+
+    </td>
+
+  </td>
+  <td>
+    {{G.PhoneNumV}}
+
+  </td>
+  
+  </tr>
+  {% endfor %}
+
+</tbody>
+</table>
+
+
+<h7>מדריכימ.ות בקבוצה:</h7>
 
       <table class="table table-hover">
         <thead>
@@ -33,6 +84,7 @@
           </tr>
         </thead>
       </br>
+
 
         <tbody>
           {% for V in vol_in_group_list  %}

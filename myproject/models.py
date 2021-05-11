@@ -62,13 +62,15 @@ class VolunteersInPoss(db.Model):
     IDV = db.Column(db.Integer,db.ForeignKey('volunteers.IDV'))
     IDP = db.Column(db.Integer,db.ForeignKey('poss.IDP'))
     TimeS = db.Column(db.Text)
+    Statusvp = db.Column(db.Text)
     #TimeF = db.Column(db.Text)
 
-    def __init__(self,IDV,IDP,TimeS):
+    def __init__(self,IDV,IDP,TimeS,Statusvp):
         self.IDV = IDV
         self.IDP = IDP
         self.TimeS = TimeS
         #self.TimeF = TimeF
+        self.Statusvp = Statusvp
 
     def __repr__(self):
         return f"ID Volunteer: {self.IDV} , ID Poss: {self.IDP}"   
