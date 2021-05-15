@@ -96,6 +96,9 @@ class NewCondidateForm(FlaskForm):
     emailc = StringField("אימייל: ")
     pronounc = SelectField('לשון פניה', choices = [('בחר/י מתוך הרשימה', 'בחר/י מתוך הרשימה'),('את', 'את'), ('אתה', 'אתה'), ('מעורבת', 'מעורבת')])
     phonenumc = StringField('מספר טלפון:')
+    text = StringField('תיאור הטיפול:')
+    status = SelectField('סטטוס הפניה:', choices = [('בטיפול','בטיפול '),('טופל','טופל ')])
+
     # stimes = StringField('start time')
     submit = SubmitField('Send')
 

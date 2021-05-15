@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="jumbotron">
+  <h1>עדון פרטי מתנדב:</h1>
+  <p>Fill all the fields</p>
+  <form method="POST">
+      {# This hidden_tag is a CSRF security feature. #}
+      {{ form.hidden_tag() }}
+
+      {{ form.group_id.label }} {{ form.group_id(value=con_to_update.group_id) }}
+    </br>
+      {{ form.status.label }} {{ form.status(value=con_to_update.status) }}
+    </br>
+      {{ form.text.label }} {{ form.text(value=con_to_update.text) }}
+    </br>
+    </br>
+      {{ form.submit(value="עדכון") }}
+  </form>
+</div>
+
+
+{% endblock %}

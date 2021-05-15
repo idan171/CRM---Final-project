@@ -270,16 +270,20 @@ class Condidate(db.Model):
     pronounc = db.Column(db.Text)
     phonenumc = db.Column(db.String(10))
     stimes = db.Column(db.Text)
+    text = db.Column(db.Text)
+    status = db.Column(db.Text)
 
 
 
-    def __init__(self,group_id,emailc,pronounc,phonenumc,stimes):
+    def __init__(self,group_id,emailc,pronounc,phonenumc,stimes,text,status):
         self.group_id = group_id
         self.emailc = emailc
         self.pronounc = pronounc
         self.phonenumc = phonenumc
         self.stimes = stimes
-
+        self.text = text
+        self.status = status
+        
 class StudentInGroup(db.Model):
 
     __tablename__ = 'studentsingroups'

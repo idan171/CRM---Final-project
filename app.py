@@ -1,8 +1,9 @@
 from logging import ERROR
+from re import template
 
 from sqlalchemy.sql.elements import Null
 from myproject.forms import LoginForm, RegistrationForm, AddForm , DelForm, AddGroupForm, AddStuGroupForm, AddAgeGroupForm, NewCondidateForm, DelGroupForm, AddVolunteerForm, VolunteersInGroupsForm, VolunteerDocumentsForm, AddPossForm, MeetingsForm, MFileForm, VolunteersInPossForm, StudentsInMeetingForm 
-from flask import render_template, redirect, request, url_for, flash,abort
+from flask import render_template, redirect, request, url_for, flash,abort,Response,make_response
 from flask_login import login_user,login_required,logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from myproject.models import Student, User, Group, StudentInGroup, AgesInGroup, Condidate, VolunteerDocuments, VolunteersInPoss, MFile, Volunteers, Poss, VolunteersInGroups, Meetings, StudentsInMeeting   
@@ -13,6 +14,15 @@ from werkzeug import secure_filename,FileStorage
 from flask_uploads import configure_uploads, IMAGES, UploadSet
 from sqlalchemy import or_
 from flask import  session
+from io import BytesIO
+import numpy as np
+import pandas as pd
+import xlsxwriter
+from flask import send_file
+import io
+from pandas import ExcelWriter
+from openpyxl import Workbook
+
 
 
 app.config['SECRET_KEY'] = 'any secret string'
@@ -306,9 +316,11 @@ def new_condidate():
             pronounc = form.pronounc.data
             phonenumc = form.phonenumc.data
             stimes = date.today()
+            text = form.text.data
+            status = form.status.data
 
             # Add new group to database
-            new_con = Condidate(group_id,emailc,pronounc,phonenumc,stimes)
+            new_con = Condidate(group_id,emailc,pronounc,phonenumc,stimes,text,status)
 
             db.session.add(new_con)
 
@@ -317,9 +329,15 @@ def new_condidate():
             return redirect(url_for('Thank_you'))
     return render_template('new_condidate.html',form=form)
 
+
 @app.route('/condidate_mang', methods=['GET', 'POST'])
 def condidate_mang():
     condidates_list = Condidate.query.all()
+    condidates_list3 = Condidate.query.join(Group, Condidate.group_id==Group.id, isouter=True)\
+    .add_columns(Condidate.id, Condidate.emailc, Condidate.group_id, Condidate.pronounc, Condidate.phonenumc, Condidate.stimes, Condidate.text, Condidate.status,Group.name)\
+    .filter(Condidate.status == 'בטיפול')
+
+
     form = NewCondidateForm()
 
     if form.is_submitted():
@@ -330,30 +348,53 @@ def condidate_mang():
             pronounc = form.pronounc.data
             phonenumc = form.phonenumc.data
             stimes = date.today()
-
+            status = form.status.data
+            text = form.status.data
             #group_id_3 = Group.query.filter_by(id =form.group_id.data).all()
             #print(group_id_3)
             #print(group_id)
 
             # Add new group to database
-            new_con = Condidate(group_id,emailc,stimes,pronounc,phonenumc)
+            new_con = Condidate(group_id,emailc,stimes,pronounc,phonenumc,text,status)
 
             db.session.add(new_con)
 
             db.session.commit()
 
 
-            return redirect(url_for('list_condidate'))
-    return render_template('condidate_mang.html',form=form,condidates_list=condidates_list)
+            return redirect(url_for('condidate_mang'))
+    return render_template('condidate_mang.html',form=form,condidates_list=condidates_list,condidates_list3=condidates_list3)
 
 #read with filter:  students = Student.query.filter_by(citys = 'Ramat Gan').all()
 
 
-@app.route('/list_condidate')
-def list_condidate():
-    # Grab a list of students from database.
-    condidates_list = Condidate.query.all()
-    return render_template('list_condidate.html',condidates_list=condidates_list)
+
+@app.route('/edit_condidate/<int:id>', methods=['GET', 'POST'])
+def edit_condidate(id):
+    condidates_list = Condidate.query.all()    
+    condidates_list3 = Condidate.query.join(Group, Condidate.group_id==Group.id, isouter=True)\
+    .add_columns(Condidate.id, Condidate.emailc, Condidate.group_id, Condidate.pronounc, Condidate.phonenumc, Condidate.stimes, Condidate.text, Condidate.status,Group.name)\
+    .filter(Condidate.status == 'בטיפול')
+
+    form = NewCondidateForm()
+    con_to_update = Condidate.query.get_or_404(id)
+    if request.method == "POST":
+        con_to_update.group_id = request.form['group_id']
+        con_to_update.text = request.form['text']
+        con_to_update.status = request.form['status']
+    
+        try:
+            db.session.commit()
+            flash("Condidate Updated Successfully!")
+            return render_template("condidate_mang.html",form=form,con_to_update=con_to_update,condidates_list=condidates_list,condidates_list3=condidates_list3)
+
+        except:
+             flash("Error! Looks like there is a problem, please try again!")
+             return render_template("edit_condidate.html",form=form,con_to_update=con_to_update,condidates_list=condidates_list,condidates_list3=condidates_list3)
+
+
+    return render_template('edit_condidate.html',form=form,con_to_update=con_to_update)
+
 
 @app.route('/add_age_group', methods=['GET', 'POST'])
 def add_age_group():
@@ -406,9 +447,8 @@ def student_in_group():
 def list_stu_in_group():
     # Grab a list of students from database.
     stu_in_group_list = StudentInGroup.query.all()
-    searchstu_in_group_list = StudentInGroup.query.join(Group, StudentInGroup.group_id==Group.id)\
-    .add_columns(StudentInGroup.group_id, StudentInGroup.student_emails, StudentInGroup.statusg, Group.id, Group.name,StudentInGroup.stimes,StudentInGroup.ftimef, StudentInGroup.statusg )\
-    .filter(StudentInGroup.group_id == Group.id)
+    searchstu_in_group_list = StudentInGroup.query.join(Group, StudentInGroup.group_id==Group.id, isouter=True).join(Student, StudentInGroup.student_emails==Student.emails, isouter=True)\
+    .add_columns(StudentInGroup.group_id, StudentInGroup.student_emails, StudentInGroup.statusg, Group.id, Group.name,StudentInGroup.stimes,StudentInGroup.ftimef, StudentInGroup.statusg )
     return render_template('list_stu_in_group.html',stu_in_group_list=stu_in_group_list,searchstu_in_group_list=searchstu_in_group_list)
 
 
@@ -418,21 +458,23 @@ def edit_stuingroup(id):
     .add_columns(StudentInGroup.group_id,StudentInGroup.student_emails,StudentInGroup.id, StudentInGroup.statusg, Group.id, Group.name,StudentInGroup.stimes,StudentInGroup.ftimef, StudentInGroup.statusg )\
     .filter(StudentInGroup.group_id == Group.id)
 
+    searchstu_in_group_list = StudentInGroup.query.join(Group, StudentInGroup.group_id==Group.id).join(Student, StudentInGroup.student_emails==Student.emails)\
+    .add_columns(StudentInGroup.group_id, StudentInGroup.student_emails, StudentInGroup.statusg, Group.id, Group.name,Student.emails,StudentInGroup.stimes,StudentInGroup.ftimef, StudentInGroup.statusg )\
+    .filter(StudentInGroup.group_id == Group.id)
     form = AddStuGroupForm()
     line_to_update = StudentInGroup.query.get_or_404(id)
     if request.method == "POST":
         line_to_update.group_id = request.form['group_id']
-        line_to_update.student_emails = request.form['student_emails']
         line_to_update.statusg = request.form['statusg']
 
         try:
             db.session.commit()
             flash("Student in Group Updated Successfully!")
-            return render_template("student_in_group.html",form=form,line_to_update=line_to_update,stu_in_group_list=stu_in_group_list)
+            return render_template("student_in_group.html",form=form,line_to_update=line_to_update,stu_in_group_list=stu_in_group_list,searchstu_in_group_list=searchstu_in_group_list)
 
         except:
              flash("Error! Looks like there is a problem, please try again!")
-             return render_template("edit_stuingroup.html",form=form,line_to_update=line_to_update,stu_in_group_list=stu_in_group_list)
+             return render_template("edit_stuingroup.html",form=form,line_to_update=line_to_update,stu_in_group_list=stu_in_group_list,searchstu_in_group_list=searchstu_in_group_list)
 
 
     return render_template('edit_stuingroup.html', form=form,line_to_update=line_to_update)
@@ -484,7 +526,49 @@ def list_gru():
     groups = Group.query.all()
     return render_template('list-gru.html',groups=groups)
     # delete a students from database.
+    
+@app.route('/upload_formp')
+def formp():
+    ""
+    # Model query in SQLAlchemy
+    users = Volunteers.query.join(VolunteersInPoss, Volunteers.IDV==VolunteersInPoss.IDV, isouter=True).join(Poss, VolunteersInPoss.IDP==Poss.IDP,isouter=True)\
+    .add_columns(VolunteersInPoss.IDP, VolunteersInPoss.id, Poss.PossName, VolunteersInPoss.TimeS, VolunteersInPoss.Statusvp, Volunteers.IDV, Volunteers.FnameV, Volunteers.SnameV,Volunteers.StatusV)\
+    .filter(Volunteers.IDV == VolunteersInPoss.IDV)
 
+    # Instantiate byte type IO objects, used to store objects in memory, no need to generate temporary files on disk
+    out = io.BytesIO()
+    # Instantiate the writer object that outputs xlsx
+    writer = ExcelWriter(out, engine='openpyxl')
+    # Split the SQLAlchemy model query object into SQL statements and connection attributes to pandas read_sql method
+    df = pd.read_sql(users.statement, users.session.bind)
+    # Simple data slicing, select all rows, the range from the sixth column to the last column
+    df = df.iloc[:, 0:]
+    # Rename the df column name
+    df.rename(columns={
+        'IDP': 'IDP',
+        'id': 'id',
+        'PossName': 'PossName',
+        'TimeS': 'TimeS',
+        'Statusvp': 'Statusvp',
+        'IDV': 'IDV',
+        'FnameV': 'FnameV',
+        'SnameV': 'SnameV',
+        'StatusV': 'StatusVs',
+
+    }, inplace=True)
+    # Save df to excel in the memory writer variable, do not include the index line number in the conversion result
+    df.to_excel(writer, index=False)
+    # This step can't be missed, if you don't save it, there is nothing in the xls file downloaded by the browser
+    writer.save()
+    # Reset the pointer of the IO object to the beginning
+    out.seek(0)
+    # The IO object uses getvalue() to return the binary raw data, which is used to give the response data to be generated
+    resp = make_response(out.getvalue())
+    # Set the response header to let the browser resolve to the file download behavior
+    resp.headers['Content-Disposition'] = 'attachement; filename=formp.xlsx'
+    resp.headers['Content-Type'] = 'application/vnd.ms-excel; charset=utf-8'
+
+    return resp
 
 @app.route('/delete', methods=['GET', 'POST'])
 def del_stu():
@@ -823,6 +907,7 @@ def students_in_meeting():
 
 @app.route('/management_dashbord')
 def management_dashbord():
+    listposs = Poss.query.all()
     guides = VolunteersInPoss.query.filter_by(IDP='1').count()
     writers = VolunteersInPoss.query.filter_by(IDP='2').count()
     educations = VolunteersInPoss.query.filter_by(IDP='3').count()
@@ -911,10 +996,60 @@ def management_dashbord():
     nir3 = (Group.query.join(StudentInGroup, Group.id==StudentInGroup.group_id, isouter=True)\
         .add_columns(StudentInGroup.group_id, StudentInGroup.student_emails, StudentInGroup.statusg, Group.id, Group.name,StudentInGroup.stimes,StudentInGroup.ftimef, StudentInGroup.statusg,Group.regionorsubject)\
         .filter(StudentInGroup.statusg!='לא פעיל',Group.regionorsubject=='תכנית ניר')).count()
-    return render_template('management_dashbord.html',guides=guides,writers=writers,educations=educations,activation=activation,waiting=waiting,zafon=zafon,sharon=sharon,merkaz=merkaz,shfela=shfela,darom=darom,trans=trans,datiot=datiot,allwan=allwan,nir=nir,zafon2=zafon2,sharon2=sharon2,merkaz2=merkaz2,shfela2=shfela2,darom2=darom2,trans2=trans2,datiot2=datiot2,allwan2=allwan2,nir2=nir2,zafon3=zafon3,sharon3=sharon3,merkaz3=merkaz3,shfela3=shfela3,darom3=darom3,trans3=trans3,datiot3=datiot3,allwan3=allwan3,nir3=nir3)
+   
+    return render_template('management_dashbord.html',guides=guides,writers=writers,educations=educations,activation=activation,waiting=waiting,zafon=zafon,sharon=sharon,merkaz=merkaz,shfela=shfela,darom=darom,trans=trans,datiot=datiot,allwan=allwan,nir=nir,zafon2=zafon2,sharon2=sharon2,merkaz2=merkaz2,shfela2=shfela2,darom2=darom2,trans2=trans2,datiot2=datiot2,allwan2=allwan2,nir2=nir2,zafon3=zafon3,sharon3=sharon3,merkaz3=merkaz3,shfela3=shfela3,darom3=darom3,trans3=trans3,datiot3=datiot3,allwan3=allwan3,nir3=nir3,listposs=listposs)
 
-    
+@app.route('/upload_form')
+
+def index():
+
+    ""
+    # Model query in SQLAlchemy
+    users = (VolunteersInGroups.query.join(Group, VolunteersInGroups.IDG==Group.id).join(Volunteers, VolunteersInGroups.IDV==Volunteers.IDV)\
+    .add_columns(VolunteersInGroups.IDV,Volunteers.FnameV,Volunteers.SnameV,Volunteers.PronounsV,Group.name,VolunteersInGroups.TimeS,VolunteersInGroups.TimeF, VolunteersInGroups.statusV)\
+    .filter(VolunteersInGroups.IDG == Group.id,VolunteersInGroups.IDV==Volunteers.IDV))
+    # Instantiate byte type IO objects, used to store objects in memory, no need to generate temporary files on disk
+    out = io.BytesIO()
+    # Instantiate the writer object that outputs xlsx
+    writer = ExcelWriter(out, engine='openpyxl')
+    # Split the SQLAlchemy model query object into SQL statements and connection attributes to pandas read_sql method
+    df = pd.read_sql(users.statement, users.session.bind)
+    # Simple data slicing, select all rows, the range from the sixth column to the last column
+    df = df.iloc[:, 0:]
+    # Rename the df column name
+    df.rename(columns={
+        'IDV': 'IDV',
+        'FnameV': 'FnameV',
+        'SnameV': 'SnameV',
+        'PronounsV': 'PronounsV',
+        'name': 'name',
+        'TimeS': 'TimeS',
+        'TimeF': 'TimeF',
+        'statusV': 'statusV',
+
+    }, inplace=True)
+    # Save df to excel in the memory writer variable, do not include the index line number in the conversion result
+    df.to_excel(writer, index=False)
+    # This step can't be missed, if you don't save it, there is nothing in the xls file downloaded by the browser
+    writer.save()
+    # Reset the pointer of the IO object to the beginning
+    out.seek(0)
+    # The IO object uses getvalue() to return the binary raw data, which is used to give the response data to be generated
+    resp = make_response(out.getvalue())
+    # Set the response header to let the browser resolve to the file download behavior
+    resp.headers['Content-Disposition'] = 'attachement; filename=users.xlsx'
+    resp.headers['Content-Type'] = 'application/vnd.ms-excel; charset=utf-8'
+
+    return resp
+app.run(debug=True)
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
 
+
+
+
+
+    
