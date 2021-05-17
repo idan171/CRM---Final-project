@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="jumbotron">
-  <h1>Add new Poss:</h1>
-  <p>Fill all the fields</p>
+  <h1>הוספת תפקיד חדש בארגון:</h1>
+  <p>מלא.י את כל הפרטים הבאים:</p>
   <form method="POST">
       {# This hidden_tag is a CSRF security feature. #}
       {{ form.hidden_tag() }}

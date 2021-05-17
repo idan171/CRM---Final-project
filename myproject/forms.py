@@ -52,9 +52,9 @@ class AddForm(FlaskForm):
 
 class AddGroupForm(FlaskForm):
 
-    name = StringField('Name of Group:')
-    regionorsubject = SelectField('Region or Subject of Group', choices = [('בחר/י מתוך הרשימה', 'בחר/י מתוך הרשימה'),('צפון', 'צפון'), ('שרון', 'שרון'), ('מרכז', 'מרכז'),('שפלה', 'שפלה'),('דרום', 'דרום'),('תחום טרנס', 'תחום טרנס'),('תחום דתיות', 'תחום דתיות'),('תחום אלואן', 'תחום אלואן'),('תכנית ניר', 'תכנית ניר')])
-    city = StringField('City of Group:')
+    name = StringField('שם קבוצה:')
+    regionorsubject = SelectField('אזור או תחום', choices = [('בחר/י מתוך הרשימה', 'בחר/י מתוך הרשימה'),('צפון', 'צפון'), ('שרון', 'שרון'), ('מרכז', 'מרכז'),('שפלה', 'שפלה'),('דרום', 'דרום'),('תחום טרנס', 'תחום טרנס'),('תחום דתיות', 'תחום דתיות'),('תחום אלואן', 'תחום אלואן'),('תכנית ניר', 'תכנית ניר')])
+    city = StringField('עיר הקבוצה:')
 
     #להכניס נתונים קבועים לתוך הגילאים ולהתאים כאן את הערכים
     submit = SubmitField('Add Group')
@@ -103,23 +103,22 @@ class NewCondidateForm(FlaskForm):
     submit = SubmitField('Send')
 
 class AddVolunteerForm(FlaskForm):
-    IDV = StringField('ID Of Volunteer:')
-    FnameV = StringField('First Name of Volunteer:')
-    SnameV = StringField('Last Name of Volunteer:')
-    DateOfBirthV = StringField('Date of Birth:')
-    PronounsV = SelectField('Pronoun', choices = [('בחר/י מתוך הרשימה', 'בחר/י מתוך הרשימה'),('את', 'את'), ('אתה', 'אתה'), ('מעורבת', 'מעורבת')])
-    CityV = StringField('City:')
-    AdressV = StringField('Address:')
-    NutritionV = SelectField('Nutrition', choices = [('בחר/י מתוך הרשימה', 'בחר/י מתוך הרשימה'),('צמחוני', 'צמחוני'), ('טבעוני', 'טבעוני'), ('אוכל כל', 'אוכל כל')])
-    PhoneNumV = StringField('Phone Number:')
-    StatusV = SelectField('Status', choices = [('בחר/י מתוך הרשימה', 'בחר/י מתוך הרשימה'),('פעיל', 'פעיל'), ('לא פעיל', 'לא פעיל'), ('הודח ', 'הודח  ')])
-    submit = SubmitField('Send')
+    IDV = StringField('ת״ז מתנדב.ת:')
+    FnameV = StringField('שם פרטי:')
+    SnameV = StringField('שם משפחה:')
+    DateOfBirthV = StringField('תאריך לידה:')
+    PronounsV = SelectField('לשון פניה', choices = [('בחר/י מתוך הרשימה', 'בחר/י מתוך הרשימה'),('את', 'את'), ('אתה', 'אתה'), ('מעורבת', 'מעורבת')])
+    CityV = StringField('עיר מגורים:')
+    AdressV = StringField('כתובת:')
+    NutritionV = SelectField('הרגלי תזונה', choices = [('בחר/י מתוך הרשימה', 'בחר/י מתוך הרשימה'),('צמחוני', 'צמחוני'), ('טבעוני', 'טבעוני'), ('אוכל כל', 'אוכל כל')])
+    PhoneNumV = StringField('מספר נייד:')
+    StatusV = SelectField('סטטוס', choices = [('בחר/י מתוך הרשימה', 'בחר/י מתוך הרשימה'),('פעיל', 'פעיל'), ('לא פעיל', 'לא פעיל'), ('הודח ', 'הודח  ')])
+    submit = SubmitField('הוספה')
 
 class VolunteersInGroupsForm(FlaskForm):
     group_list = list(Group.query.all())
     groups = [(g.id, g.name) for g in group_list]
-
-    IDV = StringField('ID Of Volunteer:')
+    IDV = StringField('ת״ז מתנדב.ת:')
     IDG = SelectField('קבוצה:', choices = groups)
     emailc = StringField("אימייל: ")
     #TimeS = StringField('Current Date:')
@@ -129,9 +128,9 @@ class VolunteersInGroupsForm(FlaskForm):
     submit = SubmitField('בצע שידוך  (:')
 
 class VolunteerDocumentsForm(FlaskForm):
-    IDV = StringField('ID Of Volunteer:')
-    Dname = SelectField('Document Name:', choices = [('אחר', 'אחר'),('אישור משטרה', 'אישור משטרה'), ('תעודת זהות', 'תעודת זהות'), (' מסמכי מתנדב', ' מסמכי מתנדב')])
-    DocDescription = StringField('Document Description:')
+    IDV = StringField('ת״ז מתנדב.ת:')
+    Dname = SelectField('שם המסמך:', choices = [('אחר', 'אחר'),('אישור משטרה', 'אישור משטרה'), ('תעודת זהות', 'תעודת זהות'), (' מסמכי מתנדב', ' מסמכי מתנדב')])
+    DocDescription = StringField('תיאור המסמך:')
     Document = FileField('Document')
 
     submit = SubmitField(' העלה מסמך  (:')
@@ -140,7 +139,7 @@ class VolunteersInPossForm(FlaskForm):
     poss_list = list(Poss.query.all())
     posss = [(p.IDP, p.PossName) for p in poss_list]
 
-    IDV = StringField('ID Of Volunteer:')
+    IDV = StringField('ת״ז מתנדב.ת:')
     IDP = SelectField('תפקיד בארגון:', choices = posss )
     Statusvp = SelectField('סטטוס פעילות בתפקיד:', choices = [('פעיל','פעיל'),('לא פעיל','לא פעיל')])
 
@@ -148,11 +147,11 @@ class VolunteersInPossForm(FlaskForm):
 
 class AddPossForm(FlaskForm):
     IDP = StringField('ID of the Poss:')
-    PossName = StringField('Poss Name:')
-    PossDescription = StringField('Poss Description:')
+    PossName = StringField('תפקיד בארגון:')
+    PossDescription = StringField('תיאור התפקיד:')
     #AddTime = StringField('Current Date:')
     
-    submit = SubmitField('Add Poss')
+    submit = SubmitField('הוספה')
     
 class MeetingsForm(FlaskForm):
     group_list = list(Group.query.all())
@@ -166,6 +165,7 @@ class MeetingsForm(FlaskForm):
     Rate = SelectField('דרוג:', choices = [('1','1'),('2','2'),('3','3'),('4','4'),('5','5')])
     Pros = StringField('נקודות לשימור:')
     Cons = StringField('נקודות לשיפור:')
+    
 
     submit = SubmitField('צור פגישה')
 

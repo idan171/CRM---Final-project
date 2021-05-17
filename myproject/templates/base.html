@@ -19,11 +19,11 @@
       <a class="nav-item nav-link" href="{{ url_for('home') }}">Home</a>
     {% if current_user.is_authenticated %}
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <a class="nav-link dropdown-toggle" href="#" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           חניכימ.ות
         </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="{{ url_for('add_stu') }}">פתיחת תיק חניכ.ה</a>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item" href="{{ url_for('add_stu') }}" >פתיחת תיק חניכ.ה</a>
           <a class="dropdown-item" href="{{ url_for('list_stu') }}">רשימת חניכימ.ות</a>
           <a class="dropdown-item" href="{{ url_for('del_stu') }}">מחיקת תיק חניכ.ה</a>
 
@@ -31,16 +31,15 @@
           <a class="dropdown-item" href="{{ url_for('student_in_group') }}">שיוך חניכ.ה לקבוצה</a>
           <a class="dropdown-item" href="{{ url_for('list_stu_in_group') }}">רשימת חניכימ.ות וקבוצות</a>
 
-
         </div>
       </li>
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <a class="nav-link dropdown-toggle" href="#" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           קבוצות
         </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
           <a class="dropdown-item" href="{{ url_for('add_group') }}">הוספת קבוצת נוער</a>
-          <a class="dropdown-item" href="{{ url_for('add_age_group') }}">Ages IN Group</a>
+          <!-- This is a comment <a class="dropdown-item" href="{{ url_for('add_age_group') }}">Ages IN Group</a>-->
           <a class="dropdown-item" href="{{ url_for('list_gru') }}">רשימת קבוצות</a>
 
           <div class="dropdown-divider"></div>
@@ -51,10 +50,10 @@
 
     </li>
     <li class="nav-item dropdown">
-      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <a class="nav-link dropdown-toggle" href="#" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         עובדימ.ות ומתנדבימ.ות
       </a>
-      <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
         <a class="dropdown-item" href="{{ url_for('add_volunteer') }}">פתיחת תיק מתנדב.ת</a>
         <a class="dropdown-item" href="{{ url_for('list_volunteers') }}">רשימת מתנדב.ות</a>
         <a class="dropdown-item" href="{{ url_for('volunteer_documents') }}">מסמכי מתנדבימ.ות</a>
@@ -67,17 +66,17 @@
   </li>
 
 <li class="nav-item dropdown">
-  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Meetings
+  <a class="nav-link dropdown-toggle" href="#" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    פעולות
   </a>
-  <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
     <a class="dropdown-item" href="{{ url_for('addmeetings') }}">Add Meeting</a>
     <a class="dropdown-item" href="{{ url_for('students_in_meeting') }}">Students In Meeting</a>
     <a class="dropdown-item" href="{{ url_for('index') }}">Download The file</a>
 
   </div>
 </li>
-      <a class="nav-item nav-link" href="{{ url_for('condidate_mang') }}">Condidates</a>
+      <a class="nav-item nav-link" href="{{ url_for('condidate_mang') }}">חניכימ.ות חדשימ.ות</a>
       <a href="{{ url_for('management_dashbord') }}" ustify-content-center class="btn btn-outline-info" role="button" >Management Dashbord</a> 
       <a href="{{ url_for('logout') }}" ustify-content-center class="btn btn-warning" role="button" >Log Out</a> 
 

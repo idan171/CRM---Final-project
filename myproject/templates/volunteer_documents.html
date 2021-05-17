@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="jumbotron">
-  <h1>Add a document</h1>
-  <p>Add a new document with the form below:</p>
+  <h1>הוספת מסמך</h1>
+  <p>מלא.י את הפרטים הבאים:</p>
   <form method="POST" enctype="multipart/form-data">
       {# This hidden_tag is a CSRF security feature. #}
       {{form.hidden_tag()}}
@@ -30,11 +30,11 @@
   <thead>
     <tr>
       <th scope="col">#</th>
-      <th scope="col">ID</th>
-      <th scope="col">First Name</th>
-      <th scope="col">Last Name</th>
-      <th scope="col">Document Name</th>
-      <th scope="col">Document Name2</th>
+      <th scope="col">ת״ז מתנדב.ת</th>
+      <th scope="col">שם פרטי</th>
+      <th scope="col">שם משפחה</th>
+      <th scope="col">שם מסמך</th>
+      <th scope="col">תאריך הוספה</th>
 
     </tr>
   </thead>
