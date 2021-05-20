@@ -37,8 +37,7 @@
       {% for S in stu_in_group_list  %}
       
       <tr>
-        <th scope="row"><ol>        {{S.StudentInGroup.id}}
-        </ol></th>
+        <th scope="row"><ol> </ol></th>
         <td> 
           <a href="{{url_for('edit_stuingroup', id=S.StudentInGroup.id)}}">{{S.student_emails}}</a>
         </td>

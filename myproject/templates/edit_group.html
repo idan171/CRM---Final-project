@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="jumbotron">
+  <h1>עדכון פרטי הקבוצה</h1>
+  <form method="POST">
+      {# This hidden_tag is a CSRF security feature. #}
+      {{ form.hidden_tag() }}
+
+      {{ form.name.label }} {{ form.name(value=gru_to_update.name) }}
+  </br>
+      {{ form.agesingroup.label }} <select multiple id="mymultiselect" name="mymultiselect" class="selectpicker"  multiple data-live-search="true" >         
+        <option value="" disabled selected>בחר.י מתוך הרשימה</option>
+
+        <option>ז</option>
+        <option>ח</option>
+        <option>ט</option>
+        <option>י</option>
+        <option>יא</option>
+        <option>יב</option>
+
+      
+    </select>
+    <br>
+
+  </br> 
+    </br>
+      {{ form.submit(value="עדכון") }}
+  </form>
+</div>
+{% endblock %}

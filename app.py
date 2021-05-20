@@ -2,11 +2,11 @@ from logging import ERROR
 from re import template
 
 from sqlalchemy.sql.elements import Null
-from myproject.forms import LoginForm, RegistrationForm, AddForm , DelForm, AddGroupForm, AddStuGroupForm, AddAgeGroupForm, NewCondidateForm, DelGroupForm, AddVolunteerForm, VolunteersInGroupsForm, VolunteerDocumentsForm, AddPossForm, MeetingsForm, MFileForm, VolunteersInPossForm, StudentsInMeetingForm 
+from myproject.forms import LoginForm, MessageForme, RegistrationForm, AddForm , DelForm, AddGroupForm, AddStuGroupForm, AddAgeGroupForm, NewCondidateForm, DelGroupForm, AddVolunteerForm, VolunteersInGroupsForm, VolunteerDocumentsForm, AddPossForm, MeetingsForm, MFileForm, VolunteersInPossForm, StudentsInMeetingForm 
 from flask import render_template, redirect, request, url_for, flash,abort,Response,make_response
 from flask_login import login_user,login_required,logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from myproject.models import Student, User, Group, StudentInGroup, AgesInGroup, Condidate, VolunteerDocuments, VolunteersInPoss, MFile, Volunteers, Poss, VolunteersInGroups, Meetings, StudentsInMeeting   
+from myproject.models import Student, User,Message, Group, StudentInGroup, AgesInGroup, Condidate, VolunteerDocuments, VolunteersInPoss, MFile, Volunteers, Poss, VolunteersInGroups, Meetings, StudentsInMeeting   
 from myproject import app,db
 from datetime import date
 #from flask_uploads import configure_uploads,IMAGES,UploadSet
@@ -22,7 +22,8 @@ from flask import send_file
 import io
 from pandas import ExcelWriter
 from openpyxl import Workbook
-
+from sqlalchemy import func
+from sqlalchemy import distinct
 
 
 app.config['SECRET_KEY'] = 'any secret string'
@@ -33,8 +34,12 @@ configure_uploads(app,images)
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    old_message = Message.query.order_by(Message.IDM.desc()).limit(3)
+    return render_template('home.html',old_message=old_message)
 
+@app.route('/info')
+def info():
+    return render_template('info.html')
 
 @app.route('/welcome')
 @login_required
@@ -91,7 +96,7 @@ def register():
         db.session.add(user)
         db.session.commit()
         flash('Thanks for registering! Now you can login!')
-        return redirect(url_for('login'))
+        return redirect(url_for('Thank_you'))
     return render_template('register.html', form=form)
 
 
@@ -155,6 +160,67 @@ def edit_stu(emails):
 
 
 
+@app.route('/edit_meet/<int:IDM>', methods=['GET', 'POST'])
+def edit_meet(IDM):
+    meetings_list6 = Meetings.query.join(Group, Meetings.IDG==Group.id)\
+    .add_columns(Meetings.IDM, Meetings.Mdate, Meetings.Mdate ,Meetings.Mtime ,Meetings.IDG ,Meetings.Occurence ,Meetings.Platform ,Meetings.Rate, Meetings.title ,Meetings.Pros ,Meetings.Cons ,Meetings.attending, Group.name ,)\
+    .filter(Meetings.IDM == IDM).all()
+    meetings_list3 = Meetings.query.join(Group, Meetings.IDG==Group.id).join(Student, Meetings.attending==Student.emails, isouter=True)\
+        .add_columns(Meetings.Mdate, Meetings.IDM, Group.id, Group.name, Meetings.Occurence, Meetings.Platform, Meetings.Rate, Student.firstname, Meetings.title )\
+        .filter(Meetings.IDG == Group.id)
+
+    return render_template('edit_meet.html',meetings_list6=meetings_list6,meetings_list3=meetings_list3)
+
+ 
+@app.route('/message', methods=['GET', 'POST'])
+def message():
+ 
+    form = MessageForme()
+    #old_message = Message.query.limit(2).all()
+    old_message = Message.query.order_by(Message.IDM.desc()).limit(3)
+ 
+    if form.validate_on_submit():
+        new_message = Message(IDV = form.IDV.data,
+        Content = form.Content.data,
+        Mdate = date.today())
+ 
+        db.session.add(new_message)
+        db.session.commit()
+ 
+        return redirect(url_for('home'))
+ 
+    return render_template('message.html',form=form,old_message=old_message)
+ 
+
+
+
+@app.route('/edit_group/<int:id>', methods=['GET', 'POST'])
+def edit_group(id):
+
+    groups = Group.query.all()
+    form = AddGroupForm()
+    gru_to_update = Group.query.get_or_404(id)
+    if request.method == "POST":
+
+        gru_to_update.name = request.form['name']
+        gru_to_update.agesingroup = ','.join(request.form.getlist('mymultiselect'))
+
+        try:
+            db.session.commit()
+            flash("Student Updated Successfully!")
+            return render_template("list-gru.html",form=form,gru_to_update=gru_to_update,groups=groups)
+
+        except:
+             flash("Error! Looks like there is a problem, please try again!")
+             return render_template("edit_group.html",form=form,gru_to_update=gru_to_update,groups=groups)
+
+
+    return render_template('edit_group.html',form=form,gru_to_update=gru_to_update)
+
+
+
+
+
 @app.route('/edit_volingroup/<int:id>', methods=['GET', 'POST'])
 def edit_volingroup(id):
     vol_in_group_list = VolunteersInGroups.query.join(Group, VolunteersInGroups.IDG==Group.id).join(Volunteers, VolunteersInGroups.IDV==Volunteers.IDV)\
@@ -198,8 +264,30 @@ def search_volingroup():
     else:
         return redirect('/')
 
+@app.route('/search_meeting', methods=['GET', 'POST'])
+def search_meeting():
+
+    if request.method =='POST':
+        form1 = request.form
+        search_value = form1['voli_string']
+        search = "%{0}%".format(search_value)
+        results = (Meetings.query.join(Group, Meetings.IDG==Group.id).join(Student, Meetings.attending==Student.emails, isouter=True)\
+        .add_columns(Meetings.Mdate,Meetings.IDM, Group.id, Group.name, Meetings.Occurence, Meetings.Platform, Meetings.Rate, Student.firstname, Meetings.title )\
+        .filter(Meetings.IDG == Group.id)).filter(or_(Group.name.like(search),
+                                            Group.id.like(search))).all()
+        return render_template('meetings_list.html',meetings_list3=results,legend="Search Results")
+    else:
+        return redirect('/')
 
 
+
+@app.route('/meetings_list')
+def meetings_list():
+    meetings_list2 = Meetings.query.all()
+    meetings_list3 = Meetings.query.join(Group, Meetings.IDG==Group.id).join(Student, Meetings.attending==Student.emails, isouter=True)\
+        .add_columns(Meetings.Mdate, Meetings.IDM, Group.id, Group.name, Meetings.Occurence, Meetings.Platform, Meetings.Rate, Student.firstname, Meetings.title )\
+        .filter(Meetings.IDG == Group.id)
+    return render_template('meetings_list.html',meetings_list2=meetings_list2,meetings_list3=meetings_list3)
 
 
 
@@ -233,6 +321,7 @@ def edit_volunteer(IDV):
     form = AddVolunteerForm()
     vol_to_update = Volunteers.query.get_or_404(IDV)
     if request.method == "POST":
+        vol_to_update.emailv = request.form['emailv']
         vol_to_update.FnameV = request.form['FnameV']
         vol_to_update.SnameV = request.form['SnameV']
         vol_to_update.DateOfBirthV = request.form['DateOfBirthV']
@@ -290,13 +379,16 @@ def add_group():
     if form.validate_on_submit():
         name = form.name.data
         regionorsubject = form.regionorsubject.data
+        agesingroup = ','.join(request.form.getlist('mymultiselect'))
+
         city = form.city.data
+
         # Add new group to database
         exists = Group.query.filter_by(name=name, regionorsubject=regionorsubject).first()
         if exists: 
             print (ERROR)
         if not exists: 
-            new_group = Group(name,regionorsubject,city)
+            new_group = Group(name,regionorsubject,city,agesingroup)
             db.session.add(new_group)
             db.session.commit()
         return redirect(url_for('list_gru'))
@@ -306,6 +398,8 @@ def add_group():
 
 @app.route('/new_condidate', methods=['GET', 'POST'])
 def new_condidate():
+    condidates_list = Condidate.query.all()
+
     form = NewCondidateForm()
 
     if form.is_submitted():
@@ -316,26 +410,28 @@ def new_condidate():
             pronounc = form.pronounc.data
             phonenumc = form.phonenumc.data
             stimes = date.today()
-            text = form.text.data
             status = form.status.data
+            text = form.status.data
+            firstname = form.firstname.data
+            lastname = form.lastname.data
 
             # Add new group to database
-            new_con = Condidate(group_id,emailc,pronounc,phonenumc,stimes,text,status)
+            new_con = Condidate(group_id,emailc,stimes,pronounc,phonenumc,text,status,firstname,lastname)
 
             db.session.add(new_con)
 
             db.session.commit()
             
             return redirect(url_for('Thank_you'))
-    return render_template('new_condidate.html',form=form)
+    return render_template('new_condidate.html',form=form,condidates_list=condidates_list)
 
 
 @app.route('/condidate_mang', methods=['GET', 'POST'])
 def condidate_mang():
     condidates_list = Condidate.query.all()
-    condidates_list3 = Condidate.query.join(Group, Condidate.group_id==Group.id, isouter=True)\
+    condidates_list3 = (Condidate.query.join(Group, Condidate.group_id==Group.id, isouter=True)\
     .add_columns(Condidate.id, Condidate.emailc, Condidate.group_id, Condidate.pronounc, Condidate.phonenumc, Condidate.stimes, Condidate.text, Condidate.status,Group.name)\
-    .filter(Condidate.status == 'בטיפול')
+    .filter(Condidate.status != 'טופל')).order_by(Condidate.group_id).all()
 
 
     form = NewCondidateForm()
@@ -350,12 +446,14 @@ def condidate_mang():
             stimes = date.today()
             status = form.status.data
             text = form.status.data
+            firstname = form.firstname.data
+            lastname = form.lastname.data
             #group_id_3 = Group.query.filter_by(id =form.group_id.data).all()
             #print(group_id_3)
             #print(group_id)
 
             # Add new group to database
-            new_con = Condidate(group_id,emailc,stimes,pronounc,phonenumc,text,status)
+            new_con = Condidate(group_id,emailc,stimes,pronounc,phonenumc,text,status,firstname,lastname)
 
             db.session.add(new_con)
 
@@ -374,7 +472,8 @@ def edit_condidate(id):
     condidates_list = Condidate.query.all()    
     condidates_list3 = Condidate.query.join(Group, Condidate.group_id==Group.id, isouter=True)\
     .add_columns(Condidate.id, Condidate.emailc, Condidate.group_id, Condidate.pronounc, Condidate.phonenumc, Condidate.stimes, Condidate.text, Condidate.status,Group.name)\
-    .filter(Condidate.status == 'בטיפול')
+    .filter(Condidate.status == 'בטיפול').order_by(Condidate.group_id).all()
+
 
     form = NewCondidateForm()
     con_to_update = Condidate.query.get_or_404(id)
@@ -570,6 +669,55 @@ def formp():
 
     return resp
 
+@app.route('/upload_condiex')
+def condiex():
+    ""
+    # Model query in SQLAlchemy
+    users = Condidate.query.join(Group, Condidate.group_id==Group.id, isouter=True)\
+    .add_columns(Condidate.id,Condidate.group_id, Condidate.emailc, Condidate.firstname, Condidate.lastname,Condidate.phonenumc,  Condidate.pronounc,  Condidate.stimes, Condidate.text, Condidate.status, Group.name)\
+    .filter(Condidate.group_id==Group.id)
+
+    # Instantiate byte type IO objects, used to store objects in memory, no need to generate temporary files on disk
+    out = io.BytesIO()
+    # Instantiate the writer object that outputs xlsx
+    writer = ExcelWriter(out, engine='openpyxl')
+    # Split the SQLAlchemy model query object into SQL statements and connection attributes to pandas read_sql method
+    df = pd.read_sql(users.statement, users.session.bind)
+    # Simple data slicing, select all rows, the range from the sixth column to the last column
+    df = df.iloc[:, 0:]
+    # Rename the df column name
+    df.rename(columns={
+        'id': 'id',
+        'group_id': 'group_id',
+        'emailc': 'emailc',
+        'firstname': 'firstname',
+        'lastname': 'lastname',
+        'stimes': 'stimes',
+        'pronounc': 'pronounc',
+        'phonenumc': 'phonenumc',
+        'text': 'text',
+        'status': 'status',
+        'name': 'name',
+
+    }, inplace=True)
+    # Save df to excel in the memory writer variable, do not include the index line number in the conversion result
+    df.to_excel(writer, index=False)
+    # This step can't be missed, if you don't save it, there is nothing in the xls file downloaded by the browser
+    writer.save()
+    # Reset the pointer of the IO object to the beginning
+    out.seek(0)
+    # The IO object uses getvalue() to return the binary raw data, which is used to give the response data to be generated
+    resp = make_response(out.getvalue())
+    # Set the response header to let the browser resolve to the file download behavior
+    resp.headers['Content-Disposition'] = 'attachement; filename=condiex.xlsx'
+    resp.headers['Content-Type'] = 'application/vnd.ms-excel; charset=utf-8'
+
+    return resp
+
+
+
+
+
 @app.route('/delete', methods=['GET', 'POST'])
 def del_stu():
     students_list = Student.query.all()
@@ -617,6 +765,7 @@ def add_volunteer():
     if form.validate_on_submit():
         
         IDV = form.IDV.data
+        emailv = form.emailv.data
         FnameV = form.FnameV.data
         SnameV = form.SnameV.data
         DateOfBirthV = form.DateOfBirthV.data
@@ -630,7 +779,7 @@ def add_volunteer():
 
 
         # Add new volunteer to database
-        new_volunteer = Volunteers(IDV,FnameV,SnameV,DateOfBirthV,PronounsV,CityV,AdressV,NutritionV,PhoneNumV,StatusV,DateAdded)
+        new_volunteer = Volunteers(IDV,emailv,FnameV,SnameV,DateOfBirthV,PronounsV,CityV,AdressV,NutritionV,PhoneNumV,StatusV,DateAdded)
         db.session.add(new_volunteer)
         db.session.commit()
 
@@ -676,7 +825,7 @@ def add_poss():
             db.session.add(new_poss)
             db.session.commit()
 
-        return redirect(url_for('list_poss'))
+        return redirect(url_for('add_poss'))
         
     return render_template('add_poss.html',form=form,poss_list=poss_list)
 
@@ -828,7 +977,7 @@ def volunteers_in_poss():
 
 @app.route('/addmeetings', methods=['GET', 'POST'])
 def addmeetings():
-
+    student_list = list(Student.query.all())
     meetings2 = Meetings.query.all()
 
     form = MeetingsForm()
@@ -844,15 +993,14 @@ def addmeetings():
             Rate = form.Rate.data,
             Pros = form.Pros.data,
             Cons = form.Cons.data,
+            attending = ','.join(request.form.getlist('mymultiselect')),
+            title = form.Cons.data,
             DateAdded = date.today())
-
-
             # Add new Student to database
             db.session.add(new_meeting)
             db.session.commit()
-            return redirect(url_for('meetings_file'))
-
-    return render_template('meetings.html',form=form,meetings2=meetings2)
+            return redirect(url_for('meetings_list'))
+    return render_template('meetings.html',form=form,meetings2=meetings2,student_list=student_list)
 
 
 @app.route('/meetings_file',methods=['GET', 'POST'])
@@ -878,31 +1026,6 @@ def meetings_file():
         return redirect(url_for('meetings_file'))
         
     return render_template('meetings_file.html',form=form,the_file=the_file,meetings=meetings)
-
-
-
-
-@app.route('/students_in_meeting', methods=['GET', 'POST'])
-def students_in_meeting():
-
-    meetings = Meetings.query.all()
-    students = Student.query.all()
-    students_in_meeting = StudentsInMeeting.query.all()
-
-    form = StudentsInMeetingForm()
-
-    if form.validate_on_submit():
-        IDM = form.IDM.data
-        EmaillS = form.EmaillS.data
-        Attendance = form.Attendance.data
-
-        new_students_in_meeting = StudentsInMeeting(IDM,EmaillS,Attendance)
-        db.session.add(new_students_in_meeting)
-        db.session.commit()
-            
-        return redirect(url_for('students_in_meeting'))
-
-    return render_template('students_in_meeting.html',form=form,meetings=meetings,students=students,students_in_meeting=students_in_meeting)
 
 
 @app.route('/management_dashbord')
@@ -997,7 +1120,22 @@ def management_dashbord():
         .add_columns(StudentInGroup.group_id, StudentInGroup.student_emails, StudentInGroup.statusg, Group.id, Group.name,StudentInGroup.stimes,StudentInGroup.ftimef, StudentInGroup.statusg,Group.regionorsubject)\
         .filter(StudentInGroup.statusg!='לא פעיל',Group.regionorsubject=='תכנית ניר')).count()
    
+   # meetings_list3 = Group.query.join(Meetings, Meetings.IDG==Group.id, isouter=True)\
+    #    .add_columns(Meetings.Mdate, Meetings.IDM, Group.id, Group.name, Meetings.Occurence, Meetings.Platform, Meetings.Rate, Meetings.title )\
+   #     .filter_by(IDM = None).count()
+   # meetings_list4 = Group.query.join(Meetings, Meetings.IDG==Group.id, isouter=True)\
+     #   .add_columns(Meetings.Mdate, Meetings.IDM, Group.id, Group.name, Meetings.Occurence, Meetings.Platform, Meetings.Rate, Meetings.title )\
+    #    .filter(~Meetings.Mdate.in_ ([ date.today()]),Meetings.Occurence=='בוטל',Group.id == Meetings.IDG).order_by(Meetings.IDG).count()
+
+   # print (meetings_list3)
+   # print (meetings_list4)
+
     return render_template('management_dashbord.html',guides=guides,writers=writers,educations=educations,activation=activation,waiting=waiting,zafon=zafon,sharon=sharon,merkaz=merkaz,shfela=shfela,darom=darom,trans=trans,datiot=datiot,allwan=allwan,nir=nir,zafon2=zafon2,sharon2=sharon2,merkaz2=merkaz2,shfela2=shfela2,darom2=darom2,trans2=trans2,datiot2=datiot2,allwan2=allwan2,nir2=nir2,zafon3=zafon3,sharon3=sharon3,merkaz3=merkaz3,shfela3=shfela3,darom3=darom3,trans3=trans3,datiot3=datiot3,allwan3=allwan3,nir3=nir3,listposs=listposs)
+
+
+
+
+
 
 @app.route('/upload_form')
 

@@ -3,21 +3,32 @@
   <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.bundle.min.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
+ 
 
     <title>Adoption</title>
   </head>
-  <body style="background-color:rgba(255, 187, 124, 0.836); direction: rtl; text-align: right;">
-    <nav class="navbar sticky-top navbar-expand-md navbar-dark" style="background-color: #700000;">
+  <body style="background-color:rgba(255, 229, 190, 0.836); direction: rtl; text-align: right;">
+    <nav class="navbar sticky-top navbar-expand-sm navbar-dark" style="background-color: #700000;">
       <a class="navbar-brand" href="#">
         <img src="https://igy.org.il/wp-content/uploads/2019/11/logo-white.png" alt="">
       </a>
     <div class="navbar-nav">
-      <a class="nav-item nav-link" href="{{ url_for('home') }}">Home</a>
+      <a class="nav-item nav-link" href="{{ url_for('home') }}">מסך הבית</a>
     {% if current_user.is_authenticated %}
+
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           חניכימ.ות
@@ -35,15 +46,16 @@
       </li>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          קבוצות
+          יצירת תוכן
         </a>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
           <a class="dropdown-item" href="{{ url_for('add_group') }}">הוספת קבוצת נוער</a>
-          <!-- This is a comment <a class="dropdown-item" href="{{ url_for('add_age_group') }}">Ages IN Group</a>-->
           <a class="dropdown-item" href="{{ url_for('list_gru') }}">רשימת קבוצות</a>
 
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="{{ url_for('add_poss') }}">הוספת תפקיד התנדבות</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="{{ url_for('message') }}">מערכת הודעות</a>  
 
         </div>
       </li>
@@ -70,19 +82,20 @@
     פעולות
   </a>
   <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-    <a class="dropdown-item" href="{{ url_for('addmeetings') }}">Add Meeting</a>
-    <a class="dropdown-item" href="{{ url_for('students_in_meeting') }}">Students In Meeting</a>
-    <a class="dropdown-item" href="{{ url_for('index') }}">Download The file</a>
+    <a class="dropdown-item" href="{{ url_for('addmeetings') }}">טופס דיווח פעולה</a>
+    <a class="dropdown-item" href="{{ url_for('meetings_list') }}">חיפוש פעולות</a>
 
   </div>
 </li>
       <a class="nav-item nav-link" href="{{ url_for('condidate_mang') }}">חניכימ.ות חדשימ.ות</a>
-      <a href="{{ url_for('management_dashbord') }}" ustify-content-center class="btn btn-outline-info" role="button" >Management Dashbord</a> 
-      <a href="{{ url_for('logout') }}" ustify-content-center class="btn btn-warning" role="button" >Log Out</a> 
+      <a href="{{ url_for('management_dashbord') }}" ustify-content-center class="btn btn-outline-light" role="button" >מסך מנהלים</a> 
+      <a href="{{ url_for('logout') }}" ustify-content-center class="btn btn-outline-warning my-2 my-sm-0" role="button" >התנתק.י</a> 
+    
 
     {% else %}
-      <li class="nav-link"><a href="{{ url_for('login') }}">Log In</a></li>
-      <li class="nav-link"><a href="{{ url_for('register') }}">Sign up</a></li>
+    <a class="nav-item nav-link" href="{{ url_for('info') }}">Information</a>
+      <li class="nav-link"><a href="{{ url_for('login') }}">התחברות</a></li>
+      <li class="nav-link"><a href="{{ url_for('register') }}">כניסת מתנדבימ.ות למערכת</a></li>
     {% endif %}
   </div>
 </nav>

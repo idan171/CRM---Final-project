@@ -6,7 +6,9 @@
   <form method="POST">
       {# This hidden_tag is a CSRF security feature. #}
       {{ form.hidden_tag() }}
-
+      
+      {{ form.emailv.label }} {{ form.emailv(value=vol_to_update.emailv) }}
+    </br>
       {{ form.FnameV.label }} {{ form.FnameV(value=vol_to_update.FnameV) }}
     </br>
       {{ form.SnameV.label }} {{ form.SnameV(value=vol_to_update.SnameV) }}

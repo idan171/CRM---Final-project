@@ -20,12 +20,34 @@
 </div>
 
 <div class="jumbotron">
-    <h2>Here is a list of all the position.</h2>
-    <ul>
-      {% for PossName in poss_list  %}
-      <li>{{PossName}}</li>
-      {% endfor %}
-    </ul>
+  <h2>להלן רשימת התפקידים בארגון:</h2>
+
+
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">תפקיד</th>
+        <th scope="col">תיאור התפקיד</th>
+       
+      </tr>
+    </thead>
+    <tbody>
+    {% for P in poss_list  %}
+      <tr>
+        <th scope="row"><ol></ol></th>
+        <td>
+           {{P.PossName}} 
+        </td>
+        <td>
+          {{P.PossDescription}} 
+        </td>
+      </tr>
+    {% endfor %}
+
+    </tbody>
+  </table>
+
   
   </div>
 {% endblock %}

@@ -98,6 +98,7 @@ class MFile(db.Model):
 
 class Volunteers(db.Model):
     IDV = db.Column(db.Integer,primary_key = True)
+    emailv = db.Column(db.String(64),primary_key = True)
     FnameV = db.Column(db.Text)
     SnameV = db.Column(db.Text)
     DateOfBirthV = db.Column(db.Text)
@@ -108,14 +109,16 @@ class Volunteers(db.Model):
     PhoneNumV = db.Column(db.String(10))
     StatusV = db.Column(db.Text)
     DateAdded = db.Column(db.Text)
-
+    
+    Message = db.relationship('Message',backref='volunteers',lazy='dynamic')
     volunteersingroups = db.relationship('VolunteersInGroups',backref='volunteers',lazy='dynamic')
     volunteerDocuments = db.relationship('VolunteerDocuments',backref='volunteers',lazy='dynamic')
     volunteersinPoss = db.relationship('VolunteersInPoss',backref='volunteers',lazy='dynamic')
 
 
-    def __init__(self,IDV,FnameV,SnameV,DateOfBirthV,PornounsV,CityV,AdressV,NutritionV,PhoneNumV,StatusV,DateAdded ):
+    def __init__(self,IDV,emailv,FnameV,SnameV,DateOfBirthV,PornounsV,CityV,AdressV,NutritionV,PhoneNumV,StatusV,DateAdded ):
         self.IDV = IDV
+        self.emailv=emailv
         self.FnameV = FnameV
         self.SnameV = SnameV
         self.DateOfBirthV = DateOfBirthV
@@ -201,15 +204,17 @@ class Group(db.Model):
     name = db.Column(db.Text)
     regionorsubject = db.Column(db.Text)
     city = db.Column(db.Text)
-    
+    agesingroup = db.Column(db.String(500))
+
     condidates = db.relationship('Condidate',backref='condidate',lazy=False)
     volunteersinGroups = db.relationship('VolunteersInGroups',backref='group',lazy='dynamic')
     Meetings = db.relationship('Meetings',backref='group',lazy='dynamic')
 
-    def __init__(self,name,regionorsubject,city):
+    def __init__(self,name,regionorsubject,city,agesingroup):
         self.name = name
         self.regionorsubject = regionorsubject
         self.city = city
+        self.agesingroup=agesingroup
 
     def __repr__(self):
         return f"Group Name: {self.name} Group ID: {self.id}"
@@ -267,6 +272,8 @@ class Condidate(db.Model):
     id = db.Column(db.Integer,primary_key= True)
     group_id = db.Column(db.Integer,db.ForeignKey('groups.id'))
     emailc = db.Column(db.String(64), unique=True, index=True)
+    firstname = db.Column(db.Text)
+    lastname = db.Column(db.Text)
     pronounc = db.Column(db.Text)
     phonenumc = db.Column(db.String(10))
     stimes = db.Column(db.Text)
@@ -275,7 +282,7 @@ class Condidate(db.Model):
 
 
 
-    def __init__(self,group_id,emailc,pronounc,phonenumc,stimes,text,status):
+    def __init__(self,group_id,emailc,pronounc,phonenumc,stimes,text,status,firstname,lastname):
         self.group_id = group_id
         self.emailc = emailc
         self.pronounc = pronounc
@@ -283,6 +290,8 @@ class Condidate(db.Model):
         self.stimes = stimes
         self.text = text
         self.status = status
+        self.fristname =firstname
+        self.lastname = lastname
         
 class StudentInGroup(db.Model):
 
@@ -313,24 +322,28 @@ class Meetings(db.Model):
     IDG = db.Column(db.Integer,db.ForeignKey('groups.id'))
     Occurence = db.Column(db.Text) 
     Platform = db.Column(db.Text)
+    title = db.Column(db.Text)
     Rate = db.Column(db.Integer)
     Pros = db.Column(db.String(500))
     Cons = db.Column(db.String(500))
     DateAdded = db.Column(db.Text)
+    attending = db.Column(db.String(500))
 
     mfile = db.relationship('MFile',backref='meetings',lazy='dynamic')
     studentsinMeeting = db.relationship('StudentsInMeeting',backref='meetings',lazy='dynamic')
 
-    def __init__(self,Mdate,Mtime,IDG,Occurence,Platform,Rate,Pros,Cons,DateAdded):
+    def __init__(self,Mdate,Mtime,IDG,Occurence,Platform,title,Rate,Pros,Cons,DateAdded,attending):
         self.Mdate = Mdate
         self.Mtime = Mtime
         self.IDG = IDG
         self.Occurence= Occurence
         self.Platform = Platform
+        self.title = title
         self.Rate = Rate
         self.Pros = Pros
         self.Cons = Cons
         self.DateAdded = DateAdded
+        self.attending = attending
 
 class StudentsInMeeting(db.Model):
     id = db.Column(db.Integer,primary_key= True)
@@ -346,6 +359,20 @@ class StudentsInMeeting(db.Model):
     def __repr__(self):
         return f"Student Email: {self.EmailS}, ID of Meeting: {self.IDM}. "   
         
+class Message(db.Model):
+    IDM = db.Column(db.Integer,primary_key=True)
+    Mdate = db.Column(db.Text)
+    IDV = db.Column(db.Integer,db.ForeignKey('volunteers.IDV'))
+    Content = db.Column(db.Text)
+
+    def _init_(self,Mdate,IDV,Content):
+        #self.IDM = IDM       
+        self.Mdate = Mdate
+        self.IDV = IDV
+        self.Content = Content
+        
+    def _repr_(self):
+        return f"{Mdate} {Content}"
          
 user_test1 = Age(namea='ז')
 user_test2 = Age(namea='ח')

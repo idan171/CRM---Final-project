@@ -9,10 +9,12 @@
     <thead>
       <tr>
         <th scope="col">#</th>
-        <th scope="col">ID</th>
-        <th scope="col">Group Name</th>
-        <th scope="col">Region</th>
-        <th scope="col">City</th>
+        <th scope="col">מזהה קבוצה</th>
+        <th scope="col">שם קבוצה</th>
+        <th scope="col">אזורֿ/תחום</th>
+        <th scope="col">עיר</th>
+        <th scope="col">שכבות גיל</th>
+
 
       </tr>
     </thead>
@@ -21,16 +23,20 @@
       <tr>
         <th scope="row"><ol></ol></th>
         <td> 
-          {{gru.id}}
+          <a href="{{url_for('edit_group', id=gru.id)}}"> {{gru.id}}</a>
         </td>
         <td>
-          <a href="#"></a> {{gru.name}} </a>
+           {{gru.name}} 
         </td>
         <td>
           {{gru.regionorsubject}}
         </td>
         <td>
           {{gru.city}}
+        </td>
+
+        <td>
+          {{gru.agesingroup}}
         </td>
       </tr>
       {% endfor %}

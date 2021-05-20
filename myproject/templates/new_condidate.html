@@ -2,7 +2,7 @@
 {% block content %}
 <div class="jumbotron">
   <h1>השאר פרטים:</h1>
-  <p>Fill all the fields</p>
+  <p>מלא.י את כל השדות</p>
   <form method="POST">
       {# This hidden_tag is a CSRF security feature. #}
       {{ form.hidden_tag() }}
@@ -14,9 +14,12 @@
     </br>
     {{ form.phonenumc.label }} {{ form.phonenumc() }}
   </br>
-  {{ form.status.label }} {{ form.status(value='בטיפול') }}
+  {{ form.firstname.label }} {{ form.firstname() }}
 </br>
-  {{ form.text.label }} {{ form.text(value='נשלח על ידי המועמד.ת') }}
+  {{ form.lastname.label }} {{ form.lastname() }}
+</br>
+
+  {{ form.status.label }} {{ form.status() }}
 
     </br>
       {{ form.submit() }}

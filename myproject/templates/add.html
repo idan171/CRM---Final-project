@@ -12,8 +12,8 @@
   </br>
       {{ form.lastname.label }} {{ form.lastname() }}
   </br>
-    {{ form.dateofbirth.label }}    
-        <input type="date"  id="form.dateofbirth()">
+    {{ form.dateofbirth.label }}   <input type="date" id="dateofbirth" name="dateofbirth">
+
   </br>
     {{ form.pronouns.label }} {{ form.pronouns() }}
     </br>
@@ -27,6 +27,10 @@
     </br>
     {{ form.schoolname.label }} {{form.schoolname() }}
     </br>
+    {{ form.parents.label }} {{form.parents() }}
+  </br>
+  {{ form.details.label }} {{form.details() }}
+
     </br>
       {{ form.submit() }}
   </form>

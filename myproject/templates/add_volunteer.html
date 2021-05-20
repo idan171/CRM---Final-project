@@ -8,6 +8,8 @@
       {{ form.hidden_tag() }}
 
       {{ form.IDV.label }} {{ form.IDV() }}
+    </br>
+    {{ form.emailv.label }} {{ form.emailv() }}
         </br>
       {{ form.FnameV.label }} {{ form.FnameV() }}
     </br>
@@ -15,7 +17,7 @@
       {{ form.SnameV.label }} {{ form.SnameV() }}
     </br>
 
-      {{ form.DateOfBirthV.label }} {{ form.DateOfBirthV() }}
+      {{ form.DateOfBirthV.label }} <input type="date" id="DateOfBirthV" name="DateOfBirthV">
         </br>
       {{ form.PronounsV.label }} {{ form.PronounsV() }}
     </br>

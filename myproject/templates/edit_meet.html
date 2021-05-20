@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="jumbotron">
+  <h1>כרטיס פעולה</h1>
+
+
+
+  <div class="table-responsive">
+  <table class="table">
+    <thead class="table-dark">
+      <tr>
+        <th scope="col">תאריך</th>
+        <th scope="col">שעות הפעילות</th>
+        <th scope="col">שם הקבוצה</th>
+        <th scope="col">התקיימה / בוטלה</th>
+        <th scope="col">נושא</th>
+        <th scope="col">פלפורמה</th>
+        <th scope="col">נוכחות</th>
+        <th scope="col">דירוג (1-5)</th>
+
+
+      </tr>
+    </thead>
+    <tbody>
+      {% for S in meetings_list6  %}
+
+      <tr>
+        <td>{{S.Mdate}}</td>
+        <td>{{S.Mtime}}</td>
+        <td>  {{S.name}}</td>
+        <td>  {{S.Occurence}}</td>
+        <td>{{S.title}}</td>
+        <td>  {{S.Platform}}</td>
+        <td>  {{S.attending}}</td>
+        <td>  {{S.Rate}}</td>
+
+        {% endfor %}
+
+      </tr>
+    </tbody>
+  </table>
+  <table class="table">
+    <thead class="table-dark">
+      <tr>
+        <th scope="col">שימור</th>
+        <th scope="col">שיפור</th>
+       
+
+
+      </tr>
+    </thead>
+    <tbody>
+      {% for S in meetings_list6  %}
+
+      <tr>
+        <td>  {{S.Pros}}
+        </td>
+        <td>  {{S.Cons}}
+        </td>
+      </tr>
+      {% endfor %}
+
+    </tbody>
+  </table>
+</div>
+</div>
+
+{% endblock %}

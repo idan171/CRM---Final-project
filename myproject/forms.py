@@ -1,8 +1,11 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, SelectField, IntegerField, RadioField, FileField
+from numpy import str_
+from wtforms import StringField, PasswordField, SubmitField,TextAreaField, SelectField, IntegerField, RadioField, FileField,SelectMultipleField
 from wtforms.validators import DataRequired,Email,EqualTo
 from wtforms import ValidationError
-from myproject.models import User, Group, Poss
+from myproject.models import User, Group, Poss, Student, Age
+from wtforms.widgets import TextArea
+
 
 #classes for login and register process:
 class LoginForm(FlaskForm):
@@ -55,9 +58,11 @@ class AddGroupForm(FlaskForm):
     name = StringField('שם קבוצה:')
     regionorsubject = SelectField('אזור או תחום', choices = [('בחר/י מתוך הרשימה', 'בחר/י מתוך הרשימה'),('צפון', 'צפון'), ('שרון', 'שרון'), ('מרכז', 'מרכז'),('שפלה', 'שפלה'),('דרום', 'דרום'),('תחום טרנס', 'תחום טרנס'),('תחום דתיות', 'תחום דתיות'),('תחום אלואן', 'תחום אלואן'),('תכנית ניר', 'תכנית ניר')])
     city = StringField('עיר הקבוצה:')
+    agesingroup = SelectMultipleField('שכבות גיל בקבוצה:', choices=[('ז','ז'), ('ח','ח'), ('ט','ט'),('י','י'),('יא','יא'),('יב','יב')])
+
 
     #להכניס נתונים קבועים לתוך הגילאים ולהתאים כאן את הערכים
-    submit = SubmitField('Add Group')
+    submit = SubmitField('הוספה')
 
 class AddAgeGroupForm(FlaskForm):
     age_id = RadioField('Ages', choices=[('1','ז'), ('2','ח'), ('3','ט'),('4','י'),('5','יא'),('6','יב')])
@@ -84,7 +89,7 @@ class AddStuGroupForm(FlaskForm):
     statusg = SelectField('סטטוס פעילות בקבוצה:', choices = [('פעיל','פעיל'),('לא פעיל','לא פעיל')])
     # stimes = StringField('start time')
     # ftimef = StringField('finish time')
-    submit = SubmitField('הוספה')
+    submit = SubmitField('שיבוץ חניכ.ה בקבוצה')
 
 class NewCondidateForm(FlaskForm):
 #לשנות לסלקט ולא לסטרינג ולדאוג שהמשתמש יבחר קבוצה ויוזן איי די.
@@ -97,13 +102,16 @@ class NewCondidateForm(FlaskForm):
     pronounc = SelectField('לשון פניה', choices = [('בחר/י מתוך הרשימה', 'בחר/י מתוך הרשימה'),('את', 'את'), ('אתה', 'אתה'), ('מעורבת', 'מעורבת')])
     phonenumc = StringField('מספר טלפון:')
     text = StringField('תיאור הטיפול:')
-    status = SelectField('סטטוס הפניה:', choices = [('בטיפול','בטיפול '),('טופל','טופל ')])
+    status = SelectField('סטטוס הפניה:', choices = [('בטיפול','בטיפול '),('טופל','טופל '),('',' ')])
+    firstname = StringField('שם פרטי:')
+    lastname = StringField('שם משפחה:')
 
     # stimes = StringField('start time')
-    submit = SubmitField('Send')
+    submit = SubmitField('שלח')
 
 class AddVolunteerForm(FlaskForm):
     IDV = StringField('ת״ז מתנדב.ת:')
+    emailv = StringField("אימייל: ")
     FnameV = StringField('שם פרטי:')
     SnameV = StringField('שם משפחה:')
     DateOfBirthV = StringField('תאריך לידה:')
@@ -125,7 +133,7 @@ class VolunteersInGroupsForm(FlaskForm):
     TimeF = StringField('Current Date:')
     statusV = SelectField('סטטוס פעילות בקבוצה:', choices = [('פעיל','פעיל'),('לא פעיל','לא פעיל')])
 
-    submit = SubmitField('בצע שידוך  (:')
+    submit = SubmitField('הוספה')
 
 class VolunteerDocumentsForm(FlaskForm):
     IDV = StringField('ת״ז מתנדב.ת:')
@@ -157,17 +165,39 @@ class MeetingsForm(FlaskForm):
     group_list = list(Group.query.all())
     groups = [(int(g.id), g.name) for g in group_list]
 
+    student_list = list(Student.query.all())
+    students = [(str(g.emails), g.firstname) for g in student_list]
+
+
+
     IDG = SelectField('קבוצה:', choices = groups)
     Mdate = StringField('תאריך:')
     Mtime = StringField('שעת התחלת המפגש:')
-    Occurence = SelectField('סטטס פגישה?', choices = [('1','ממתין'),('2','בוטל'),('3','בוצע')])
-    Platform = SelectField('סוג פגישה:', choices = [('1','פרונטאלי'),('2','מקוון')])
+    Occurence = SelectField('סטטס פגישה?', choices = [('בוטל','בוטל'),('בוצע','בוצע')])
+    Platform = SelectField('סוג פגישה:', choices = [('פרונטאלי','פרונטאלי'),('מקוון','מקוון')])
     Rate = SelectField('דרוג:', choices = [('1','1'),('2','2'),('3','3'),('4','4'),('5','5')])
     Pros = StringField('נקודות לשימור:')
     Cons = StringField('נקודות לשיפור:')
-    
+    attending = SelectMultipleField('נוכחות חניכימ.ות:', choices = students)
+    title = StringField('נושא הפעולה/סיבת הביטול:')
+
 
     submit = SubmitField('צור פגישה')
+
+
+
+ 
+class MessageForme(FlaskForm):
+    #idv_list = list(Volunteers.query.all())
+   #idvs = [(v.IDV,v.FnameV) for v in idv_list]
+ 
+    #IDV = SelectField('ID Volunteer:', choices = idvs)
+    IDV = StringField('ID כותב ההודעה:')
+    #Content = StringField('תוכן ההודעה ')
+    Content = TextAreaField('תוכן ההודעה:', widget=TextArea())
+    submit = SubmitField('פרסם הודעה למדריכים')
+
+
 
 class MFileForm(FlaskForm):
     IDM = StringField('ID of Meetings:') 

@@ -2,13 +2,21 @@
 {% block content %}
 </br>
 </br>
+
 </br>
 </br>
 <div class="d-flex justify-content-center" >
   <a href="{{ url_for('formp') }}" ustify-content-center class="btn btn-success btn-md" role="button">ייצוא לאקסל - דו״ח מתנדבים בתפקיד</a>  
 </div>
-{% for stu in listposs  %}{{stu.PossName}},{% endfor %}
+{% for stu in listposs  %} "{{stu.PossName}}",{% endfor %}
+{% for stu in listposs  %} {{stu.IDP}},{% endfor %}
 
+
+
+
+</br>
+</br>
+</br>
 
   <body style=" direction: rtl; text-align: right;">
 
@@ -19,7 +27,7 @@
             var myLineChart = new Chart(ctx, {
                 type: 'pie',
                 data: {
-                    labels: ["מדריכימ.ות", "ספרית הדרכה", "רכזי.ות חינוך", "רכזי.ות פעילות","מחלקת הדרכה"],
+                    labels: [{% for stu in listposs  %} "{{stu.PossName}}",{% endfor %}],
                     datasets: [{
                         data: [{{guides}}, {{writers}}, {{educations}}, {{activation}}, {{waiting}}],
                         backgroundColor: ["rgba(255, 0, 0, 0.5)", "rgba(100, 255, 0, 0.5)", "rgba(200, 50, 255, 0.5)", "rgba(0, 100, 255, 0.5)", "rgba(256, 165, 100, 100)"],
@@ -124,9 +132,13 @@
 </div>
 </br>
 </br>
-
+</br>
+</br>
 <img src="https://as2.ftcdn.net/v2/jpg/02/85/23/35/1000_F_285233581_kvuGRr79LvShNGoZO9zluF6doEP7a83A.jpg" width="700" height="300" class="rounded mx-auto d-block" alt="Responsive image">
 
+
+
+</br>
 
 </br>
 

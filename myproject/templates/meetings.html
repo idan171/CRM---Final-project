@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+
 <div class="jumbotron">
   <h1>יצירת פגישה:</h1>
   <p>מלא את הפרטים הבאים</p>
@@ -7,9 +8,9 @@
       {# This hidden_tag is a CSRF security feature. #}
       {{ form.hidden_tag() }}
 
-      {{ form.Mdate.label }} <input type="date"  id="form.Mdate()">
+      {{ form.Mdate.label }} <input type="date" id="Mdate" name="Mdate">
     </br>
-      {{ form.Mtime.label }}<input type="time" id="Mdate" name="Mtime">
+      {{ form.Mtime.label }}<input type="time" id="Mtime" name="Mtime">
     </br>
         {{ form.Platform.label }} {{ form.Platform() }}  
     </br>
@@ -17,22 +18,34 @@
     </br>
         {{ form.Occurence.label }} {{ form.Occurence() }}
     </br>
+    {{ form.title.label }} {{ form.title() }}
+    </br>
 
         {{ form.Rate.label }} {{ form.Rate() }}
     </br>
          {{ form.Pros.label }} {{ form.Pros() }}
     </br>
         {{ form.Cons.label }} {{ form.Cons() }}
+    </br>
+
+        {{ form.attending.label }} <select multiple id="mymultiselect" name="mymultiselect" class="selectpicker"  multiple data-live-search="true" >         
+          <option value="" disabled selected>Choose your country</option>
+          {% for c in student_list  %}
+
+          <option value={{c.emails}}>{{c.firstname}}</option>       
+          
+          {% endfor %}
+
+      </select>
+
+
     </br>  
        
       {{ form.submit() }}
 
   </form>
 
-
-
   
-
 </div>
 
 

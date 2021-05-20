@@ -45,6 +45,9 @@
         </tbody>
       </table>
 
+      <div class="d-flex justify-content-center" >
+        <a href="{{ url_for('condiex') }}" ustify-content-center class="btn btn-success btn-md" role="button">ייצוא לאקסל - דו״ח מתעניינימ.ות</a>  
+      </div>
 
 
 
@@ -69,7 +72,11 @@
     </br>
       {{ form.emailc.label }} {{ form.emailc() }}
     </br>
-    {{ form.pronounc.label }} {{ form.pronounc() }}
+    {{ form.firstname.label }} {{ form.firstname() }}
+  </br>
+  {{ form.lastname.label }} {{ form.lastname() }}
+</br>
+{{ form.pronounc.label }} {{ form.pronounc() }}
     </br>
     {{ form.phonenumc.label }} {{ form.phonenumc() }}
     </br>
