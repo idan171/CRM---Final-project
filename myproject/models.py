@@ -98,7 +98,7 @@ class MFile(db.Model):
 
 class Volunteers(db.Model):
     IDV = db.Column(db.Integer,primary_key = True)
-    emailv = db.Column(db.String(64),primary_key = True)
+    emailv = db.Column(db.String(64))
     FnameV = db.Column(db.Text)
     SnameV = db.Column(db.Text)
     DateOfBirthV = db.Column(db.Text)
