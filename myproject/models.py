@@ -116,13 +116,13 @@ class Volunteers(db.Model):
     volunteersinPoss = db.relationship('VolunteersInPoss',backref='volunteers',lazy='dynamic')
 
 
-    def __init__(self,IDV,emailv,FnameV,SnameV,DateOfBirthV,PornounsV,CityV,AdressV,NutritionV,PhoneNumV,StatusV,DateAdded ):
+    def __init__(self,IDV,emailv,FnameV,SnameV,DateOfBirthV,PronounsV,CityV,AdressV,NutritionV,PhoneNumV,StatusV,DateAdded ):
         self.IDV = IDV
         self.emailv=emailv
         self.FnameV = FnameV
         self.SnameV = SnameV
         self.DateOfBirthV = DateOfBirthV
-        self.PornounsV = PornounsV
+        self.PronounsV = PronounsV
         self.CityV = CityV
         self.AdressV = AdressV
         self.NutritionV = NutritionV

@@ -1,15 +1,25 @@
 {% extends "base.html" %}
 {% block content %}
+
+<script>
+  var canceled_meetings = JSON.parse({{ meetings_dict | tojson  }})
+
+  canceled_meetings_labels = []
+  canceled_meetings_values = []
+
+  for (const [key, value] of Object.entries(canceled_meetings)) {
+    canceled_meetings_labels.push(key)
+    canceled_meetings_values.push(value)
+  }
+
+</script>
 </br>
 </br>
 
 </br>
 </br>
-<div class="d-flex justify-content-center" >
-  <a href="{{ url_for('formp') }}" ustify-content-center class="btn btn-success btn-md" role="button">ייצוא לאקסל - דו״ח מתנדבים בתפקיד</a>  
-</div>
-{% for stu in listposs  %} "{{stu.PossName}}",{% endfor %}
-{% for stu in listposs  %} {{stu.IDP}},{% endfor %}
+
+{% for stu in meetings_list4  %} "{{stu}}",{% endfor %}
 
 
 
@@ -44,36 +54,90 @@
                     }
                 }
             });
+
+            var ctx = $("#chart-meetings");
+            var myLineChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: canceled_meetings_labels,
+                    datasets: [{
+                        data: canceled_meetings_values,
+                        backgroundColor: ["rgba(255, 0, 0, 0.5)", "rgba(100, 255, 0, 0.5)", "rgba(200, 50, 255, 0.5)", "rgba(0, 100, 255, 0.5)", "rgba(256, 165, 100, 100)"],
+                        borderWidth: 1,
+                        borderColor:'#777',
+                        hoverBorderWidth:2,
+                        hoverBorderColor:'#000'
+                    }]
+                },
+                options: {
+                    title: {
+                        display: true,
+                        text: 'פילוח פעולות'
+                    }
+                }
+            });
         });
     </script>
-    <div class="page-content page-container" id="page-content">
-        <div class="padding">
-            <div class="row">
-                <div class="container-fluid d-flex justify-content-center">
-                    <div class="col-sm-8 col-md-6">
-                            <div class="card-header">פילוח מתנדבימ.ות</div>
-                            <div class="card-body" style="height: 420px">
-                                <div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
-                                    <div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
-                                        <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
-                                    </div>
-                                    <div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
-                                        <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
-                                    </div>
-                                </div> <canvas id="chart-line" width="299" height="200" class="chartjs-render-monitor" style="display: block; width: 299px; height: 200px;"></canvas>
-                            </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-  </br>
-</br>
-</br>
+    <div class="row">
+      <div class="col-lg-6 col-md-6 col-sm-12">
 
-    <div class="container">
-      <canvas id="mychart"></canvas>
+            
+              
+                <div class="card-header">פילוח מתנדבימ.ות</div>
+                <div class="card-body" >
+                  <div class="d-flex justify-content-center" >
+                    <a href="{{ url_for('formp') }}" ustify-content-center class="btn btn-success btn-md" role="button">ייצוא לאקסל - דו״ח מתנדבים בתפקיד</a>  
+                  </div>
+                    <div class="chartjs-size-monitor" style=" overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                        <div class="chartjs-size-monitor-expand" style="overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                            <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
+                        </div>
+                        <div class="chartjs-size-monitor-shrink" style="overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                            <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
+                        </div>
+                    </div> <canvas id="chart-line" width="299" height="200" class="chartjs-render-monitor" style="display: block; width: 299px; height: 200px;"></canvas>
+                </div>
+                      
+             
+
+      </div>
+
+      <div class="col-lg-6 col-md-6 col-sm-12">
+        <div class="card-header">פילוח מתנדבימ.ות</div>
+        <div class="card-body"></div>
+          <canvas id="mychart"></canvas>
+        </div>
+      </div>
+
+      <div class="col-lg-12 col-md-12 col-sm-12">
+        
+        <div class="card-header" style="text-align: center;">פילוח פעולות</div>
+        <div class="card-body" >
+          <div class="d-flex justify-content-center" >
+            <a href="{{ url_for('formp') }}" ustify-content-center class="btn btn-success btn-md" role="button">ייצוא לאקסל - דו״ח מתנדבים בתפקיד</a>  
+          </div>
+            <div class="chartjs-size-monitor" style=" overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                <div class="chartjs-size-monitor-expand" style="overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                    <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
+                </div>
+                <div class="chartjs-size-monitor-shrink" style="overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+                    <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
+                </div>
+            </div> <canvas id="chart-meetings" width="299" height="100" class="chartjs-render-monitor" style="display: block; width: 199px; height: 200px;"></canvas>
+        </div>
+       
+      </div>
     </div>
+    
+</br>
+</br>
+</br>
+</br>
+</br></br>
+</br></br>
+</br></br>
+</br>
+   
 
     <script>
       let mychart = document.getElementById('mychart').getContext('2d');

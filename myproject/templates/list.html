@@ -30,7 +30,7 @@
     <tbody>
       {% for stu in students_list  %}
       <tr>
-        <th scope="row"><ol></ol></th>
+        <td scope="row">{{loop.index}}</td>
         <td> 
           <a href="{{url_for('edit_stu', emails=stu.emails)}}">{{stu.emails}}</a>
         </td>

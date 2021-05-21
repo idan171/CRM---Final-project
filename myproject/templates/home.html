@@ -5,14 +5,14 @@
 " width="500" height="250" class="rounded mx-auto d-block" alt="Responsive image">
 
 </br>
-<div class="alert alert-info" role="alert">
+<div class="alert alert-success" role="alert">
   {% if current_user.is_authenticated %}
     <h1 style="text-align:center;">שלום {{ current_user.username }}</h1>
 
 
   </div>
   <div class="alert alert-warning alert-dismissible fade show" role="alert">
-      <h4 class="alert-heading">רשימת הודעות </h4>
+      <h4 class="alert-heading">ידיעות מהארגון:</h4>
     {% for M in old_message  %}
     <p>{{M.Content}} </br> <strong>Time: {{M.Mdate}} </strong> </br>ID: {{M.IDV}}</p>
     <hr>

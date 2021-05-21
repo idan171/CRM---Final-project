@@ -19,6 +19,32 @@
  
 
     <title>Adoption</title>
+
+    <style>
+      .navbar-nav {
+        width: 100%;
+        display: block;
+      }
+
+      .navbar-nav li, .navbar-nav a {
+        display: inline-block;
+      }
+
+      .nav-item-left {
+        float: left;
+        margin-right: 5px;
+      }
+
+      .dropdown-menu-right {
+        text-align: right;
+      }
+
+    </style>
+
+    <script>
+      $.get('/update_inactive_users')
+    </script>
+
   </head>
   <body style="background-color:rgba(255, 229, 190, 0.836); direction: rtl; text-align: right;">
     <nav class="navbar sticky-top navbar-expand-sm navbar-dark" style="background-color: #700000;">
@@ -88,8 +114,10 @@
   </div>
 </li>
       <a class="nav-item nav-link" href="{{ url_for('condidate_mang') }}">חניכימ.ות חדשימ.ות</a>
-      <a href="{{ url_for('management_dashbord') }}" ustify-content-center class="btn btn-outline-light" role="button" >מסך מנהלים</a> 
-      <a href="{{ url_for('logout') }}" ustify-content-center class="btn btn-outline-warning my-2 my-sm-0" role="button" >התנתק.י</a> 
+
+      <a href="{{ url_for('logout') }}" ustify-content-center class="btn btn-outline-warning my-2 my-sm-0 nav-item-left" role="button" >התנתק.י</a> 
+      <a href="{{ url_for('management_dashbord') }}" ustify-content-center class="btn btn-outline-light nav-item-left" role="button" >מסך מנהלים</a> 
+      
     
 
     {% else %}

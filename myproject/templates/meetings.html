@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.9.3/js/bootstrap-select.min.js"></script>
+
+
 <div class="jumbotron">
   <h1>יצירת פגישה:</h1>
   <p>מלא את הפרטים הבאים</p>
@@ -28,7 +31,7 @@
         {{ form.Cons.label }} {{ form.Cons() }}
     </br>
 
-        {{ form.attending.label }} <select multiple id="mymultiselect" name="mymultiselect" class="selectpicker"  multiple data-live-search="true" >         
+        {{ form.attending.label }} <select multiple id="mymultiselect" name="mymultiselect" class="" >         
           <option value="" disabled selected>Choose your country</option>
           {% for c in student_list  %}
 
@@ -48,5 +51,37 @@
   
 </div>
 
+
+<script>
+  var students = JSON.parse({{  student_list_thin | tojson }})
+
+  
+  $('#IDG').on('change', function() {
+    // alert( this.value );
+    $('#mymultiselect').find('option').remove()
+
+    
+
+    for (i in students) {
+      s = students[i]
+      
+      if (parseInt(s['group_id']) == parseInt(this.value)) {
+        $("#mymultiselect").append($('<option>', {value:s['email'], text: s['first_name'] + ' ' + s['last_name']}));
+      }
+
+    }
+    // alert('refreshing')
+    // $('#mymultiselect').selectpicker('destroy');
+    // $('#mymultiselect').selectpicker('refresh');
+
+  })
+
+  $('#IDG')
+    .val('1')
+    .trigger('change');
+
+ 
+  
+</script>
 
 {% endblock %}

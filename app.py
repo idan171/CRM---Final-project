@@ -8,7 +8,6 @@ from flask_login import login_user,login_required,logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from myproject.models import Student, User,Message, Group, StudentInGroup, AgesInGroup, Condidate, VolunteerDocuments, VolunteersInPoss, MFile, Volunteers, Poss, VolunteersInGroups, Meetings, StudentsInMeeting   
 from myproject import app,db
-from datetime import date
 #from flask_uploads import configure_uploads,IMAGES,UploadSet
 from werkzeug import secure_filename,FileStorage
 from flask_uploads import configure_uploads, IMAGES, UploadSet
@@ -24,7 +23,8 @@ from pandas import ExcelWriter
 from openpyxl import Workbook
 from sqlalchemy import func
 from sqlalchemy import distinct
-
+import json
+from datetime import datetime, timedelta, date
 
 app.config['SECRET_KEY'] = 'any secret string'
 app.config['UPLOADED_IMAGES_DEST'] = 'uploads/images'
@@ -284,8 +284,8 @@ def search_meeting():
 @app.route('/meetings_list')
 def meetings_list():
     meetings_list2 = Meetings.query.all()
-    meetings_list3 = Meetings.query.join(Group, Meetings.IDG==Group.id).join(Student, Meetings.attending==Student.emails, isouter=True)\
-        .add_columns(Meetings.Mdate, Meetings.IDM, Group.id, Group.name, Meetings.Occurence, Meetings.Platform, Meetings.Rate, Student.firstname, Meetings.title )\
+    meetings_list3 = Meetings.query.join(Group, Meetings.IDG==Group.id, isouter=True).join(Student, Student.emails == Meetings.attending, isouter=True)\
+        .add_columns(Meetings.Mdate, Meetings.IDM,Meetings.attending, Group.id, Group.name, Meetings.Occurence, Meetings.Platform, Meetings.Rate, Student.firstname, Meetings.title )\
         .filter(Meetings.IDG == Group.id)
     return render_template('meetings_list.html',meetings_list2=meetings_list2,meetings_list3=meetings_list3)
 
@@ -315,7 +315,7 @@ def edit_volunteer(IDV):
    # .add_columns(VolunteersInPoss.IDP, Poss.PossName, VolunteersInPoss.TimeS, Volunteers.IDV, Volunteers.FnameV, Volunteers.SnameV,Volunteers.StatusV)\
     #.filter(VolunteersInPoss.IDV==Volunteers.IDV,VolunteersInPoss.IDP==Poss.IDP)
     volunteers_poss_list2 = Volunteers.query.join(VolunteersInPoss, Volunteers.IDV==VolunteersInPoss.IDV, isouter=True).join(Poss, VolunteersInPoss.IDP==Poss.IDP,isouter=True)\
-    .add_columns(VolunteersInPoss.IDP, VolunteersInPoss.id, Poss.PossName, VolunteersInPoss.TimeS, VolunteersInPoss.Statusvp, Volunteers.IDV, Volunteers.FnameV, Volunteers.SnameV,Volunteers.StatusV)\
+    .add_columns(VolunteersInPoss.IDP, VolunteersInPoss.id, Poss.PossName,Volunteers.PronounsV, VolunteersInPoss.TimeS, VolunteersInPoss.Statusvp, Volunteers.IDV, Volunteers.FnameV, Volunteers.SnameV,Volunteers.StatusV)\
    
     volunteers_list = Volunteers.query.all()
     form = AddVolunteerForm()
@@ -347,7 +347,7 @@ def edit_volunteer(IDV):
 @app.route('/edit_poss/<int:id>', methods=['GET', 'POST'])
 def edit_poss(id):
     volunteers_poss_list2 = Volunteers.query.join(VolunteersInPoss, Volunteers.IDV==VolunteersInPoss.IDV, isouter=True).join(Poss, VolunteersInPoss.IDP==Poss.IDP,isouter=True)\
-    .add_columns(VolunteersInPoss.IDP, VolunteersInPoss.id, Poss.PossName, VolunteersInPoss.TimeS, VolunteersInPoss.Statusvp, Volunteers.IDV, Volunteers.FnameV, Volunteers.SnameV,Volunteers.StatusV)\
+    .add_columns(VolunteersInPoss.IDP, VolunteersInPoss.id, Poss.PossName, VolunteersInPoss.TimeS, VolunteersInPoss.Statusvp, Volunteers.IDV, Volunteers.FnameV, Volunteers.SnameV,Volunteers.StatusV,Volunteers.PronounsV)\
    
     volunteers_poss = VolunteersInPoss.query.all()
     form = VolunteersInPossForm()
@@ -512,10 +512,19 @@ def add_age_group():
 
     return render_template('add_age_group.html',form=form)
 
-    
+
+@app.route('/update_inactive_users', methods=['GET'])
+def update_inactive_users():
+    print('updating users...')
+    return '0'
+
 @app.route('/student_in_group', methods=['GET', 'POST'])
 def student_in_group():
     groups = Group.query.all()
+    students_list = Student.query.all()
+    students_list2 = Student.query.join(StudentInGroup, Student.emails==StudentInGroup.student_emails, isouter=True)\
+    .add_columns(Student.emails, Student.firstname,Student.lastname,Student.citys,Student.phonenums,StudentInGroup.id,Student.statuss)\
+    .filter(StudentInGroup.id == None)
 
     stu_in_group_list = StudentInGroup.query.join(Group, StudentInGroup.group_id==Group.id)\
     .add_columns(StudentInGroup.group_id,StudentInGroup.student_emails,StudentInGroup.id, StudentInGroup.statusg, Group.id, Group.name,StudentInGroup.stimes,StudentInGroup.ftimef, StudentInGroup.statusg )\
@@ -540,7 +549,7 @@ def student_in_group():
                 
             return redirect(url_for('student_in_group'))
 
-    return render_template('student_in_group.html',form=form,stu_in_group_list=stu_in_group_list,groups=groups)
+    return render_template('student_in_group.html',form=form,stu_in_group_list=stu_in_group_list,groups=groups,students_list=students_list,students_list2=students_list2)
 
 @app.route('/list_stu_in_group')
 def list_stu_in_group():
@@ -553,6 +562,10 @@ def list_stu_in_group():
 
 @app.route('/edit_stuingroup/<int:id>', methods=['GET', 'POST'])
 def edit_stuingroup(id):
+    students_list = Student.query.all()
+    students_list2 = Student.query.join(StudentInGroup, Student.emails==StudentInGroup.student_emails, isouter=True)\
+    .add_columns(Student.emails, Student.firstname,Student.lastname,Student.citys,Student.phonenums,StudentInGroup.id,Student.statuss)\
+    .filter(StudentInGroup.id == None)
     stu_in_group_list = StudentInGroup.query.join(Group, StudentInGroup.group_id==Group.id)\
     .add_columns(StudentInGroup.group_id,StudentInGroup.student_emails,StudentInGroup.id, StudentInGroup.statusg, Group.id, Group.name,StudentInGroup.stimes,StudentInGroup.ftimef, StudentInGroup.statusg )\
     .filter(StudentInGroup.group_id == Group.id)
@@ -569,11 +582,11 @@ def edit_stuingroup(id):
         try:
             db.session.commit()
             flash("Student in Group Updated Successfully!")
-            return render_template("student_in_group.html",form=form,line_to_update=line_to_update,stu_in_group_list=stu_in_group_list,searchstu_in_group_list=searchstu_in_group_list)
+            return render_template("student_in_group.html",form=form,line_to_update=line_to_update,stu_in_group_list=stu_in_group_list,searchstu_in_group_list=searchstu_in_group_list,students_list=students_list,students_list2=students_list2)
 
         except:
              flash("Error! Looks like there is a problem, please try again!")
-             return render_template("edit_stuingroup.html",form=form,line_to_update=line_to_update,stu_in_group_list=stu_in_group_list,searchstu_in_group_list=searchstu_in_group_list)
+             return render_template("edit_stuingroup.html",form=form,line_to_update=line_to_update,stu_in_group_list=stu_in_group_list,searchstu_in_group_list=searchstu_in_group_list,students_list=students_list,students_list2=students_list2)
 
 
     return render_template('edit_stuingroup.html', form=form,line_to_update=line_to_update)
@@ -793,7 +806,7 @@ def list_volunteers():
     volunteers_list = Volunteers.query.all()
 
     volunteers_poss_list2 = Volunteers.query.join(VolunteersInPoss, Volunteers.IDV==VolunteersInPoss.IDV, isouter=True).join(Poss, VolunteersInPoss.IDP==Poss.IDP,isouter=True)\
-    .add_columns(VolunteersInPoss.IDP, VolunteersInPoss.id, Poss.PossName, VolunteersInPoss.TimeS, VolunteersInPoss.Statusvp, Volunteers.IDV, Volunteers.FnameV, Volunteers.SnameV,Volunteers.StatusV)\
+    .add_columns(VolunteersInPoss.IDP, VolunteersInPoss.id,Volunteers.PronounsV, Poss.PossName, VolunteersInPoss.TimeS, VolunteersInPoss.Statusvp, Volunteers.IDV, Volunteers.FnameV, Volunteers.SnameV,Volunteers.StatusV)\
     # .filter(Volunteers.IDV==VolunteersInPoss.IDV)
 
     #volunteers_poss_list = VolunteersInPoss.query.join(Volunteers, VolunteersInPoss.IDV==Volunteers.IDV).join(Poss, VolunteersInPoss.IDP==Poss.IDP)\
@@ -977,8 +990,18 @@ def volunteers_in_poss():
 
 @app.route('/addmeetings', methods=['GET', 'POST'])
 def addmeetings():
-    student_list = list(Student.query.all())
+    student_list = list(Student.query.join(StudentInGroup, Student.emails==StudentInGroup.student_emails)\
+        .add_columns(StudentInGroup.group_id, StudentInGroup.student_emails,Student.firstname,Student.lastname))
     meetings2 = Meetings.query.all()
+
+    students_thin_list = []
+    for s in student_list:
+        students_thin_list.append({
+            'email': s[2],
+            'group_id': s[1],
+            'last_name': s[4],
+            'first_name': s[3]
+        })
 
     form = MeetingsForm()
 
@@ -1000,7 +1023,7 @@ def addmeetings():
             db.session.add(new_meeting)
             db.session.commit()
             return redirect(url_for('meetings_list'))
-    return render_template('meetings.html',form=form,meetings2=meetings2,student_list=student_list)
+    return render_template('meetings.html',form=form,meetings2=meetings2,student_list=student_list,student_list_thin=json.dumps(students_thin_list))
 
 
 @app.route('/meetings_file',methods=['GET', 'POST'])
@@ -1123,14 +1146,19 @@ def management_dashbord():
    # meetings_list3 = Group.query.join(Meetings, Meetings.IDG==Group.id, isouter=True)\
     #    .add_columns(Meetings.Mdate, Meetings.IDM, Group.id, Group.name, Meetings.Occurence, Meetings.Platform, Meetings.Rate, Meetings.title )\
    #     .filter_by(IDM = None).count()
-   # meetings_list4 = Group.query.join(Meetings, Meetings.IDG==Group.id, isouter=True)\
-     #   .add_columns(Meetings.Mdate, Meetings.IDM, Group.id, Group.name, Meetings.Occurence, Meetings.Platform, Meetings.Rate, Meetings.title )\
-    #    .filter(~Meetings.Mdate.in_ ([ date.today()]),Meetings.Occurence=='בוטל',Group.id == Meetings.IDG).order_by(Meetings.IDG).count()
+
+    start = datetime.today() - timedelta(days=1)
+
+    meetings_list4 = Group.query.join(Meetings, Meetings.IDG==Group.id, isouter=True)\
+      .add_columns(Meetings.Mdate, Meetings.IDM, Group.id, Group.name, Meetings.Occurence, Meetings.Platform, Meetings.Rate, Meetings.title )\
+      .filter(Meetings.Mdate >= start, Meetings.Occurence=='בוטל',Group.id == Meetings.IDG).order_by(Meetings.IDG)
+
+    meetings_dict = pd.DataFrame.from_records(list(meetings_list4)).groupby(4)[4].count().to_dict()
 
    # print (meetings_list3)
    # print (meetings_list4)
 
-    return render_template('management_dashbord.html',guides=guides,writers=writers,educations=educations,activation=activation,waiting=waiting,zafon=zafon,sharon=sharon,merkaz=merkaz,shfela=shfela,darom=darom,trans=trans,datiot=datiot,allwan=allwan,nir=nir,zafon2=zafon2,sharon2=sharon2,merkaz2=merkaz2,shfela2=shfela2,darom2=darom2,trans2=trans2,datiot2=datiot2,allwan2=allwan2,nir2=nir2,zafon3=zafon3,sharon3=sharon3,merkaz3=merkaz3,shfela3=shfela3,darom3=darom3,trans3=trans3,datiot3=datiot3,allwan3=allwan3,nir3=nir3,listposs=listposs)
+    return render_template('management_dashbord.html',meetings_list4=meetings_list4,guides=guides,writers=writers,educations=educations,activation=activation,waiting=waiting,zafon=zafon,sharon=sharon,merkaz=merkaz,shfela=shfela,darom=darom,trans=trans,datiot=datiot,allwan=allwan,nir=nir,zafon2=zafon2,sharon2=sharon2,merkaz2=merkaz2,shfela2=shfela2,darom2=darom2,trans2=trans2,datiot2=datiot2,allwan2=allwan2,nir2=nir2,zafon3=zafon3,sharon3=sharon3,merkaz3=merkaz3,shfela3=shfela3,darom3=darom3,trans3=trans3,datiot3=datiot3,allwan3=allwan3,nir3=nir3,listposs=listposs, meetings_dict=json.dumps(meetings_dict))
 
 
 

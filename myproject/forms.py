@@ -168,7 +168,7 @@ class MeetingsForm(FlaskForm):
     student_list = list(Student.query.all())
     students = [(str(g.emails), g.firstname) for g in student_list]
 
-
+    
 
     IDG = SelectField('קבוצה:', choices = groups)
     Mdate = StringField('תאריך:')
