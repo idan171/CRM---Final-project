@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="jumbotron">
-  <u><h1>שיוך חניכ.ה לקבוצה</h1></u>
+  <h1 class="m-0 font-weight-bold text-primary">שיבוץ חניכ.ה בקבוצה</h1>
 
 </br>
   <form method="POST">
@@ -16,8 +16,7 @@
   </form>
 </br>
 </br>
-<h5>רשימת חניכימ.ות בקבוצה, לעריכה לחצ.י על הדואר האלקטרוני:</h5>
-
+<h5>רשימת חניכימ.ות לפי קבוצה. לעריכה לחצ.י על כתובת הדוא״ל:</h5>
 
 
   <table class="table table-hover">
@@ -25,6 +24,7 @@
       <tr>
         <th scope="col">#</th>
         <th scope="col">דואר אלקטורני</th>
+        <th scope="col">שם מלא</th>
         <th scope="col">שם הקבוצה</th>
         <th scope="col">סטטוס פעילות</th>
 
@@ -36,11 +36,15 @@
       {% for S in stu_in_group_list  %}
       
       <tr>
-        <th scope="row"><ol> </ol></th>
+        <td scope="row">{{loop.index}}</td>
         <td> 
-          <a href="{{url_for('edit_stuingroup', id=S.StudentInGroup.id)}}">{{S.student_emails}}</a>
+          <a href="{{url_for('edit_stuingroup', id=S.StudentInGroup.id)}}">{{S.emails}}</a>
         </td>
-  
+        <td>
+          {{S.firstname}} {{S.lastname}}
+
+
+        </td>
         <td>
           {{S.name}}
 
@@ -73,7 +77,7 @@
       <tbody>
         {% for stu in students_list2  %}
         <tr>
-          <th scope="row"><ol></ol></th>
+          <td scope="row">{{loop.index}}</td>
           <td> 
            {{stu.emails}}
           </td>

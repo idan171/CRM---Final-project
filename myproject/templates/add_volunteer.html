@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="jumbotron">
-  <h1>הוסף מתנדב חדש:</h1>
+  <h1 class="m-0 font-weight-bold text-primary">הוספת מתנדב.ת חדש.ה</h1>
+</br>
   <p>מלא.י את הפרטים הבאים:</p>
   <form method="POST">
       {# This hidden_tag is a CSRF security feature. #}
@@ -41,4 +42,6 @@
   </form>
 
   </div>
+<img src="https://i.pinimg.com/originals/3f/a0/9f/3fa09ff702e45f7941bcd943c4fd8970.jpg" width="600" height="500" class="rounded mx-auto d-block"  style="border:5px solid black" alt="Responsive image">
+
 {% endblock %}

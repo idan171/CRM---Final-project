@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="jumbotron">
-  <h1>שיוך מתנדב לתפקיד:</h1>
-  <p>מלא את הפרטים הבאים</p>
+  <h1 class="m-0 font-weight-bold text-primary">שיבוץ מתנדב.ת בתפקיד</h1>
+</br>
+  <p>מלא.י את הפרטים הבאים</p>
   <form method="POST">
       {# This hidden_tag is a CSRF security feature. #}
       {{ form.hidden_tag() }}
@@ -18,7 +19,7 @@
   </form>
 </div>
 <div class="jumbotron">
-<h2> רשימת המתנה, מתנדבים שעברו תהליך מיונים וטרם שובצו בתפקיד:</h2>  
+  <h3 class="m-0 font-weight-bold text-primary">רשימת המתנה - מתנדבימ.ות שעברו הליך מיון וטרם שובצו בתפקיד</h3>
 
   <table class="table table-hover">
     <thead>
@@ -38,7 +39,7 @@
     <tbody>
       {% for v in volunteers_poss_list2  %}
       <tr>
-        <th scope="row"><ol></ol></th>
+        <td scope="row">{{loop.index}}</td>
         <td> 
           {{v.IDV}}
          </td>

@@ -1,8 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="jumbotron">
-    <h1>:השלם את השדות להתחברות</h1>
+    <h1>כניסה למערכת:</h1>
+    <div class="dropdown-divider"></div>
 
+</br>
     <form method="POST">
     {# This hidden_tag is a CSRF security feature. #}
     {{ form.hidden_tag() }}

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="jumbotron">
-  <h1>חיפוש מתנדבים לפי קבוצה</h1>
+  <h1 class="m-0 font-weight-bold text-primary">חיפוש רשומות מתנדבימ.ות</h1>
 </br>
 
 
@@ -11,7 +11,7 @@
 
   </form>
 </br>
-<h6>לעריכה, לחץ על פרטי המתנדב:</h6>
+<h6>לעריכה, לחצ.י על פרטי המתנדב.ת:</h6>
 
 
   <table class="table table-hover">
@@ -33,7 +33,7 @@
     <tbody>
       {% for V in searchvol_in_group_list  %}
       <tr>
-        <th scope="row"><ol></ol></th>
+        <td scope="row">{{loop.index}}</td>
         <td> 
       {{V.IDV}}
 
@@ -69,6 +69,6 @@
 </div>
 
 <div class="d-flex justify-content-right" >
-  <a href="{{ url_for('index') }}" ustify-content-center class="btn btn-success btn-lg" role="button">ייצוא לאקסל - דו״ח מתנדבים</a>  
+  <a href="{{ url_for('index') }}" ustify-content-center class="btn btn-success btn-md" role="button">ייצוא לאקסל - דו״ח מתנדבים</a>  
 </div>
 {% endblock %}

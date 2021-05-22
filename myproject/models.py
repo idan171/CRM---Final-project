@@ -24,11 +24,19 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(64), unique=True, index=True)
     username = db.Column(db.String(64), unique=True, index=True)
     password_hash = db.Column(db.String(128))
+    firstname = db.Column(db.Text)
+    lastname = db.Column(db.Text)
+    tel = db.Column(db.Text)
 
-    def __init__(self, email, username, password):
+
+    def __init__(self, email, username, password,firstname, lastname,tel):
         self.email = email
         self.username = username
         self.password_hash = generate_password_hash(password)
+        self.firstname = firstname
+        self.lastname = lastname
+        self.tel = tel
+
 
     def check_password(self,password):
         # https://stackoverflow.com/questions/23432478/flask-generate-password-hash-not-constant-output
@@ -312,9 +320,6 @@ class StudentInGroup(db.Model):
         self.group_id = group_id
         self.statusg = statusg
 
-    def __repr__(self):
-        return f"the name of the student is {self.student_emails} and he is in group: {self.group_id} and the id of the row is: {self.id}"
-
 class Meetings(db.Model):
     IDM = db.Column(db.Integer,primary_key= True)
     Mdate = db.Column(db.Text)
@@ -327,7 +332,7 @@ class Meetings(db.Model):
     Pros = db.Column(db.String(500))
     Cons = db.Column(db.String(500))
     DateAdded = db.Column(db.Text)
-    attending = db.Column(db.String(500))
+    attending = db.Column(db.String(500),db.ForeignKey('Student.emails'))
 
     mfile = db.relationship('MFile',backref='meetings',lazy='dynamic')
     studentsinMeeting = db.relationship('StudentsInMeeting',backref='meetings',lazy='dynamic')

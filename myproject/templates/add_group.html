@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="jumbotron">
-  <h1>הוספת קבוצה</h1>
+  <h1 class="m-0 font-weight-bold text-primary">הוספת קבוצת נוער / מועדון</h1>
+</br>
   <p>מלא.י את הפרטים הבאים</p>
   <form method="POST">
       {# This hidden_tag is a CSRF security feature. #}
@@ -23,11 +24,13 @@
       
     </select>
     <br>
-
+  </br>
       {{ form.submit() }}
   </form>
 
 </div>
+<img src="https://cdn.cnn.com/cnnnext/dam/assets/170626132817-pride-parade-exlarge-169.jpg" width="900" height="500" class="rounded mx-auto d-block"  style="border:5px solid black" alt="Responsive image">
+
 {% endblock %}
 
 

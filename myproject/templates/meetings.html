@@ -5,8 +5,9 @@
 
 
 <div class="jumbotron">
-  <h1>יצירת פגישה:</h1>
-  <p>מלא את הפרטים הבאים</p>
+  <h1 class="m-0 font-weight-bold text-primary">דיווח פעולה בקבוצה</h1>
+</br>
+  <p>מלא.י את הפרטים הבאים</p>
   <form method="POST">
       {# This hidden_tag is a CSRF security feature. #}
       {{ form.hidden_tag() }}
@@ -83,5 +84,7 @@
  
   
 </script>
+
+<img src="https://www.apa.org/images/lgbt-pride-title-image_tcm7-187539.jpg" width="900" height="500" class="rounded mx-auto d-block"  style="border:5px solid black" alt="Responsive image">
 
 {% endblock %}

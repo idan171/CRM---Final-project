@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="jumbotron">
-  <h1>שיוך מתנדב לקבוצה:</h1>
+  <h1 class="m-0 font-weight-bold text-primary">שיבוץ מתנדב.ת בקבוצה</h1>
+</br>
   <p>מלא את הפרטים הבאים</p>
   <form method="POST">
       {# This hidden_tag is a CSRF security feature. #}
@@ -38,7 +39,7 @@
 <tbody>
   {% for G in vol_in_group_list2  %}
   <tr>
-    <th scope="row"><ol></ol></th>
+    <td scope="row">{{loop.index}}</td>
     <td> 
       {{G.IDV}}
     </td>
@@ -66,8 +67,8 @@
 
 </tbody>
 </table>
-
-
+</br>
+</br>
 <h7>מדריכימ.ות בקבוצה:</h7>
 
       <table class="table table-hover">
@@ -89,7 +90,7 @@
         <tbody>
           {% for V in vol_in_group_list  %}
           <tr>
-            <th scope="row"><ol>{{V.VolunteersInGroups.id}}</ol></th>
+            <td scope="row">{{loop.index}}</td>
             <td> 
               <a href="{{url_for('edit_volingroup', id=V.VolunteersInGroups.id)}}">{{V.IDV}}</a>
             </td>

@@ -9,17 +9,20 @@ from wtforms.widgets import TextArea
 
 #classes for login and register process:
 class LoginForm(FlaskForm):
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    submit = SubmitField('Log In')
+    email = StringField('דוא״ל', validators=[DataRequired(), Email()])
+    password = PasswordField('סיסמא', validators=[DataRequired()])
+    submit = SubmitField('התחברות')
 
 
 class RegistrationForm(FlaskForm):
-    email = StringField('Email', validators=[DataRequired(),Email()])
-    username = StringField('Username', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired(), EqualTo('pass_confirm', message='Passwords Must Match!')])
-    pass_confirm = PasswordField('Confirm password', validators=[DataRequired()])
-    submit = SubmitField('Register!')
+    email = StringField('דוא״ל', validators=[DataRequired(),Email()])
+    username = StringField('שם משתמש', validators=[DataRequired()])
+    password = PasswordField('סיסמא', validators=[DataRequired(), EqualTo('pass_confirm', message='Passwords Must Match!')])
+    pass_confirm = PasswordField('אימות סיסמא', validators=[DataRequired()])
+    firstname = StringField('שם פרטי')
+    lastname = StringField('שם משפחה')
+    tel = StringField('מספר נייד')
+    submit = SubmitField('שלח פרטים')
 
     def check_email(self, field):
         # Check if not None for that user email!

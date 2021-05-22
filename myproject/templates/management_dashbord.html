@@ -13,20 +13,9 @@
   }
 
 </script>
-</br>
-</br>
 
 </br>
-</br>
 
-{% for stu in meetings_list4  %} "{{stu}}",{% endfor %}
-
-
-
-
-</br>
-</br>
-</br>
 
   <body style=" direction: rtl; text-align: right;">
 
@@ -62,7 +51,7 @@
                     labels: canceled_meetings_labels,
                     datasets: [{
                         data: canceled_meetings_values,
-                        backgroundColor: ["rgba(255, 0, 0, 0.5)", "rgba(100, 255, 0, 0.5)", "rgba(200, 50, 255, 0.5)", "rgba(0, 100, 255, 0.5)", "rgba(256, 165, 100, 100)"],
+                        backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850","#ff33cc","#ffff00","#66ff33","66ffcc","ff33cc"],
                         borderWidth: 1,
                         borderColor:'#777',
                         hoverBorderWidth:2,
@@ -72,7 +61,7 @@
                 options: {
                     title: {
                         display: true,
-                        text: 'פילוח פעולות'
+                       text: 'פילוח פעולות'
                     }
                 }
             });
@@ -83,10 +72,10 @@
 
             
               
-                <div class="card-header">פילוח מתנדבימ.ות</div>
+                <div class="card-header" style= "text-align: center;">פילוח מתנדבימ.ות</div>
                 <div class="card-body" >
                   <div class="d-flex justify-content-center" >
-                    <a href="{{ url_for('formp') }}" ustify-content-center class="btn btn-success btn-md" role="button">ייצוא לאקסל - דו״ח מתנדבים בתפקיד</a>  
+                    <a href="{{ url_for('formp') }}" ustify-content-center class="btn btn-success btn-sm" role="button">ייצוא לאקסל - דו״ח מתנדבים בתפקיד</a>  
                   </div>
                     <div class="chartjs-size-monitor" style=" overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
                         <div class="chartjs-size-monitor-expand" style="overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
@@ -103,18 +92,21 @@
       </div>
 
       <div class="col-lg-6 col-md-6 col-sm-12">
-        <div class="card-header">פילוח מתנדבימ.ות</div>
-        <div class="card-body"></div>
+        <div class="card-header"style= "text-align: center;">פילוח חניכימ.ות </div>
+        <div class="card-body" >
+          <div class="d-flex justify-content-center" >
+            <a href="{{ url_for('studentli') }}" ustify-content-center class="btn btn-success btn-sm" role="button">ייצוא לאקסל - דו״ח מתנדבים בתפקיד</a>  
+          </div>
           <canvas id="mychart"></canvas>
         </div>
       </div>
-
+        
       <div class="col-lg-12 col-md-12 col-sm-12">
         
         <div class="card-header" style="text-align: center;">פילוח פעולות</div>
         <div class="card-body" >
           <div class="d-flex justify-content-center" >
-            <a href="{{ url_for('formp') }}" ustify-content-center class="btn btn-success btn-md" role="button">ייצוא לאקסל - דו״ח מתנדבים בתפקיד</a>  
+            <a href="{{ url_for('action') }}" ustify-content-center class="btn btn-success btn-sm" role="button">ייצוא לאקסל - דו״ח מתנדבים בתפקיד</a>  
           </div>
             <div class="chartjs-size-monitor" style=" overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
                 <div class="chartjs-size-monitor-expand" style="overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
@@ -123,6 +115,7 @@
                 <div class="chartjs-size-monitor-shrink" style="overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
                     <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
                 </div>
+                
             </div> <canvas id="chart-meetings" width="299" height="100" class="chartjs-render-monitor" style="display: block; width: 199px; height: 200px;"></canvas>
         </div>
        
@@ -188,18 +181,6 @@
 
     </script>
 </body>
-</br>
-
-
-
-
-</div>
-</br>
-</br>
-</br>
-</br>
-<img src="https://as2.ftcdn.net/v2/jpg/02/85/23/35/1000_F_285233581_kvuGRr79LvShNGoZO9zluF6doEP7a83A.jpg" width="700" height="300" class="rounded mx-auto d-block" alt="Responsive image">
-
 
 
 </br>

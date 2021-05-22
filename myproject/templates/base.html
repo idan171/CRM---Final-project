@@ -62,11 +62,11 @@
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
           <a class="dropdown-item" href="{{ url_for('add_stu') }}" >פתיחת תיק חניכ.ה</a>
           <a class="dropdown-item" href="{{ url_for('list_stu') }}">רשימת חניכימ.ות</a>
-          <a class="dropdown-item" href="{{ url_for('del_stu') }}">מחיקת תיק חניכ.ה</a>
 
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="{{ url_for('student_in_group') }}">שיוך חניכ.ה לקבוצה</a>
-          <a class="dropdown-item" href="{{ url_for('list_stu_in_group') }}">רשימת חניכימ.ות וקבוצות</a>
+          <a class="dropdown-item" href="{{ url_for('list_stu_in_group') }}">חיפוש חניכימ.ות</a>
+
 
         </div>
       </li>
@@ -93,10 +93,12 @@
       </a>
       <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
         <a class="dropdown-item" href="{{ url_for('add_volunteer') }}">פתיחת תיק מתנדב.ת</a>
-        <a class="dropdown-item" href="{{ url_for('list_volunteers') }}">רשימת מתנדב.ות</a>
+        <a class="dropdown-item" href="{{ url_for('list_volunteers') }}">רשימת מתנדבימ.ות</a>
         <a class="dropdown-item" href="{{ url_for('volunteer_documents') }}">מסמכי מתנדבימ.ות</a>
+        <div class="dropdown-divider"></div>
         <a class="dropdown-item" href="{{ url_for('volunteers_in_poss') }}">שיבוץ מתנדבימ.ות בתפקיד</a>
         <a class="dropdown-item" href="{{ url_for('volunteer_in_group') }}">שיבוץ מדריכימ.ות בקבוצה</a>
+        <div class="dropdown-divider"></div>
         <a class="dropdown-item" href="{{ url_for('list_vol_in_group') }}">חיפוש</a>
 
       </div>

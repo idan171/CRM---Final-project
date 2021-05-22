@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="jumbotron">
-  <u><h1>חיפוש פעולות</h1></u>
+  <h1 class="m-0 font-weight-bold text-primary">חיפוש במאגר פעולות </h1>
 </br>
 
   <form method ="POST">
@@ -34,7 +34,7 @@
       {% for S in meetings_list3  %}
       
       <tr>
-        <th scope="row"><ol></ol></th>
+        <td scope="row">{{loop.index}}</td>
         <td>
           <a href="{{url_for('edit_meet', IDM=S.IDM)}}">{{S.Mdate}}</a>
         </td>

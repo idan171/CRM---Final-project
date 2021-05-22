@@ -1,8 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
+
 <div class="jumbotron">
   <h1 class="m-0 font-weight-bold text-primary">פתיחת תיק חניכ.ה</h1>
-  <p>לאחר פגישת הכרות, השלמ.י את כל הפרטים</p>
+</br>
+  <p>לאחר פגישת הכרות, השלמ.י את הפרטים הבאים:</p>  
+  
   <form method="POST">
       {# This hidden_tag is a CSRF security feature. #}
       {{ form.hidden_tag() }}
@@ -20,7 +23,7 @@
     {{ form.citys.label }} {{form.citys() }}
     </br>
     {{ form.addresss.label }} {{form.addresss() }}
-    </br>
+  </br>
     {{ form.nutritions.label }} {{ form.nutritions() }}
     </br>
     {{ form.phonenums.label }} {{form.phonenums() }}
@@ -34,5 +37,10 @@
     </br>
       {{ form.submit() }}
   </form>
+
 </div>
+  <img src="https://miro.medium.com/max/4242/1*9xQNT2BMQEBpQ6Sy0ubgFQ.jpeg" width="1000" height="500" class="rounded mx-auto d-block"  style="border:5px solid black" alt="Responsive image">
+
+
 {% endblock %}
+

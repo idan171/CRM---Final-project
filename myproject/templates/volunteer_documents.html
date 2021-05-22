@@ -42,7 +42,7 @@
     {% for V in volunteer_and_doc  %}
 
     <tr>
-      <th scope="row"><ol></ol></th>
+      <td scope="row">{{loop.index}}</td>
       <td> 
         <a href="{{url_for('edit_volunteer', IDV=V.IDV)}}">{{V.IDV}}</a>
 

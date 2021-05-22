@@ -1,12 +1,17 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="jumbotron">
-    <h1>צור פרטי התחברות:</h1>
+    <h1>בקש.י הרשאות התחברות:</h1>
+    <div class="dropdown-divider">גג</div>
+</br>
 
 <form method="POST">
     {# This hidden_tag is a CSRF security feature. #}
     {{ form.hidden_tag() }}
-  
+    {{ form.firstname.label }} {{ form.firstname() }}<br>
+    {{ form.lastname.label }} {{ form.lastname() }}<br>
+    {{ form.tel.label }} {{ form.tel() }}<br>
+
     {{ form.email.label }} {{ form.email() }}<br>
     {{ form.username.label }} {{ form.username() }}<br>
     {{ form.password.label }} {{ form.password() }}<br>

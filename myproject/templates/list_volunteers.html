@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="jumbotron">
-  <h1>רשימת מתנדבים ועובדים בארגון:</h1>
+  <h1 class="m-0 font-weight-bold text-primary">רשימת מתנדבימ.ות ועובדימ.ות בארגון</h1>
 </br>
   <p>חיפוש לפי שם / תעודת זהות / תפקיד</p>
   
@@ -11,7 +11,7 @@
 
   </form>
 </br>
-<p>לצפיה או עריכת פרטי המתנדב.ת, לחצ/י על ת״ז המתנדב/ת. לשינוי סטטוס התפקיד - לחצ.י על הסטטוס:</p>
+<p>לצפיה או עריכת פרטי המתנדב.ת, לחצ.י על ת״ז המתנדב.ת. לשינוי סטטוס התפקיד - לחצ.י על הסטטוס:</p>
 
   <table class="table table-hover">
     <thead>
@@ -31,7 +31,7 @@
       {% for V in volunteers_poss_list2  %}
 
       <tr>
-        <th scope="row"><ol></ol></th>
+        <td scope="row">{{loop.index}}</td>
         <td> 
           <a href="{{url_for('edit_volunteer', IDV=V.IDV)}}">{{V.IDV}}</a>
 

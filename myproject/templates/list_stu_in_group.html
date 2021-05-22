@@ -1,27 +1,27 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="jumbotron">
-  <u><h1>חיפוש חניכמ.ות וקבוצות</h1></u>
+  <h1 class="m-0 font-weight-bold text-primary"> חיפוש חניכימ.ות בקבוצה:</h1>
 </br>
 
-
-  <form method ="POST">
-    <input type="text" autofocus="autofocus" name="vol_string">
-    <input type="submit" formaction="/search_stuingroup" value="Search / Return">
 
   </form>
 </br>
-<h6>לעריכה, לחצ.י על כתובת הדואר האלקטרוני:</h6>
+<h6>חיפוש לפי שם הקבוצה:</h6>
+<form method ="POST">
+  <input type="text" autofocus="autofocus" name="stuin_string">
+  <input type="submit" formaction="/search_stuingroup" value="Search / Return">
 
+</form>
 
   <table class="table table-hover">
     <thead>
       <tr>
         <th scope="col">#</th>
-        <th scope="col">Student Email</th>
-        <th scope="col">ID of Group</th>
-        <th scope="col">Group Name</th>
-        <th scope="col">Status</th>
+        <th scope="col">דוא״ל</th>
+        <th scope="col">שם החניכ.ה</th>
+        <th scope="col">שם קבוצה</th>
+        <th scope="col">סטטוס פעילות בקבוצה</th>
 
       </tr>
     </thead>
@@ -31,12 +31,13 @@
       {% for S in searchstu_in_group_list  %}
       
       <tr>
-        <th scope="row"><ol></ol></th>
+        <td scope="row">{{loop.index}}</td>
         <td> 
-          {{S.student_emails}}
+          {{S.emails}}
         </td>
         <td>
-        {{S.group_id}}
+        {{S.firstname}}        {{S.lastname}}
+
         </td>
         <td>
           {{S.name}}

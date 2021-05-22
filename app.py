@@ -91,7 +91,10 @@ def register():
     if form.validate_on_submit():
         user = User(email=form.email.data,
                     username=form.username.data,
-                    password=form.password.data)
+                    password=form.password.data,
+                    firstname=form.password.data,
+                    lastname=form.password.data,
+                    tel=form.password.data)
 
         db.session.add(user)
         db.session.commit()
@@ -102,6 +105,10 @@ def register():
 
 @app.route('/add', methods=['GET', 'POST'])
 def add_stu():
+   # meetings_list3 = Meetings.query.join(Group, Meetings.IDG==Group.id, isouter=True).join(Student, Student.emails == Meetings.attending, isouter=True)\
+      #  .add_columns(Meetings.Mdate, Meetings.IDM,Meetings.attending, Group.id, Group.name, Meetings.Occurence, Meetings.Platform, Meetings.Rate, Student.firstname, Meetings.title )\
+     #   .filter(Meetings.Mdate >= (datetime.today() - timedelta(days=2)))
+
     form = AddForm()
 
     if form.validate_on_submit():
@@ -162,16 +169,32 @@ def edit_stu(emails):
 
 @app.route('/edit_meet/<int:IDM>', methods=['GET', 'POST'])
 def edit_meet(IDM):
-    meetings_list6 = Meetings.query.join(Group, Meetings.IDG==Group.id)\
-    .add_columns(Meetings.IDM, Meetings.Mdate, Meetings.Mdate ,Meetings.Mtime ,Meetings.IDG ,Meetings.Occurence ,Meetings.Platform ,Meetings.Rate, Meetings.title ,Meetings.Pros ,Meetings.Cons ,Meetings.attending, Group.name ,)\
+    #mee = db.session.query(Meetings.attending,Student.emails).filter(Meetings.IDM == IDM,Student.emails.like('%Meetings.attending%'))
+    meetings_list6 = Meetings.query.join(Group, Meetings.IDG==Group.id).join(Student, Student.emails.like(Meetings.attending), isouter=True)\
+    .add_columns(Meetings.IDM, Meetings.Mdate, Meetings.Mdate ,Meetings.Mtime ,Meetings.IDG ,Meetings.Occurence ,Meetings.Platform ,Meetings.Rate, Meetings.title ,Meetings.Pros ,Meetings.Cons ,Meetings.attending, Group.name,Student.firstname ,)\
     .filter(Meetings.IDM == IDM).all()
     meetings_list3 = Meetings.query.join(Group, Meetings.IDG==Group.id).join(Student, Meetings.attending==Student.emails, isouter=True)\
         .add_columns(Meetings.Mdate, Meetings.IDM, Group.id, Group.name, Meetings.Occurence, Meetings.Platform, Meetings.Rate, Student.firstname, Meetings.title )\
         .filter(Meetings.IDG == Group.id)
 
+    print(*meetings_list3, sep = "\n")   
+    
     return render_template('edit_meet.html',meetings_list6=meetings_list6,meetings_list3=meetings_list3)
 
- 
+
+@app.route('/search_stuingroup', methods=['GET', 'POST'])
+def search_stuingroup():
+    if request.method =='POST':
+        form = request.form
+        search_value = form['stuin_string']
+        search = "%{0}%".format(search_value)
+        results = StudentInGroup.query.join(Group, StudentInGroup.group_id==Group.id, isouter=True).join(Student, StudentInGroup.student_emails==Student.emails, isouter=True)\
+    .add_columns(StudentInGroup.group_id, Student.emails, StudentInGroup.statusg, Group.id, Group.name,StudentInGroup.stimes,StudentInGroup.ftimef,Student.firstname, Student.lastname).filter(or_(StudentInGroup.student_emails.like(search),Group.name.like(search),
+                                            StudentInGroup.statusg.like(search))).all()
+        return render_template('list_stu_in_group.html',searchstu_in_group_list=results,legend="Search Results")
+    else:
+        return redirect('/')
+
 @app.route('/message', methods=['GET', 'POST'])
 def message():
  
@@ -290,25 +313,6 @@ def meetings_list():
     return render_template('meetings_list.html',meetings_list2=meetings_list2,meetings_list3=meetings_list3)
 
 
-
-@app.route('/search_stuingroup', methods=['GET', 'POST'])
-def search_stuingroup():
-    
-
-    
-    if request.method =='POST':
-        form1 = request.form
-        search_value = form1['vol_string']
-        search = "%{0}%".format(search_value)
-        results = (StudentInGroup.query.join(Group, StudentInGroup.group_id==Group.id)\
-        .add_columns(StudentInGroup.group_id, StudentInGroup.student_emails, StudentInGroup.statusg, Group.id, Group.name,StudentInGroup.stimes,StudentInGroup.ftimef, StudentInGroup.statusg )\
-        .filter(StudentInGroup.group_id == Group.id)).filter(or_(StudentInGroup.student_emails.like(search),Group.name.like(search),
-                                            StudentInGroup.statusg.like(search))).all()
-        return render_template('list_stu_in_group.html',searchstu_in_group_list=results,legend="Search Results")
-    else:
-        return redirect('/')
-
-
 @app.route('/edit_volunteer/<int:IDV>', methods=['GET', 'POST'])
 def edit_volunteer(IDV):
   #  volunteers_poss_list = VolunteersInPoss.query.join(Volunteers, VolunteersInPoss.IDV==Volunteers.IDV).join(Poss, VolunteersInPoss.IDP==Poss.IDP)\
@@ -367,7 +371,6 @@ def edit_poss(id):
 
 
     return render_template('edit_poss.html',form=form,pos_to_update=pos_to_update)
-
 
 
 
@@ -522,15 +525,14 @@ def update_inactive_users():
 def student_in_group():
     groups = Group.query.all()
     students_list = Student.query.all()
+    students_list3 = StudentInGroup.query.all()
     students_list2 = Student.query.join(StudentInGroup, Student.emails==StudentInGroup.student_emails, isouter=True)\
     .add_columns(Student.emails, Student.firstname,Student.lastname,Student.citys,Student.phonenums,StudentInGroup.id,Student.statuss)\
     .filter(StudentInGroup.id == None)
-
-    stu_in_group_list = StudentInGroup.query.join(Group, StudentInGroup.group_id==Group.id)\
-    .add_columns(StudentInGroup.group_id,StudentInGroup.student_emails,StudentInGroup.id, StudentInGroup.statusg, Group.id, Group.name,StudentInGroup.stimes,StudentInGroup.ftimef, StudentInGroup.statusg )\
+    stu_in_group_list = StudentInGroup.query.join(Group, StudentInGroup.group_id==Group.id, isouter=True).join(Student, StudentInGroup.student_emails==Student.emails, isouter=True)\
+    .add_columns(StudentInGroup.group_id, Student.emails, StudentInGroup.statusg, Group.id, Group.name,StudentInGroup.stimes,StudentInGroup.ftimef,Student.firstname, Student.lastname)\
     .filter(StudentInGroup.group_id == Group.id)
     #.paginate(page, 1, False)
-
     form = AddStuGroupForm()
     
     if form.is_submitted():
@@ -547,17 +549,9 @@ def student_in_group():
             db.session.commit()
             print('added')
                 
-            return redirect(url_for('student_in_group'))
+        return render_template('student_in_group.html',form=form,stu_in_group_list=stu_in_group_list,groups=groups,students_list=students_list,students_list2=students_list2,students_list3=students_list3)
 
-    return render_template('student_in_group.html',form=form,stu_in_group_list=stu_in_group_list,groups=groups,students_list=students_list,students_list2=students_list2)
-
-@app.route('/list_stu_in_group')
-def list_stu_in_group():
-    # Grab a list of students from database.
-    stu_in_group_list = StudentInGroup.query.all()
-    searchstu_in_group_list = StudentInGroup.query.join(Group, StudentInGroup.group_id==Group.id, isouter=True).join(Student, StudentInGroup.student_emails==Student.emails, isouter=True)\
-    .add_columns(StudentInGroup.group_id, StudentInGroup.student_emails, StudentInGroup.statusg, Group.id, Group.name,StudentInGroup.stimes,StudentInGroup.ftimef, StudentInGroup.statusg )
-    return render_template('list_stu_in_group.html',stu_in_group_list=stu_in_group_list,searchstu_in_group_list=searchstu_in_group_list)
+    return render_template('student_in_group.html',form=form,stu_in_group_list=stu_in_group_list,groups=groups,students_list=students_list,students_list2=students_list2,students_list3=students_list3)
 
 
 @app.route('/edit_stuingroup/<int:id>', methods=['GET', 'POST'])
@@ -566,12 +560,12 @@ def edit_stuingroup(id):
     students_list2 = Student.query.join(StudentInGroup, Student.emails==StudentInGroup.student_emails, isouter=True)\
     .add_columns(Student.emails, Student.firstname,Student.lastname,Student.citys,Student.phonenums,StudentInGroup.id,Student.statuss)\
     .filter(StudentInGroup.id == None)
-    stu_in_group_list = StudentInGroup.query.join(Group, StudentInGroup.group_id==Group.id)\
-    .add_columns(StudentInGroup.group_id,StudentInGroup.student_emails,StudentInGroup.id, StudentInGroup.statusg, Group.id, Group.name,StudentInGroup.stimes,StudentInGroup.ftimef, StudentInGroup.statusg )\
+    stu_in_group_list = StudentInGroup.query.join(Group, StudentInGroup.group_id==Group.id, isouter=True).join(Student, StudentInGroup.student_emails==Student.emails, isouter=True)\
+    .add_columns(StudentInGroup.group_id, Student.emails, StudentInGroup.statusg, Group.id, Group.name,StudentInGroup.stimes,StudentInGroup.ftimef,Student.firstname, Student.lastname)\
     .filter(StudentInGroup.group_id == Group.id)
 
-    searchstu_in_group_list = StudentInGroup.query.join(Group, StudentInGroup.group_id==Group.id).join(Student, StudentInGroup.student_emails==Student.emails)\
-    .add_columns(StudentInGroup.group_id, StudentInGroup.student_emails, StudentInGroup.statusg, Group.id, Group.name,Student.emails,StudentInGroup.stimes,StudentInGroup.ftimef, StudentInGroup.statusg )\
+    searchstu_in_group_list = StudentInGroup.query.join(Group, StudentInGroup.group_id==Group.id, isouter=True).join(Student, StudentInGroup.student_emails==Student.emails, isouter=True)\
+    .add_columns(StudentInGroup.group_id, Student.emails, StudentInGroup.statusg, Group.id, Group.name,StudentInGroup.stimes,StudentInGroup.ftimef,Student.firstname, Student.lastname)\
     .filter(StudentInGroup.group_id == Group.id)
     form = AddStuGroupForm()
     line_to_update = StudentInGroup.query.get_or_404(id)
@@ -727,7 +721,92 @@ def condiex():
 
     return resp
 
+@app.route('/upload_action')
+def action():
+    ""
+    # Model query in SQLAlchemy
+    users = Group.query.join(Meetings, Meetings.IDG==Group.id, isouter=True)\
+      .add_columns(Meetings.Mdate, Meetings.IDM, Group.id, Group.name, Meetings.Occurence, Meetings.Platform, Meetings.Rate, Meetings.title )\
+      .filter(Meetings.Mdate >= (datetime.today() - timedelta(days=2)), Meetings.Occurence=='בוטל',Group.id == Meetings.IDG).order_by(Meetings.IDG)
+    
 
+    # Instantiate byte type IO objects, used to store objects in memory, no need to generate temporary files on disk
+    out = io.BytesIO()
+    # Instantiate the writer object that outputs xlsx
+    writer = ExcelWriter(out, engine='openpyxl')
+    # Split the SQLAlchemy model query object into SQL statements and connection attributes to pandas read_sql method
+    df = pd.read_sql(users.statement, users.session.bind)
+    # Simple data slicing, select all rows, the range from the sixth column to the last column
+    df = df.iloc[:, 0:]
+    # Rename the df column name
+    df.rename(columns={
+        'Mdate': 'Mdate',
+        'IDM': 'IDM',
+        'id': 'id',
+        'name': 'name',
+        'Occurence': 'Occurence',
+        'Platform': 'Platform',
+        'Rate': 'Rate',
+        'title': 'title',
+        'StatusV': 'StatusVs',
+
+    }, inplace=True)
+    # Save df to excel in the memory writer variable, do not include the index line number in the conversion result
+    df.to_excel(writer, index=False)
+    # This step can't be missed, if you don't save it, there is nothing in the xls file downloaded by the browser
+    writer.save()
+    # Reset the pointer of the IO object to the beginning
+    out.seek(0)
+    # The IO object uses getvalue() to return the binary raw data, which is used to give the response data to be generated
+    resp = make_response(out.getvalue())
+    # Set the response header to let the browser resolve to the file download behavior
+    resp.headers['Content-Disposition'] = 'attachement; filename=action.xlsx'
+    resp.headers['Content-Type'] = 'application/vnd.ms-excel; charset=utf-8'
+
+    return resp
+
+
+@app.route('/upload_studentli')
+def studentli():
+    ""
+    # Model query in SQLAlchemy
+    users = StudentInGroup.query.join(Group, StudentInGroup.group_id==Group.id, isouter=True).join(Student, StudentInGroup.student_emails==Student.emails, isouter=True)\
+    .add_columns(StudentInGroup.group_id, StudentInGroup.student_emails, StudentInGroup.statusg, Group.id, Group.name,StudentInGroup.stimes,StudentInGroup.ftimef,Student.firstname,Student.lastname, StudentInGroup.statusg).order_by(Group.name)
+
+    # Instantiate byte type IO objects, used to store objects in memory, no need to generate temporary files on disk
+    out = io.BytesIO()
+    # Instantiate the writer object that outputs xlsx
+    writer = ExcelWriter(out, engine='openpyxl')
+    # Split the SQLAlchemy model query object into SQL statements and connection attributes to pandas read_sql method
+    df = pd.read_sql(users.statement, users.session.bind)
+    # Simple data slicing, select all rows, the range from the sixth column to the last column
+    df = df.iloc[:, 0:]
+    # Rename the df column name
+    df.rename(columns={
+        'IDP': 'IDP',
+        'id': 'id',
+        'PossName': 'PossName',
+        'TimeS': 'TimeS',
+        'Statusvp': 'Statusvp',
+        'IDV': 'IDV',
+        'FnameV': 'FnameV',
+        'SnameV': 'SnameV',
+        'StatusV': 'StatusVs',
+
+    }, inplace=True)
+    # Save df to excel in the memory writer variable, do not include the index line number in the conversion result
+    df.to_excel(writer, index=False)
+    # This step can't be missed, if you don't save it, there is nothing in the xls file downloaded by the browser
+    writer.save()
+    # Reset the pointer of the IO object to the beginning
+    out.seek(0)
+    # The IO object uses getvalue() to return the binary raw data, which is used to give the response data to be generated
+    resp = make_response(out.getvalue())
+    # Set the response header to let the browser resolve to the file download behavior
+    resp.headers['Content-Disposition'] = 'attachement; filename=studentli.xlsx'
+    resp.headers['Content-Type'] = 'application/vnd.ms-excel; charset=utf-8'
+
+    return resp
 
 
 
@@ -867,7 +946,6 @@ def volunteer_in_group():
     .add_columns(VolunteersInGroups.IDG, VolunteersInGroups.TimeS,VolunteersInGroups.TimeF,Volunteers.IDV,VolunteersInPoss.IDP,VolunteersInPoss.Statusvp,Volunteers.FnameV,Volunteers.SnameV,Volunteers.PronounsV,Volunteers.DateAdded,Volunteers.CityV,Volunteers.PhoneNumV,Volunteers.StatusV )\
     .filter(VolunteersInGroups.IDG == None, VolunteersInPoss.IDP == 1, VolunteersInPoss.Statusvp == 'פעיל',Volunteers.StatusV == 'פעיל')
 
-
     form = VolunteersInGroupsForm()
 
     if form.is_submitted():
@@ -886,6 +964,19 @@ def volunteer_in_group():
             return redirect(url_for('volunteer_in_group'))
         
     return render_template('volunteer_in_group.html',form=form,volunteer_in_group=volunteer_in_group,group=group,volunteers_list=volunteers_list,vol_in_group_list=vol_in_group_list,vol_in_group_list2=vol_in_group_list2)
+
+
+@app.route('/list_stu_in_group')
+def list_stu_in_group():
+    # Grab a list of students from database.
+    stu_in_group_list1 = StudentInGroup.query.all()
+    searchstu_in_group_list = StudentInGroup.query.join(Group, StudentInGroup.group_id==Group.id, isouter=True).join(Student, StudentInGroup.student_emails==Student.emails, isouter=True)\
+    .add_columns(StudentInGroup.group_id, Student.emails, StudentInGroup.statusg, Group.id, Group.name,StudentInGroup.stimes,StudentInGroup.ftimef,Student.firstname, Student.lastname)\
+    .filter(StudentInGroup.group_id == Group.id)
+    return render_template('list_stu_in_group.html',stu_in_group_list1=stu_in_group_list1,searchstu_in_group_list=searchstu_in_group_list)
+
+
+
 
 
 
@@ -985,7 +1076,6 @@ def volunteers_in_poss():
                 return redirect(url_for('volunteers_in_poss'))
 
     return render_template('volunteers_in_poss.html',form=form,volunteers_in_poss=volunteers_in_poss,poss_list=poss_list,volunteers_list=volunteers_list,volunteers_poss_list2=volunteers_poss_list2)
-
 
 
 @app.route('/addmeetings', methods=['GET', 'POST'])
@@ -1147,11 +1237,11 @@ def management_dashbord():
     #    .add_columns(Meetings.Mdate, Meetings.IDM, Group.id, Group.name, Meetings.Occurence, Meetings.Platform, Meetings.Rate, Meetings.title )\
    #     .filter_by(IDM = None).count()
 
-    start = datetime.today() - timedelta(days=1)
+    start = datetime.today() - timedelta(days=2)
 
     meetings_list4 = Group.query.join(Meetings, Meetings.IDG==Group.id, isouter=True)\
       .add_columns(Meetings.Mdate, Meetings.IDM, Group.id, Group.name, Meetings.Occurence, Meetings.Platform, Meetings.Rate, Meetings.title )\
-      .filter(Meetings.Mdate >= start, Meetings.Occurence=='בוטל',Group.id == Meetings.IDG).order_by(Meetings.IDG)
+      .filter(Meetings.Mdate >= (datetime.today() - timedelta(days=2)), Meetings.Occurence=='בוטל',Group.id == Meetings.IDG).order_by(Meetings.IDG)
 
     meetings_dict = pd.DataFrame.from_records(list(meetings_list4)).groupby(4)[4].count().to_dict()
 
@@ -1208,6 +1298,7 @@ def index():
 
     return resp
 app.run(debug=True)
+
 
 
 
