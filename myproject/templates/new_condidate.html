@@ -1,8 +1,8 @@
 {% extends "home.html" %}
 {% block content %}
 <div class="jumbotron">
-  <h1>השאר פרטים:</h1>
-  <p>מלא.י את כל השדות</p>
+  <h1 class="m-0 font-weight-bold text-primary">השאר פרטים</h1>
+  <p>מלא.י את כל השדות:</p>
   <form method="POST">
       {# This hidden_tag is a CSRF security feature. #}
       {{ form.hidden_tag() }}
@@ -18,8 +18,7 @@
 </br>
   {{ form.lastname.label }} {{ form.lastname() }}
 </br>
-
-  {{ form.status.label }} {{ form.status() }}
+{{ form.status.label }} {{ form.status() }}
 
     </br>
       {{ form.submit() }}

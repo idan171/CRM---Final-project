@@ -69,9 +69,9 @@
   <form method="POST">
       {# This hidden_tag is a CSRF security feature. #}
       {{ form.hidden_tag() }}
-      {{ form.group_id.label }} {{ form.group_id() }}
+      <em class="redText">* </em>{{ form.group_id.label }} {{ form.group_id() }}
     </br>
-      {{ form.emailc.label }} {{ form.emailc() }}
+    <em class="redText">* </em> {{ form.emailc.label }} {{ form.emailc() }}
     </br>
     {{ form.firstname.label }} {{ form.firstname() }}
   </br>
@@ -79,9 +79,9 @@
 </br>
 {{ form.pronounc.label }} {{ form.pronounc() }}
     </br>
-    {{ form.phonenumc.label }} {{ form.phonenumc() }}
+    <em class="redText">* </em>{{ form.phonenumc.label }} {{ form.phonenumc() }}
     </br>
-    {{ form.status.label }} {{ form.status() }}
+    <em class="redText">* </em>{{ form.status.label }} {{ form.status() }}
   </br>
     {{ form.text.label }} {{ form.text() }}
   </br>

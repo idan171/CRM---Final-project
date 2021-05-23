@@ -8,8 +8,8 @@
     <form method="POST">
     {# This hidden_tag is a CSRF security feature. #}
     {{ form.hidden_tag() }}
-    {{ form.email.label }} {{ form.email() }}
-    {{ form.password.label }} {{ form.password() }}
+    <em class="redText">* </em>{{ form.email.label }} {{ form.email() }}
+    <em class="redText">* </em>{{ form.password.label }} {{ form.password() }}
     <button type="submit" class="btn btn-primary">Sign in</button>
     </form>
 </div>

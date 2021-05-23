@@ -14,6 +14,7 @@
 
 </script>
 
+
 </br>
 
 
@@ -26,10 +27,10 @@
             var myLineChart = new Chart(ctx, {
                 type: 'pie',
                 data: {
-                    labels: [{% for stu in listposs  %} "{{stu.PossName}}",{% endfor %}],
+                    labels: ['טרם שובצו בתפקיד',{% for stu in listposs  %} "{{stu.PossName}}",{% endfor %}],
                     datasets: [{
-                        data: [{{guides}}, {{writers}}, {{educations}}, {{activation}}, {{waiting}}],
-                        backgroundColor: ["rgba(255, 0, 0, 0.5)", "rgba(100, 255, 0, 0.5)", "rgba(200, 50, 255, 0.5)", "rgba(0, 100, 255, 0.5)", "rgba(256, 165, 100, 100)"],
+                        data: [{{a}},{{guides}}, {{writers}}, {{educations}}, {{activation}}, {{waiting}},{{b}},{{c}},{{d}}],
+                        backgroundColor: ["rgba(255, 0, 0, 0.5)", "rgba(100, 255, 0, 0.5)", "rgba(200, 50, 255, 0.5)", "rgba(0, 100, 255, 0.5)", "rgba(256, 165, 100, 100)", "rgba(200, 200, 200, 200)", "rgba(32, 500, 6, 1)", "rgba(100, 20, 40, 1)", "rgba(87, 154, 33, 1)"],
                         borderWidth: 1,
                         borderColor:'#777',
                         hoverBorderWidth:2,
@@ -46,7 +47,7 @@
 
             var ctx = $("#chart-meetings");
             var myLineChart = new Chart(ctx, {
-                type: 'pie',
+                type: 'bar',
                 data: {
                     labels: canceled_meetings_labels,
                     datasets: [{
@@ -103,7 +104,7 @@
         
       <div class="col-lg-12 col-md-12 col-sm-12">
         
-        <div class="card-header" style="text-align: center;">פילוח פעולות</div>
+        <div class="card-header" style="text-align: center;">פילוח ביטולי פעולות - חודש אחרון</div>
         <div class="card-body" >
           <div class="d-flex justify-content-center" >
             <a href="{{ url_for('action') }}" ustify-content-center class="btn btn-success btn-sm" role="button">ייצוא לאקסל - דו״ח מתנדבים בתפקיד</a>  

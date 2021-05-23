@@ -2,11 +2,11 @@ from logging import ERROR
 from re import template
 
 from sqlalchemy.sql.elements import Null
-from myproject.forms import LoginForm, MessageForme, RegistrationForm, AddForm , DelForm, AddGroupForm, AddStuGroupForm, AddAgeGroupForm, NewCondidateForm, DelGroupForm, AddVolunteerForm, VolunteersInGroupsForm, VolunteerDocumentsForm, AddPossForm, MeetingsForm, MFileForm, VolunteersInPossForm, StudentsInMeetingForm 
+from myproject.forms import LoginForm, MessageForme, RegistrationForm, AddForm , DelForm, AddGroupForm, AddStuGroupForm, NewCondidateForm, DelGroupForm, AddVolunteerForm, VolunteersInGroupsForm, VolunteerDocumentsForm, AddPossForm, MeetingsForm, MFileForm, VolunteersInPossForm 
 from flask import render_template, redirect, request, url_for, flash,abort,Response,make_response
 from flask_login import login_user,login_required,logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from myproject.models import Student, User,Message, Group, StudentInGroup, AgesInGroup, Condidate, VolunteerDocuments, VolunteersInPoss, MFile, Volunteers, Poss, VolunteersInGroups, Meetings, StudentsInMeeting   
+from myproject.models import Student, User,Message, Group, StudentInGroup, Condidate, VolunteerDocuments, VolunteersInPoss, MFile, Volunteers, Poss, VolunteersInGroups, Meetings
 from myproject import app,db
 #from flask_uploads import configure_uploads,IMAGES,UploadSet
 from werkzeug import secure_filename,FileStorage
@@ -79,7 +79,7 @@ def login():
             # So let's now check if that next exists, otherwise we'll go to
             # the welcome page.
             if next == None or not next[0]=='/':
-                next = url_for('welcome_user')
+                next = url_for('home')
 
             return redirect(next)
     return render_template('login.html', form=form)
@@ -89,7 +89,8 @@ def register():
     form = RegistrationForm()
 
     if form.validate_on_submit():
-        user = User(email=form.email.data,
+        user = User(id=form.id.data,
+                    email=form.email.data,
                     username=form.username.data,
                     password=form.password.data,
                     firstname=form.password.data,
@@ -98,7 +99,6 @@ def register():
 
         db.session.add(user)
         db.session.commit()
-        flash('Thanks for registering! Now you can login!')
         return redirect(url_for('Thank_you'))
     return render_template('register.html', form=form)
 
@@ -413,8 +413,8 @@ def new_condidate():
             pronounc = form.pronounc.data
             phonenumc = form.phonenumc.data
             stimes = date.today()
+            text = form.text.data
             status = 'form.status.data'
-            text = form.status.data
             firstname = form.firstname.data
             lastname = form.lastname.data
 
@@ -447,8 +447,8 @@ def condidate_mang():
             pronounc = form.pronounc.data
             phonenumc = form.phonenumc.data
             stimes = date.today()
+            text = 'הוזן על ידי החניך'
             status = form.status.data
-            text = form.status.data
             firstname = form.firstname.data
             lastname = form.lastname.data
             #group_id_3 = Group.query.filter_by(id =form.group_id.data).all()
@@ -472,10 +472,10 @@ def condidate_mang():
 
 @app.route('/edit_condidate/<int:id>', methods=['GET', 'POST'])
 def edit_condidate(id):
-    condidates_list = Condidate.query.all()    
-    condidates_list3 = Condidate.query.join(Group, Condidate.group_id==Group.id, isouter=True)\
+    condidates_list = Condidate.query.all()
+    condidates_list3 = (Condidate.query.join(Group, Condidate.group_id==Group.id, isouter=True)\
     .add_columns(Condidate.id, Condidate.emailc, Condidate.group_id, Condidate.pronounc, Condidate.phonenumc, Condidate.stimes, Condidate.text, Condidate.status,Group.name)\
-    .filter(Condidate.status == 'בטיפול').order_by(Condidate.group_id).all()
+    .filter(Condidate.status != 'טופל')).order_by(Condidate.group_id).all()
 
 
     form = NewCondidateForm()
@@ -496,24 +496,6 @@ def edit_condidate(id):
 
 
     return render_template('edit_condidate.html',form=form,con_to_update=con_to_update)
-
-
-@app.route('/add_age_group', methods=['GET', 'POST'])
-def add_age_group():
-
-    form = AddAgeGroupForm()
-
-    if form.validate_on_submit():
-        age_id = form.age_id.data
-        group_id = form.group_id.data
-
-        new_agesingroup = AgesInGroup(age_id,group_id)
-        db.session.add(new_agesingroup)
-        db.session.commit()
-
-        return redirect(url_for('list_gru'))
-
-    return render_template('add_age_group.html',form=form)
 
 
 @app.route('/update_inactive_users', methods=['GET'])
@@ -727,7 +709,7 @@ def action():
     # Model query in SQLAlchemy
     users = Group.query.join(Meetings, Meetings.IDG==Group.id, isouter=True)\
       .add_columns(Meetings.Mdate, Meetings.IDM, Group.id, Group.name, Meetings.Occurence, Meetings.Platform, Meetings.Rate, Meetings.title )\
-      .filter(Meetings.Mdate >= (datetime.today() - timedelta(days=2)), Meetings.Occurence=='בוטל',Group.id == Meetings.IDG).order_by(Meetings.IDG)
+      .filter(Meetings.Mdate >= (datetime.today() - timedelta(days=30)), Meetings.Occurence=='בוטל',Group.id == Meetings.IDG).order_by(Meetings.IDG)
     
 
     # Instantiate byte type IO objects, used to store objects in memory, no need to generate temporary files on disk
@@ -1128,11 +1110,19 @@ def meetings_file():
 @app.route('/management_dashbord')
 def management_dashbord():
     listposs = Poss.query.all()
-    guides = VolunteersInPoss.query.filter_by(IDP='1').count()
-    writers = VolunteersInPoss.query.filter_by(IDP='2').count()
-    educations = VolunteersInPoss.query.filter_by(IDP='3').count()
-    activation = VolunteersInPoss.query.filter_by(IDP='4').count()
-    waiting = VolunteersInPoss.query.filter_by(IDP='5').count()
+    guides = VolunteersInPoss.query.filter_by(IDP='1',Statusvp='פעיל').count()
+    writers = VolunteersInPoss.query.filter_by(IDP='2',Statusvp='פעיל').count()
+    educations = VolunteersInPoss.query.filter_by(IDP='3',Statusvp='פעיל').count()
+    activation = VolunteersInPoss.query.filter_by(IDP='4',Statusvp='פעיל').count()
+    waiting = VolunteersInPoss.query.filter_by(IDP='5',Statusvp='פעיל').count()
+    b = VolunteersInPoss.query.filter_by(IDP='6',Statusvp='פעיל').count()
+    c = VolunteersInPoss.query.filter_by(IDP='7',Statusvp='פעיל').count()
+    d = VolunteersInPoss.query.filter_by(IDP='8',Statusvp='פעיל').count()
+
+    a = Volunteers.query.join(VolunteersInPoss, Volunteers.IDV==VolunteersInPoss.IDV, isouter=True)\
+    .add_columns(Volunteers.IDV,VolunteersInPoss.IDP,VolunteersInPoss.Statusvp,Volunteers.StatusV )\
+    .filter(VolunteersInPoss.IDP == None,Volunteers.StatusV=='פעיל').count()
+
 
     zafon = (StudentInGroup.query.join(Group, StudentInGroup.group_id==Group.id)\
         .add_columns(StudentInGroup.group_id, StudentInGroup.student_emails, StudentInGroup.statusg, Group.id, Group.name,StudentInGroup.stimes,StudentInGroup.ftimef, StudentInGroup.statusg,Group.regionorsubject)\
@@ -1221,18 +1211,20 @@ def management_dashbord():
     #    .add_columns(Meetings.Mdate, Meetings.IDM, Group.id, Group.name, Meetings.Occurence, Meetings.Platform, Meetings.Rate, Meetings.title )\
    #     .filter_by(IDM = None).count()
 
-    start = datetime.today() - timedelta(days=2)
-
+    start = datetime.today() - timedelta(days=30)
+    print (start)
     meetings_list4 = Group.query.join(Meetings, Meetings.IDG==Group.id, isouter=True)\
       .add_columns(Meetings.Mdate, Meetings.IDM, Group.id, Group.name, Meetings.Occurence, Meetings.Platform, Meetings.Rate, Meetings.title )\
-      .filter(Meetings.Mdate >= (datetime.today() - timedelta(days=2)), Meetings.Occurence=='בוטל',Group.id == Meetings.IDG).order_by(Meetings.IDG)
+      .filter(Meetings.Mdate >= (datetime.today() - timedelta(days=30)), Meetings.Occurence=='בוטל',Group.id == Meetings.IDG).order_by(Meetings.IDG)
 
     meetings_dict = pd.DataFrame.from_records(list(meetings_list4)).groupby(4)[4].count().to_dict()
+
+
 
    # print (meetings_list3)
    # print (meetings_list4)
 
-    return render_template('management_dashbord.html',meetings_list4=meetings_list4,guides=guides,writers=writers,educations=educations,activation=activation,waiting=waiting,zafon=zafon,sharon=sharon,merkaz=merkaz,shfela=shfela,darom=darom,trans=trans,datiot=datiot,allwan=allwan,nir=nir,zafon2=zafon2,sharon2=sharon2,merkaz2=merkaz2,shfela2=shfela2,darom2=darom2,trans2=trans2,datiot2=datiot2,allwan2=allwan2,nir2=nir2,zafon3=zafon3,sharon3=sharon3,merkaz3=merkaz3,shfela3=shfela3,darom3=darom3,trans3=trans3,datiot3=datiot3,allwan3=allwan3,nir3=nir3,listposs=listposs, meetings_dict=json.dumps(meetings_dict))
+    return render_template('management_dashbord.html',meetings_list4=meetings_list4,guides=guides,writers=writers,educations=educations,activation=activation,waiting=waiting,a=a,b=b,c=c,d=d,zafon=zafon,sharon=sharon,merkaz=merkaz,shfela=shfela,darom=darom,trans=trans,datiot=datiot,allwan=allwan,nir=nir,zafon2=zafon2,sharon2=sharon2,merkaz2=merkaz2,shfela2=shfela2,darom2=darom2,trans2=trans2,datiot2=datiot2,allwan2=allwan2,nir2=nir2,zafon3=zafon3,sharon3=sharon3,merkaz3=merkaz3,shfela3=shfela3,darom3=darom3,trans3=trans3,datiot3=datiot3,allwan3=allwan3,nir3=nir3,listposs=listposs, meetings_dict=json.dumps(meetings_dict))
 
 
 

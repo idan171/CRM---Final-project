@@ -8,14 +8,14 @@
       {# This hidden_tag is a CSRF security feature. #}
       {{ form.hidden_tag() }}
 
-      {{ form.IDV.label }} {{ form.IDV() }}
+      <em class="redText">* </em> {{ form.IDV.label }} {{ form.IDV() }}
         </br>
-      {{ form.IDP.label }} {{ form.IDP() }}
+        <em class="redText">* </em> {{ form.IDP.label }} {{ form.IDP() }}
          </br>
       {{ form.Statusvp.label }} {{ form.Statusvp() }}
     </br>
 
-      {{ form.submit() }}
+      {{ form.submit(value='שיבוץ') }}
   </form>
 </div>
 <div class="jumbotron">

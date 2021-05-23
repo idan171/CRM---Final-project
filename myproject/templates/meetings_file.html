@@ -8,9 +8,9 @@
     {{form.hidden_tag()}}
 
     {{form.IDM.label}} {{form.IDM()}} <br>
-    {{form.FileName.label}} {{form.FileName()}} <br>
+    <em class="redText">* </em>{{form.FileName.label}} {{form.FileName()}} <br>
     {{form.FileDescription.label}} {{form.FileDescription()}} <br>
-    {{form.TheFile.label}} {{form.TheFile()}} <br>
+    <em class="redText">* </em>{{form.TheFile.label}} {{form.TheFile()}} <br>
 
 
       {{ form.submit() }}

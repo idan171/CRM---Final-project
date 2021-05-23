@@ -3,15 +3,17 @@
 <div class="jumbotron">
   <h1 class="m-0 font-weight-bold text-primary">הוספת קבוצת נוער / מועדון</h1>
 </br>
+
   <p>מלא.י את הפרטים הבאים</p>
   <form method="POST">
       {# This hidden_tag is a CSRF security feature. #}
       {{ form.hidden_tag() }}
-      {{ form.name.label }} {{ form.name() }}<br>
+      <em class="redText">* </em>
+{{ form.name.label }} {{ form.name() }}<br>
       {{ form.regionorsubject.label }} {{ form.regionorsubject() }}<br>
       {{ form.city.label }} {{ form.city() }}<br>
 
-      {{ form.agesingroup.label }}  <select multiple id="mymultiselect" name="mymultiselect" class="selectpicker"  multiple data-live-search="true" >         
+      <em class="redText">* </em> {{ form.agesingroup.label }}  <select multiple id="mymultiselect" name="mymultiselect" class="selectpicker"  multiple data-live-search="true" >         
         <option value="" disabled selected>Choose your country</option>
 
         <option>ז</option>
@@ -24,7 +26,7 @@
       
     </select>
     <br>
-  </br>
+</form>
       {{ form.submit() }}
   </form>
 

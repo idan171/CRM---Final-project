@@ -8,12 +8,12 @@
       {# This hidden_tag is a CSRF security feature. #}
       {{ form.hidden_tag() }}
 
-      {{ form.IDV.label }} {{ form.IDV() }}
+      <em class="redText">* </em>{{ form.IDV.label }} {{ form.IDV() }}
         </br>
-      {{ form.IDG.label }} {{ form.IDG() }}
+        <em class="redText">* </em> {{ form.IDG.label }} {{ form.IDG() }}
     </br>
     {{ form.statusV.label }} {{ form.statusV() }}
-
+  </br>
       {{ form.submit() }}
   </form>
 </br>

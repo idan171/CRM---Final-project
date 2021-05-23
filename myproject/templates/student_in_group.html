@@ -2,13 +2,16 @@
 {% block content %}
 <div class="jumbotron">
   <h1 class="m-0 font-weight-bold text-primary">שיבוץ חניכ.ה בקבוצה</h1>
-
+  <style scoped>
+    .redText {color:red;}
+    </style>
 </br>
   <form method="POST">
       {# This hidden_tag is a CSRF security feature. #}
       {{ form.hidden_tag() }}
       {{ form.group_id.label }} {{ form.group_id() }}<br>
-      {{ form.student_emails.label }} {{ form.student_emails() }}<br>
+      <em class="redText">* </em>
+{{ form.student_emails.label }} {{ form.student_emails(value=emails) }}<br>
       {{ form.statusg.label }} {{ form.statusg() }}<br>
 
 

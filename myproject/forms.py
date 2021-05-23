@@ -3,7 +3,7 @@ from numpy import str_
 from wtforms import StringField, PasswordField, SubmitField,TextAreaField, SelectField, IntegerField, RadioField, FileField,SelectMultipleField
 from wtforms.validators import DataRequired,Email,EqualTo
 from wtforms import ValidationError
-from myproject.models import User, Group, Poss, Student, Age
+from myproject.models import User, Group, Poss, Student
 from wtforms.widgets import TextArea
 
 
@@ -15,6 +15,7 @@ class LoginForm(FlaskForm):
 
 
 class RegistrationForm(FlaskForm):
+    id = StringField('תעודת זהות:')
     email = StringField('דוא״ל', validators=[DataRequired(),Email()])
     username = StringField('שם משתמש', validators=[DataRequired()])
     password = PasswordField('סיסמא', validators=[DataRequired(), EqualTo('pass_confirm', message='Passwords Must Match!')])
@@ -67,10 +68,6 @@ class AddGroupForm(FlaskForm):
     #להכניס נתונים קבועים לתוך הגילאים ולהתאים כאן את הערכים
     submit = SubmitField('הוספה')
 
-class AddAgeGroupForm(FlaskForm):
-    age_id = RadioField('Ages', choices=[('1','ז'), ('2','ח'), ('3','ט'),('4','י'),('5','יא'),('6','יב')])
-    group_id = IntegerField('ID of Group:')
-    submit = SubmitField('Add age to Group')
 
 class DelForm(FlaskForm):
 
@@ -195,8 +192,7 @@ class MessageForme(FlaskForm):
    #idvs = [(v.IDV,v.FnameV) for v in idv_list]
  
     #IDV = SelectField('ID Volunteer:', choices = idvs)
-    IDV = StringField('ID כותב ההודעה:')
-    #Content = StringField('תוכן ההודעה ')
+    IDV = StringField('דוא״ל כותב ההודעה:')
     Content = TextAreaField('תוכן ההודעה:', widget=TextArea())
     submit = SubmitField('פרסם הודעה למדריכים')
 
@@ -209,10 +205,3 @@ class MFileForm(FlaskForm):
     TheFile = FileField('מסמך:')
 
     submit = SubmitField('העלה קובץ')
-
-class StudentsInMeetingForm(FlaskForm):
-    IDM = StringField('ID of Meetings:') 
-    EmaillS = StringField('אימייל של החניך:') 
-    Attendance = StringField('נוכחות:')
-
-    submit = SubmitField('סמן')

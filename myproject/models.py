@@ -20,16 +20,17 @@ class User(db.Model, UserMixin):
     # Create a table in the db
     __tablename__ = 'users'
 
-    id = db.Column(db.Integer, primary_key = True)
+    id = db.Column(db.Integer,db.ForeignKey('volunteers.IDV'), primary_key = True)
     email = db.Column(db.String(64), unique=True, index=True)
-    username = db.Column(db.String(64), unique=True, index=True)
+    username = db.Column(db.String(64), unique=True, nullable=False, index=True)
     password_hash = db.Column(db.String(128))
-    firstname = db.Column(db.Text)
-    lastname = db.Column(db.Text)
-    tel = db.Column(db.Text)
+    firstname = db.Column(db.Text, nullable=False)
+    lastname = db.Column(db.Text, nullable=False)
+    tel = db.Column(db.Text, nullable=False)
 
 
-    def __init__(self, email, username, password,firstname, lastname,tel):
+    def __init__(self,id, email, username, password,firstname, lastname,tel):
+        self.id = id
         self.email = email
         self.username = username
         self.password_hash = generate_password_hash(password)
@@ -118,7 +119,7 @@ class Volunteers(db.Model):
     StatusV = db.Column(db.Text)
     DateAdded = db.Column(db.Text)
     
-    Message = db.relationship('Message',backref='volunteers',lazy='dynamic')
+    users = db.relationship('User',backref='volunteers',lazy='dynamic')
     volunteersingroups = db.relationship('VolunteersInGroups',backref='volunteers',lazy='dynamic')
     volunteerDocuments = db.relationship('VolunteerDocuments',backref='volunteers',lazy='dynamic')
     volunteersinPoss = db.relationship('VolunteersInPoss',backref='volunteers',lazy='dynamic')
@@ -246,31 +247,6 @@ class VolunteersInGroups(db.Model):
         self.TimeF = TimeF
         self.statusV = statusV
 
-class Age(db.Model):
-
-    __tablename__ = 'ages'
-
-    id = db.Column(db.Integer,primary_key= True)
-    namea = db.Column(db.Text)
-    
-    agesingroups = db.relationship('AgesInGroup',backref='ages',lazy=False)
-
-
-    def __init__(self,namea):
-        self.namea = namea
-
-class AgesInGroup(db.Model):
-
-    __tablename__ = 'agesingroups'
-
-    age_id = db.Column(db.Integer,db.ForeignKey('ages.id'),primary_key=True)
-    group_id = db.Column(db.Integer,db.ForeignKey('groups.id'))
-
-
-
-    def __init__(self,age_id,group_id):
-        self.age_id = age_id
-        self.group_id = group_id
 
 
 class Condidate(db.Model):
@@ -280,14 +256,13 @@ class Condidate(db.Model):
     id = db.Column(db.Integer,primary_key= True)
     group_id = db.Column(db.Integer,db.ForeignKey('groups.id'))
     emailc = db.Column(db.String(64), unique=True, index=True)
-    firstname = db.Column(db.Text)
-    lastname = db.Column(db.Text)
     pronounc = db.Column(db.Text)
     phonenumc = db.Column(db.String(10))
     stimes = db.Column(db.Text)
     text = db.Column(db.Text)
     status = db.Column(db.Text)
-
+    firstname = db.Column(db.Text)
+    lastname = db.Column(db.Text)
 
 
     def __init__(self,group_id,emailc,pronounc,phonenumc,stimes,text,status,firstname,lastname):
@@ -367,7 +342,7 @@ class StudentsInMeeting(db.Model):
 class Message(db.Model):
     IDM = db.Column(db.Integer,primary_key=True)
     Mdate = db.Column(db.Text)
-    IDV = db.Column(db.Integer,db.ForeignKey('volunteers.IDV'))
+    IDV = db.Column(db.String(64))
     Content = db.Column(db.Text)
 
     def _init_(self,Mdate,IDV,Content):
@@ -379,20 +354,8 @@ class Message(db.Model):
     def _repr_(self):
         return f"{Mdate} {Content}"
          
-user_test1 = Age(namea='ז')
-user_test2 = Age(namea='ח')
-user_test3 = Age(namea='ט')
-user_test4 = Age(namea='י')
-user_test5 = Age(namea='יא')
-user_test6 = Age(namea='יב')
-
-db.session.add(user_test1)
-db.session.add(user_test2)
-db.session.add(user_test3)
-db.session.add(user_test4)
-db.session.add(user_test5)
-db.session.add(user_test6)
-
+#user_test1 = User(id='d')
+#db.session.add(user_test1)
 
 db.create_all()
 db.session.commit()

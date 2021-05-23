@@ -6,14 +6,18 @@
 </br>
   <p>לאחר פגישת הכרות, השלמ.י את הפרטים הבאים:</p>  
   
+  <style scoped>
+    .redText {color:red;}
+    </style>
   <form method="POST">
       {# This hidden_tag is a CSRF security feature. #}
       {{ form.hidden_tag() }}
-      {{ form.emails.label }} {{ form.emails() }}
+      
+      <em class="redText">* </em>{{ form.emails.label }} {{ form.emails() }}
   </br>
-      {{ form.firstname.label }} {{ form.firstname() }}
+  <em class="redText">* </em>{{ form.firstname.label }} {{ form.firstname() }}
   </br>
-      {{ form.lastname.label }} {{ form.lastname() }}
+  <em class="redText">* </em>{{ form.lastname.label }} {{ form.lastname() }}
   </br>
     {{ form.dateofbirth.label }}   <input type="date" id="dateofbirth" name="dateofbirth">
 

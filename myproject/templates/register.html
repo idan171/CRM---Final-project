@@ -10,12 +10,13 @@
     {{ form.hidden_tag() }}
     {{ form.firstname.label }} {{ form.firstname() }}<br>
     {{ form.lastname.label }} {{ form.lastname() }}<br>
+    <em class="redText">* </em>{{ form.id.label }} {{ form.id() }}<br>
     {{ form.tel.label }} {{ form.tel() }}<br>
 
-    {{ form.email.label }} {{ form.email() }}<br>
-    {{ form.username.label }} {{ form.username() }}<br>
-    {{ form.password.label }} {{ form.password() }}<br>
-    {{ form.pass_confirm.label }} {{ form.pass_confirm() }}<br>
+    <em class="redText">* </em>{{ form.email.label }} {{ form.email() }}<br>
+    <em class="redText">* </em>{{ form.username.label }} {{ form.username() }}<br>
+    <em class="redText">* </em>{{ form.password.label }} {{ form.password() }}<br>
+    <em class="redText">* </em>{{ form.pass_confirm.label }} {{ form.pass_confirm() }}<br>
     <button type="submit" class="btn btn-primary">שלח פרטים</button>
 
 </form>

@@ -8,10 +8,10 @@
       {# This hidden_tag is a CSRF security feature. #}
       {{form.hidden_tag()}}
 
-      {{form.IDV.label}} {{form.IDV()}} <br>
-      {{form.Dname.label}} {{form.Dname()}} <br>
+      <em class="redText">* </em> {{form.IDV.label}} {{form.IDV()}} <br>
+      <em class="redText">* </em>{{form.Dname.label}} {{form.Dname()}} <br>
       {{form.DocDescription.label}} {{form.DocDescription()}} <br>
-      {{form.Document.label}} {{form.Document()}} <br>
+      <em class="redText">* </em> {{form.Document.label}} {{form.Document()}} <br>
       <br>
       {{ form.submit(value ="העלה מסמך") }}
   </form>

@@ -12,15 +12,15 @@
       {# This hidden_tag is a CSRF security feature. #}
       {{ form.hidden_tag() }}
 
-      {{ form.Mdate.label }} <input type="date" id="Mdate" name="Mdate">
+      <em class="redText">* </em>{{ form.Mdate.label }} <input type="date" id="Mdate" name="Mdate">
     </br>
       {{ form.Mtime.label }}<input type="time" id="Mtime" name="Mtime">
     </br>
         {{ form.Platform.label }} {{ form.Platform() }}  
     </br>
-        {{ form.IDG.label }} {{ form.IDG() }}
+    <em class="redText">* </em> {{ form.IDG.label }} {{ form.IDG() }}
     </br>
-        {{ form.Occurence.label }} {{ form.Occurence() }}
+    <em class="redText">* </em>{{ form.Occurence.label }} {{ form.Occurence() }}
     </br>
     {{ form.title.label }} {{ form.title() }}
     </br>
@@ -33,7 +33,7 @@
       </br>
   
 
-        {{ form.attending.label }}      </br>
+      <em class="redText">* </em> {{ form.attending.label }}      </br>
 
          <select multiple id="mymultiselect" name="mymultiselect" class="" >         
           <option value="" disabled selected>Choose your country</option>
@@ -47,7 +47,7 @@
 
 
     </br>  
-  </br>
+             </br>
 
       {{ form.submit() }}
 
@@ -89,6 +89,6 @@
   
 </script>
 
-<img src="https://www.apa.org/images/lgbt-pride-title-image_tcm7-187539.jpg" width="900" height="500" class="rounded mx-auto d-block"  style="border:5px solid black" alt="Responsive image">
+<img src="https://dynaimage.cdn.cnn.com/cnn/c_fill,g_auto,w_1200,h_675,ar_16:9/https%3A%2F%2Fcdn.cnn.com%2Fcnnnext%2Fdam%2Fassets%2F190624202615-six-influential-lgbtq-activists.jpg" width="900" height="500" class="rounded mx-auto d-block"  style="border:5px solid black" alt="Responsive image">
 
 {% endblock %}
