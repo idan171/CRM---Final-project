@@ -30,9 +30,12 @@
          {{ form.Pros.label }} {{ form.Pros() }}
     </br>
         {{ form.Cons.label }} {{ form.Cons() }}
-    </br>
+      </br>
+  
 
-        {{ form.attending.label }} <select multiple id="mymultiselect" name="mymultiselect" class="" >         
+        {{ form.attending.label }}      </br>
+
+         <select multiple id="mymultiselect" name="mymultiselect" class="" >         
           <option value="" disabled selected>Choose your country</option>
           {% for c in student_list  %}
 
@@ -44,7 +47,8 @@
 
 
     </br>  
-       
+  </br>
+
       {{ form.submit() }}
 
   </form>

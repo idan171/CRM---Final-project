@@ -413,7 +413,7 @@ def new_condidate():
             pronounc = form.pronounc.data
             phonenumc = form.phonenumc.data
             stimes = date.today()
-            status = form.status.data
+            status = 'form.status.data'
             text = form.status.data
             firstname = form.firstname.data
             lastname = form.lastname.data
@@ -996,8 +996,8 @@ def list_vol_in_group():
 def volunteer_documents():
     Dname = VolunteerDocuments.query.all()
     volunteers_list = Volunteers.query.all()
-    volunteer_and_doc = Volunteers.query.join(VolunteerDocuments, Volunteers.IDV==VolunteerDocuments.IDV, isouter=True)\
-    .add_columns(Volunteers.IDV, Volunteers.FnameV, Volunteers.SnameV, Volunteers.StatusV, VolunteerDocuments.Dname,VolunteerDocuments.Document,VolunteerDocuments.DateAdded)\
+    volunteer_and_doc = Volunteers.query.join(VolunteerDocuments, Volunteers.IDV==VolunteerDocuments.IDV, isouter=True).join(VolunteersInPoss,Volunteers.IDV==VolunteersInPoss.IDV, isouter=True).join(Poss, VolunteersInPoss.IDP==Poss.IDP, isouter=True)\
+    .add_columns(Volunteers.IDV, Volunteers.FnameV, Volunteers.SnameV, Volunteers.StatusV, VolunteerDocuments.Dname,VolunteerDocuments.Document,VolunteerDocuments.DateAdded,Poss.PossName)\
     #.filter(Volunteers.IDV == VolunteerDocuments.IDV,VolunteersInGroups.IDV==Volunteers.IDV)
 
     form = VolunteerDocumentsForm()
@@ -1020,22 +1020,6 @@ def volunteer_documents():
         return redirect(url_for('volunteer_documents'))
         
     return render_template('volunteer_documents.html',form=form,Dname=Dname,volunteers_list=volunteers_list,volunteer_and_doc=volunteer_and_doc)
-
-
-@app.route('/search_doc', methods=['GET', 'POST'])
-def search_doc():
-    if request.method =='POST':
-        form3 = request.form2
-        search_value = form3['doc_string']
-        search = "%{0}%".format(search_value)
-        results = Volunteers.query.join(VolunteerDocuments, Volunteers.IDV==VolunteerDocuments.IDV, isouter=True)\
-    .add_columns(Volunteers.IDV, Volunteers.FnameV, Volunteers.SnameV, Volunteers.StatusV, VolunteerDocuments.Dname,VolunteerDocuments.Document,VolunteerDocuments.DateAdded).filter(or_(VolunteerDocuments.Dname.like(search),
-                                                        Volunteers.IDV.like(search))).all()
-                                                       
-        return render_template('volunteer_documents.html',volunteer_and_doc=results,legend="Search Results")
-    else:
-        return redirect('/')
-
 
 
 

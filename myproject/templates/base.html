@@ -111,9 +111,13 @@
   </a>
   <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
     <a class="dropdown-item" href="{{ url_for('addmeetings') }}">טופס דיווח פעולה</a>
+    <a class="dropdown-item" href="{{ url_for('meetings_file') }}">העלאת קובץ לפעולה</a>
     <a class="dropdown-item" href="{{ url_for('meetings_list') }}">חיפוש פעולות</a>
 
   </div>
+
+
+
 </li>
       <a class="nav-item nav-link" href="{{ url_for('condidate_mang') }}">חניכימ.ות חדשימ.ות</a>
 
@@ -123,7 +127,7 @@
     
 
     {% else %}
-    <a class="nav-item nav-link" href="{{ url_for('info') }}">Information</a>
+    <a class="nav-item nav-link" href="{{ url_for('info') }}">אודות הארגון</a>
       <li class="nav-link"><a href="{{ url_for('login') }}">התחברות</a></li>
       <li class="nav-link"><a href="{{ url_for('register') }}">כניסת מתנדבימ.ות למערכת</a></li>
     {% endif %}

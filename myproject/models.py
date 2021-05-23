@@ -332,7 +332,7 @@ class Meetings(db.Model):
     Pros = db.Column(db.String(500))
     Cons = db.Column(db.String(500))
     DateAdded = db.Column(db.Text)
-    attending = db.Column(db.String(500),db.ForeignKey('Student.emails'))
+    attending = db.Column(db.String(500))
 
     mfile = db.relationship('MFile',backref='meetings',lazy='dynamic')
     studentsinMeeting = db.relationship('StudentsInMeeting',backref='meetings',lazy='dynamic')

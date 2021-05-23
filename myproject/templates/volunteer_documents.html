@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="jumbotron">
-  <h1>הוספת מסמך</h1>
-  <p>מלא.י את הפרטים הבאים:</p>
+  <h1 class="m-0 font-weight-bold text-primary">הוספת מסמך</h1>
+</br>
+  <h5>מלא.י את הפרטים הבאים:</h5>
   <form method="POST" enctype="multipart/form-data">
       {# This hidden_tag is a CSRF security feature. #}
       {{form.hidden_tag()}}
@@ -11,34 +12,29 @@
       {{form.Dname.label}} {{form.Dname()}} <br>
       {{form.DocDescription.label}} {{form.DocDescription()}} <br>
       {{form.Document.label}} {{form.Document()}} <br>
-
-      {{ form.submit() }}
+      <br>
+      {{ form.submit(value ="העלה מסמך") }}
   </form>
 
 </br>
+<p>חיפוש מסמכים בטבלה:</p>
 
-<form method ="POST">
-  <input type="text" autofocus="autofocus" name="doc_string">
-  <input type="submit" formaction="/search_doc" value="Search / Return">
+<input class="form-control" id="myInput" type="text" placeholder="Search..">
 
-</form>
-
-</br>
-
-
-<table class="table table-striped table-primary">
+<table class="table table-hover">
   <thead>
     <tr>
       <th scope="col">#</th>
       <th scope="col">ת״ז מתנדב.ת</th>
       <th scope="col">שם פרטי</th>
       <th scope="col">שם משפחה</th>
+      <th scope="col">תפקיד</th>
       <th scope="col">שם מסמך</th>
       <th scope="col">תאריך הוספה</th>
 
     </tr>
   </thead>
-  <tbody>
+  <tbody id = "idan">
     {% for V in volunteer_and_doc  %}
 
     <tr>
@@ -54,6 +50,9 @@
         {{V.SnameV}}
       </td>
       <td>
+        {{V.PossName}}
+      </td>
+      <td>
         {{V.Dname}}
       </td>
       <td>
@@ -66,4 +65,15 @@
 
 
 </div>
+
+<script>
+  $(document).ready(function(){
+    $("#myInput").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#idan tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+  });
+  </script>
 {% endblock %}
