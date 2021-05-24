@@ -182,6 +182,7 @@ def edit_meet(IDM):
     return render_template('edit_meet.html',meetings_list6=meetings_list6,meetings_list3=meetings_list3)
 
 
+
 @app.route('/search_stuingroup', methods=['GET', 'POST'])
 def search_stuingroup():
     if request.method =='POST':
@@ -382,9 +383,9 @@ def add_group():
     if form.validate_on_submit():
         name = form.name.data
         regionorsubject = form.regionorsubject.data
+        city = form.city.data
         agesingroup = ','.join(request.form.getlist('mymultiselect'))
 
-        city = form.city.data
 
         # Add new group to database
         exists = Group.query.filter_by(name=name, regionorsubject=regionorsubject).first()
@@ -1069,11 +1070,11 @@ def addmeetings():
             IDG = form.IDG.data,
             Occurence = form.Occurence.data,
             Platform = form.Platform.data,
+            title = form.title.data,
             Rate = form.Rate.data,
             Pros = form.Pros.data,
             Cons = form.Cons.data,
             attending = ','.join(request.form.getlist('mymultiselect')),
-            title = form.Cons.data,
             DateAdded = date.today())
             # Add new Student to database
             db.session.add(new_meeting)

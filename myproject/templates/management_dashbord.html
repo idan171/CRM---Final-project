@@ -47,7 +47,7 @@
 
             var ctx = $("#chart-meetings");
             var myLineChart = new Chart(ctx, {
-                type: 'bar',
+                type: 'doughnut',//bar, horizontalBar, pie, line, doughnut, radar, polarArea
                 data: {
                     labels: canceled_meetings_labels,
                     datasets: [{

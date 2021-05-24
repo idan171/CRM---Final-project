@@ -12,6 +12,7 @@ app = Flask(__name__)
 # Often people will also separate these into a separate config.py file
 basedir = os.path.abspath(os.path.dirname(__file__))
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'data.sqlite')
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:gilad040@localhost/gilad_schema9'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:iv300592@localhost/idan'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 

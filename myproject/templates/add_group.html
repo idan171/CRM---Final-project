@@ -14,7 +14,6 @@
       {{ form.city.label }} {{ form.city() }}<br>
 
       <em class="redText">* </em> {{ form.agesingroup.label }}  <select multiple id="mymultiselect" name="mymultiselect" class="selectpicker"  multiple data-live-search="true" >         
-        <option value="" disabled selected>Choose your country</option>
 
         <option>ז</option>
         <option>ח</option>
@@ -26,8 +25,9 @@
       
     </select>
     <br>
+          {{ form.submit() }}
+
 </form>
-      {{ form.submit() }}
   </form>
 
 </div>

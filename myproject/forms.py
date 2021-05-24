@@ -180,10 +180,9 @@ class MeetingsForm(FlaskForm):
     Cons = StringField('נקודות לשיפור:')
     attending = SelectMultipleField('נוכחות חניכימ.ות:', choices = students)
     title = StringField('נושא הפעולה/סיבת הביטול:')
-
+    TheFile = FileField('מסמך:')
 
     submit = SubmitField('צור פגישה')
-
 
 
  

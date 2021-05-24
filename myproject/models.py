@@ -119,6 +119,7 @@ class Volunteers(db.Model):
     StatusV = db.Column(db.Text)
     DateAdded = db.Column(db.Text)
     
+    Message = db.relationship('Message',backref='volunteers',lazy='dynamic')
     users = db.relationship('User',backref='volunteers',lazy='dynamic')
     volunteersingroups = db.relationship('VolunteersInGroups',backref='volunteers',lazy='dynamic')
     volunteerDocuments = db.relationship('VolunteerDocuments',backref='volunteers',lazy='dynamic')
@@ -306,13 +307,12 @@ class Meetings(db.Model):
     Rate = db.Column(db.Integer)
     Pros = db.Column(db.String(500))
     Cons = db.Column(db.String(500))
-    DateAdded = db.Column(db.Text)
     attending = db.Column(db.String(500))
+    DateAdded = db.Column(db.Text)
 
-    mfile = db.relationship('MFile',backref='meetings',lazy='dynamic')
     studentsinMeeting = db.relationship('StudentsInMeeting',backref='meetings',lazy='dynamic')
 
-    def __init__(self,Mdate,Mtime,IDG,Occurence,Platform,title,Rate,Pros,Cons,DateAdded,attending):
+    def __init__(self,Mdate,Mtime,IDG,Occurence,Platform,title,Rate,Pros,Cons,attending,DateAdded):
         self.Mdate = Mdate
         self.Mtime = Mtime
         self.IDG = IDG
@@ -322,8 +322,8 @@ class Meetings(db.Model):
         self.Rate = Rate
         self.Pros = Pros
         self.Cons = Cons
-        self.DateAdded = DateAdded
         self.attending = attending
+        self.DateAdded = DateAdded
 
 class StudentsInMeeting(db.Model):
     id = db.Column(db.Integer,primary_key= True)
@@ -342,7 +342,7 @@ class StudentsInMeeting(db.Model):
 class Message(db.Model):
     IDM = db.Column(db.Integer,primary_key=True)
     Mdate = db.Column(db.Text)
-    IDV = db.Column(db.String(64))
+    IDV = db.Column(db.String(64),db.ForeignKey('volunteers.IDV'))
     Content = db.Column(db.Text)
 
     def _init_(self,Mdate,IDV,Content):
