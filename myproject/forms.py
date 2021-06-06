@@ -23,6 +23,8 @@ class RegistrationForm(FlaskForm):
     firstname = StringField('שם פרטי')
     lastname = StringField('שם משפחה')
     tel = StringField('מספר נייד')
+    permission = StringField('הרשאות')
+
     submit = SubmitField('שלח פרטים')
 
     def check_email(self, field):
@@ -102,7 +104,7 @@ class NewCondidateForm(FlaskForm):
     pronounc = SelectField('לשון פניה', choices = [('בחר/י מתוך הרשימה', 'בחר/י מתוך הרשימה'),('את', 'את'), ('אתה', 'אתה'), ('מעורבת', 'מעורבת')])
     phonenumc = StringField('מספר טלפון:')
     text = StringField('תיאור הטיפול:')
-    status = SelectField('סטטוס הפניה:', choices = [('בטיפול','בטיפול '),('טופל','טופל '),('',' ')])
+    status = SelectField('סטטוס הפניה:', choices = [('',''),('בטיפול','בטיפול '),('טופל','טופל ')])
     firstname = StringField('שם פרטי:')
     lastname = StringField('שם משפחה:')
 
@@ -191,7 +193,7 @@ class MessageForme(FlaskForm):
    #idvs = [(v.IDV,v.FnameV) for v in idv_list]
  
     #IDV = SelectField('ID Volunteer:', choices = idvs)
-    IDV = StringField('דוא״ל כותב ההודעה:')
+    IDV = StringField('ת״ז כותב ההודעה:')
     Content = TextAreaField('תוכן ההודעה:', widget=TextArea())
     submit = SubmitField('פרסם הודעה למדריכים')
 

@@ -23,21 +23,21 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer,db.ForeignKey('volunteers.IDV'), primary_key = True)
     email = db.Column(db.String(64), unique=True, index=True)
     username = db.Column(db.String(64), unique=True, nullable=False, index=True)
+    firstname = db.Column(db.Text)
+    lastname = db.Column(db.Text)
+    tel = db.Column(db.Text)
+    permission = db.Column(db.Text)
     password_hash = db.Column(db.String(128))
-    firstname = db.Column(db.Text, nullable=False)
-    lastname = db.Column(db.Text, nullable=False)
-    tel = db.Column(db.Text, nullable=False)
 
-
-    def __init__(self,id, email, username, password,firstname, lastname,tel):
+    def __init__(self,id, email, username,firstname, lastname,tel,permission,password):
         self.id = id
         self.email = email
         self.username = username
-        self.password_hash = generate_password_hash(password)
         self.firstname = firstname
         self.lastname = lastname
         self.tel = tel
-
+        self.permission = permission
+        self.password_hash = generate_password_hash(password)
 
     def check_password(self,password):
         # https://stackoverflow.com/questions/23432478/flask-generate-password-hash-not-constant-output
@@ -107,7 +107,7 @@ class MFile(db.Model):
 
 class Volunteers(db.Model):
     IDV = db.Column(db.Integer,primary_key = True)
-    emailv = db.Column(db.String(64))
+    emailv = db.Column(db.Text)
     FnameV = db.Column(db.Text)
     SnameV = db.Column(db.Text)
     DateOfBirthV = db.Column(db.Text)
@@ -120,7 +120,7 @@ class Volunteers(db.Model):
     DateAdded = db.Column(db.Text)
     
     Message = db.relationship('Message',backref='volunteers',lazy='dynamic')
-    users = db.relationship('User',backref='volunteers',lazy='dynamic')
+    User = db.relationship('User',backref='volunteers',lazy='dynamic')
     volunteersingroups = db.relationship('VolunteersInGroups',backref='volunteers',lazy='dynamic')
     volunteerDocuments = db.relationship('VolunteerDocuments',backref='volunteers',lazy='dynamic')
     volunteersinPoss = db.relationship('VolunteersInPoss',backref='volunteers',lazy='dynamic')
@@ -274,7 +274,7 @@ class Condidate(db.Model):
         self.stimes = stimes
         self.text = text
         self.status = status
-        self.fristname =firstname
+        self.firstname =firstname
         self.lastname = lastname
         
 class StudentInGroup(db.Model):
@@ -341,14 +341,14 @@ class StudentsInMeeting(db.Model):
         
 class Message(db.Model):
     IDM = db.Column(db.Integer,primary_key=True)
+    IDV = db.Column(db.Integer,db.ForeignKey('volunteers.IDV'))
     Mdate = db.Column(db.Text)
-    IDV = db.Column(db.String(64),db.ForeignKey('volunteers.IDV'))
     Content = db.Column(db.Text)
 
-    def _init_(self,Mdate,IDV,Content):
+    def _init_(self,IDV,Mdate,Content):
         #self.IDM = IDM       
-        self.Mdate = Mdate
         self.IDV = IDV
+        self.Mdate = Mdate
         self.Content = Content
         
     def _repr_(self):

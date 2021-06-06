@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="jumbotron">
+  <h1 class="m-0 font-weight-bold text-primary">מנהל המערכת - ניהול הרשאות</h1>
+</br>
+  <h4>מתן הרשאות: מנהל / רכז / מדריך / חסום:</h4>
+</br>
+</br>
+
+
+  {{ form.id.label }} {{ form.id(value=name_to_update.id) }}
+</br>
+    {{ form.email.label }} {{ form.email(value=name_to_update.email) }}
+</br>
+  {{ form.username.label }} {{ form.username(value=name_to_update.username) }}
+  </br>
+  {{ form.permission.label }} {{form.permission(value=name_to_update.permission) }}
+  </br>
+
+  </br>
+    {{ form.submit() }}
+
+</div>
+{% endblock %}

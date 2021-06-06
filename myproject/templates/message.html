@@ -8,7 +8,7 @@
         {{ form.hidden_tag() }}
        
   
-        {{ form.IDV.label }} {{ form.IDV(value=current_user.email) }}
+        {{ form.IDV.label }} {{ form.IDV(value=current_user.id) }}
       </br>
       <em class="redText">* </em>{{ form.Content.label }} </br> {{ form.Content(cols="50", rows="3") }}
     </br>

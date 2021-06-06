@@ -92,10 +92,11 @@ def register():
         user = User(id=form.id.data,
                     email=form.email.data,
                     username=form.username.data,
-                    password=form.password.data,
                     firstname=form.password.data,
                     lastname=form.password.data,
-                    tel=form.password.data)
+                    tel=form.password.data,
+                    permission=form.password.data,
+                    password=form.password.data)
 
         db.session.add(user)
         db.session.commit()
@@ -135,6 +136,40 @@ def add_stu():
 
     return render_template('add.html',form=form)
 
+
+@app.route('/system_manager', methods=['GET', 'POST'])
+def system_manager():
+    user_list = User.query.all()
+
+    return render_template('system_manager.html',user_list=user_list)
+
+
+@app.route('/edit_per/<int:id>', methods=['GET', 'POST'])
+def edit_per(id):
+    user_list = User.query.all()
+    form = RegistrationForm()
+    name_to_update = User.query.get_or_404(id)
+    if request.method == "POST":
+
+        name_to_update.id = request.form['id']
+        name_to_update.email = request.form['email']
+        name_to_update.username = request.form['username']
+        name_to_update.permission = request.form['permission']
+        
+        try:
+            db.session.commit()
+            flash("Student Updated Successfully!")
+            return render_template("system_manager.html",form=form,name_to_update=name_to_update,user_list=user_list)
+
+        except:
+             flash("Error! Looks like there is a problem, please try again!")
+             return render_template("edit_per.html",form=form,name_to_update=name_to_update,user_list=user_list)
+
+
+    return render_template('edit_per.html',form=form,name_to_update=name_to_update)
+
+
+
 @app.route('/edit_stu/<string:emails>', methods=['GET', 'POST'])
 def edit_stu(emails):
     students_list = Student.query.all()
@@ -170,16 +205,33 @@ def edit_stu(emails):
 @app.route('/edit_meet/<int:IDM>', methods=['GET', 'POST'])
 def edit_meet(IDM):
     #mee = db.session.query(Meetings.attending,Student.emails).filter(Meetings.IDM == IDM,Student.emails.like('%Meetings.attending%'))
-    meetings_list6 = Meetings.query.join(Group, Meetings.IDG==Group.id).join(Student, Student.emails.like(Meetings.attending), isouter=True)\
-    .add_columns(Meetings.IDM, Meetings.Mdate, Meetings.Mdate ,Meetings.Mtime ,Meetings.IDG ,Meetings.Occurence ,Meetings.Platform ,Meetings.Rate, Meetings.title ,Meetings.Pros ,Meetings.Cons ,Meetings.attending, Group.name,Student.firstname ,)\
+    meetings_list6 = Meetings.query.join(Group, Meetings.IDG==Group.id).join(Student, Meetings.attending.like(f'%{Student.emails}%'), isouter=True)\
+    .add_columns(Meetings.IDM, Meetings.Mdate, Meetings.Mdate ,Meetings.Mtime ,Meetings.IDG ,Meetings.Occurence ,Meetings.Platform ,Meetings.Rate, Meetings.title ,Meetings.Pros ,Meetings.Cons ,Meetings.attending, Group.name,Student.firstname,Student.lastname)\
     .filter(Meetings.IDM == IDM).all()
+
     meetings_list3 = Meetings.query.join(Group, Meetings.IDG==Group.id).join(Student, Meetings.attending==Student.emails, isouter=True)\
-        .add_columns(Meetings.Mdate, Meetings.IDM, Group.id, Group.name, Meetings.Occurence, Meetings.Platform, Meetings.Rate, Student.firstname, Meetings.title )\
+        .add_columns(Meetings.Mdate, Meetings.IDM, Meetings.Mtime, Group.id, Group.name, Meetings.Pros ,Meetings.Cons , Meetings.Occurence, Meetings.Platform, Meetings.Rate, Student.firstname,Student.lastname, Meetings.title )\
         .filter(Meetings.IDG == Group.id)
+
+    meeting_with_all_studens = Meetings.query.join(Group, Meetings.IDG==Group.id).join(Student, Meetings.attending.like("%%"), isouter=False)\
+    .add_columns(Meetings.IDM, Meetings.Mdate, Meetings.Mdate ,Meetings.Mtime ,Meetings.IDG ,Meetings.Occurence ,Meetings.Platform ,Meetings.Rate, Meetings.title ,Meetings.Pros ,Meetings.Cons ,Meetings.attending, Group.name,Student.firstname ,Student.lastname,Student.emails )\
+    .filter(Meetings.IDM == IDM).all()
+
+
+    correct_meetings = []
+    for m in meeting_with_all_studens:
+        if(m.attending.find(m.emails) != -1):
+            correct_meetings.append(m)
+
+
+    students = StudentInGroup.query.join(Student,StudentInGroup.student_emails==Student.emails)\
+    .add_columns(StudentInGroup.student_emails,Student.firstname ,Student.lastname,StudentInGroup.group_id )\
+    .filter(StudentInGroup.group_id == 2).all()
+
 
     print(*meetings_list3, sep = "\n")   
     
-    return render_template('edit_meet.html',meetings_list6=meetings_list6,meetings_list3=meetings_list3)
+    return render_template('edit_meet.html',meetings_list6=correct_meetings,meetings_list3=meetings_list3,students=students)
 
 
 
@@ -420,7 +472,7 @@ def new_condidate():
             lastname = form.lastname.data
 
             # Add new group to database
-            new_con = Condidate(group_id,emailc,stimes,pronounc,phonenumc,text,status,firstname,lastname)
+            new_con = Condidate(group_id,emailc,pronounc,phonenumc,stimes,text,status,firstname,lastname)
 
             db.session.add(new_con)
 
@@ -433,9 +485,9 @@ def new_condidate():
 @app.route('/condidate_mang', methods=['GET', 'POST'])
 def condidate_mang():
     condidates_list = Condidate.query.all()
-    condidates_list3 = (Condidate.query.join(Group, Condidate.group_id==Group.id, isouter=True)\
-    .add_columns(Condidate.id, Condidate.emailc, Condidate.group_id, Condidate.pronounc, Condidate.phonenumc, Condidate.stimes, Condidate.text, Condidate.status,Group.name)\
-    .filter(Condidate.status != 'טופל')).order_by(Condidate.group_id).all()
+    condidates_list3 = Condidate.query.join(Group, Condidate.group_id==Group.id, isouter=True)\
+    .add_columns(Condidate.id, Condidate.emailc, Condidate.group_id, Condidate.pronounc, Condidate.phonenumc, Condidate.stimes, Condidate.text, Condidate.status,Group.name, Condidate.firstname, Condidate.lastname)\
+    .filter(Condidate.status != 'טופל').order_by(Condidate.group_id).all()
 
 
     form = NewCondidateForm()
@@ -448,7 +500,7 @@ def condidate_mang():
             pronounc = form.pronounc.data
             phonenumc = form.phonenumc.data
             stimes = date.today()
-            text = 'הוזן על ידי החניך'
+            text = form.text.data
             status = form.status.data
             firstname = form.firstname.data
             lastname = form.lastname.data
@@ -457,7 +509,7 @@ def condidate_mang():
             #print(group_id)
 
             # Add new group to database
-            new_con = Condidate(group_id,emailc,stimes,pronounc,phonenumc,text,status,firstname,lastname)
+            new_con = Condidate(group_id,emailc,pronounc,phonenumc,stimes,text,status,firstname,lastname)
 
             db.session.add(new_con)
 
@@ -475,7 +527,7 @@ def condidate_mang():
 def edit_condidate(id):
     condidates_list = Condidate.query.all()
     condidates_list3 = (Condidate.query.join(Group, Condidate.group_id==Group.id, isouter=True)\
-    .add_columns(Condidate.id, Condidate.emailc, Condidate.group_id, Condidate.pronounc, Condidate.phonenumc, Condidate.stimes, Condidate.text, Condidate.status,Group.name)\
+    .add_columns(Condidate.id, Condidate.emailc, Condidate.group_id, Condidate.pronounc, Condidate.phonenumc, Condidate.stimes, Condidate.text, Condidate.status,Group.name, Condidate.firstname, Condidate.lastname)\
     .filter(Condidate.status != 'טופל')).order_by(Condidate.group_id).all()
 
 
@@ -501,6 +553,7 @@ def edit_condidate(id):
 
 @app.route('/update_inactive_users', methods=['GET'])
 def update_inactive_users():
+
     print('updating users...')
     return '0'
 
@@ -792,7 +845,6 @@ def studentli():
     return resp
 
 
-
 @app.route('/delete', methods=['GET', 'POST'])
 def del_stu():
     students_list = Student.query.all()
@@ -914,6 +966,7 @@ def list_poss():
 
 
 
+
 @app.route('/volunteer_in_group', methods=['GET', 'POST'])
 def volunteer_in_group():
 
@@ -979,8 +1032,8 @@ def list_vol_in_group():
 def volunteer_documents():
     Dname = VolunteerDocuments.query.all()
     volunteers_list = Volunteers.query.all()
-    volunteer_and_doc = Volunteers.query.join(VolunteerDocuments, Volunteers.IDV==VolunteerDocuments.IDV, isouter=True).join(VolunteersInPoss,Volunteers.IDV==VolunteersInPoss.IDV, isouter=True).join(Poss, VolunteersInPoss.IDP==Poss.IDP, isouter=True)\
-    .add_columns(Volunteers.IDV, Volunteers.FnameV, Volunteers.SnameV, Volunteers.StatusV, VolunteerDocuments.Dname,VolunteerDocuments.Document,VolunteerDocuments.DateAdded,Poss.PossName)\
+    volunteer_and_doc = Volunteers.query.join(VolunteerDocuments, Volunteers.IDV==VolunteerDocuments.IDV, isouter=True)\
+    .add_columns(Volunteers.IDV, Volunteers.FnameV, Volunteers.SnameV, Volunteers.StatusV, VolunteerDocuments.Dname,VolunteerDocuments.Document,VolunteerDocuments.DateAdded)\
     #.filter(Volunteers.IDV == VolunteerDocuments.IDV,VolunteersInGroups.IDV==Volunteers.IDV)
 
     form = VolunteerDocumentsForm()
@@ -1043,6 +1096,50 @@ def volunteers_in_poss():
                 return redirect(url_for('volunteers_in_poss'))
 
     return render_template('volunteers_in_poss.html',form=form,volunteers_in_poss=volunteers_in_poss,poss_list=poss_list,volunteers_list=volunteers_list,volunteers_poss_list2=volunteers_poss_list2)
+
+
+
+
+
+@app.route('/upload_docs')
+
+def docs():
+
+    ""
+    # Model query in SQLAlchemy
+    users = Volunteers.query.join(VolunteerDocuments, Volunteers.IDV==VolunteerDocuments.IDV, isouter=True).join(VolunteersInPoss,Volunteers.IDV==VolunteersInPoss.IDV, isouter=True).join(Poss, VolunteersInPoss.IDP==Poss.IDP, isouter=True)\
+    .add_columns(Volunteers.IDV, Volunteers.FnameV, Volunteers.SnameV, Volunteers.StatusV, VolunteerDocuments.Dname,VolunteerDocuments.Document,VolunteerDocuments.DateAdded,Poss.PossName)\
+
+    # Instantiate byte type IO objects, used to store objects in memory, no need to generate temporary files on disk
+    out = io.BytesIO()
+    # Instantiate the writer object that outputs xlsx
+    writer = ExcelWriter(out, engine='openpyxl')
+    # Split the SQLAlchemy model query object into SQL statements and connection attributes to pandas read_sql method
+    df = pd.read_sql(users.statement, users.session.bind)
+    # Simple data slicing, select all rows, the range from the sixth column to the last column
+    df = df.iloc[:, 0:]
+    # Rename the df column name
+    df.rename(columns={
+   
+
+    }, inplace=True)
+    # Save df to excel in the memory writer variable, do not include the index line number in the conversion result
+    df.to_excel(writer, index=False)
+    # This step can't be missed, if you don't save it, there is nothing in the xls file downloaded by the browser
+    writer.save()
+    # Reset the pointer of the IO object to the beginning
+    out.seek(0)
+    # The IO object uses getvalue() to return the binary raw data, which is used to give the response data to be generated
+    resp = make_response(out.getvalue())
+    # Set the response header to let the browser resolve to the file download behavior
+    resp.headers['Content-Disposition'] = 'attachement; filename=docs.xlsx'
+    resp.headers['Content-Type'] = 'application/vnd.ms-excel; charset=utf-8'
+
+    return resp
+
+
+
+
 
 
 @app.route('/addmeetings', methods=['GET', 'POST'])
@@ -1221,7 +1318,6 @@ def management_dashbord():
     meetings_dict = pd.DataFrame.from_records(list(meetings_list4)).groupby(4)[4].count().to_dict()
 
 
-
    # print (meetings_list3)
    # print (meetings_list4)
 
@@ -1275,7 +1371,6 @@ def index():
 
     return resp
 app.run(debug=True)
-
 
 
 

@@ -58,6 +58,7 @@
     <div class="navbar-nav">
       <a class="nav-item nav-link" href="{{ url_for('home') }}">מסך הבית</a>
     {% if current_user.is_authenticated %}
+      {% if current_user.permission=='מנהל' %}
 
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -127,14 +128,77 @@
 
       <a href="{{ url_for('logout') }}" ustify-content-center class="btn btn-outline-warning my-2 my-sm-0 nav-item-left" role="button" >התנתק.י</a> 
       <a href="{{ url_for('management_dashbord') }}" ustify-content-center class="btn btn-outline-light nav-item-left" role="button" >מסך מנהלים</a> 
-      
+      <a href="{{ url_for('system_manager') }}" ustify-content-center class="btn btn-outline-light nav-item-left" role="button" >ניהול הרשאות</a> 
+
     
+    {% endif %}
+
+
+    {% if current_user.permission=='רכז' %}
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        חניכימ.ות
+      </a>
+      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item" href="{{ url_for('add_stu') }}" >פתיחת תיק חניכ.ה</a>
+        <a class="dropdown-item" href="{{ url_for('list_stu') }}">רשימת חניכימ.ות</a>
+
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" href="{{ url_for('student_in_group') }}">שיוך חניכ.ה לקבוצה</a>
+        <a class="dropdown-item" href="{{ url_for('list_stu_in_group') }}">חיפוש חניכימ.ות</a>
+
+
+      </div>
+    </li>
+   
+
+  </li>
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      עובדימ.ות ומתנדבימ.ות
+    </a>
+    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+      <a class="dropdown-item" href="{{ url_for('add_volunteer') }}">פתיחת תיק מתנדב.ת</a>
+      <a class="dropdown-item" href="{{ url_for('list_volunteers') }}">רשימת מתנדבימ.ות</a>
+      <a class="dropdown-item" href="{{ url_for('volunteer_documents') }}">מסמכי מתנדבימ.ות</a>
+      <div class="dropdown-divider"></div>
+      <a class="dropdown-item" href="{{ url_for('volunteers_in_poss') }}">שיבוץ מתנדבימ.ות בתפקיד</a>
+      <a class="dropdown-item" href="{{ url_for('volunteer_in_group') }}">שיבוץ מדריכימ.ות בקבוצה</a>
+      <div class="dropdown-divider"></div>
+      <a class="dropdown-item" href="{{ url_for('list_vol_in_group') }}">חיפוש</a>
+
+    </div>
+  </li>
+</li>
+
+<li class="nav-item dropdown">
+<a class="nav-link dropdown-toggle" href="#" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+  פעולות
+</a>
+<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+  <a class="dropdown-item" href="{{ url_for('addmeetings') }}">טופס דיווח פעולה</a>
+  <a class="dropdown-item" href="{{ url_for('meetings_file') }}">העלאת קובץ לפעולה</a>
+  <a class="dropdown-item" href="{{ url_for('meetings_list') }}">חיפוש פעולות</a>
+
+</div>
+
+
+
+</li>
+
+    <a href="{{ url_for('logout') }}" ustify-content-center class="btn btn-outline-warning my-2 my-sm-0 nav-item-left" role="button" >התנתק.י</a> 
+ 
+    {% endif %}
+
 
     {% else %}
     <a class="nav-item nav-link" href="{{ url_for('info') }}">אודות הארגון</a>
       <li class="nav-link"><a href="{{ url_for('login') }}">התחברות</a></li>
       <li class="nav-link"><a href="{{ url_for('register') }}">כניסת מתנדבימ.ות למערכת</a></li>
     {% endif %}
+
+
+
   </div>
 </nav>
 </ul>

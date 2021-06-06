@@ -14,15 +14,14 @@
         <th scope="col">שם הקבוצה</th>
         <th scope="col">התקיימה / בוטלה</th>
         <th scope="col">נושא</th>
-        <th scope="col">פלפורמה</th>
-        <th scope="col">נוכחות</th>
+        <th scope="col">פלטפורמה</th>
         <th scope="col">דירוג (1-5)</th>
 
 
       </tr>
     </thead>
     <tbody>
-      {% for S in meetings_list6  %}
+      {% for S in meetings_list3  %}
 
       <tr>
         <td>{{S.Mdate}}</td>
@@ -31,7 +30,6 @@
         <td>  {{S.Occurence}}</td>
         <td>{{S.title}}</td>
         <td>  {{S.Platform}}</td>
-        <td>  {{S.attending}}</td>
         <td>  {{S.Rate}}</td>
 
         {% endfor %}
@@ -50,7 +48,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for S in meetings_list6  %}
+      {% for S in meetings_list3  %}
 
       <tr>
         <td>  {{S.Pros}}
@@ -62,6 +60,38 @@
 
     </tbody>
   </table>
+
+
+</br>
+</br>
+
+<h4>נוכחות</h4>
+
+</table>
+<table class="table">
+  <thead class="table-dark">
+    <tr>
+      <th scope="col">שם</th>
+      <th scope="col">מספר מזהה</th>
+     
+
+
+    </tr>
+  </thead>
+  <tbody>
+    {% for S in meetings_list6  %}
+
+    <tr>
+      <td>  {{S.firstname}}
+      </td>
+      <td>  {{S.lastname}}
+      </td>
+    </tr>
+    {% endfor %}
+
+  </tbody>
+</table>
+
 </div>
 
 
@@ -70,14 +100,6 @@
 </br>
 </br>
 </br>
-
-{% for b in meetings_list6  %}
-    {{b.attending}}
-
-{% endfor %}
-
-
-
 
 </div>
 

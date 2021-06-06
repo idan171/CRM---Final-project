@@ -17,49 +17,6 @@
 
       {{ form.submit() }}
   </form>
-</br>
-</br>
-<h5>רשימת חניכימ.ות לפי קבוצה. לעריכה לחצ.י על כתובת הדוא״ל:</h5>
-
-
-  <table class="table table-hover">
-    <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">דואר אלקטורני</th>
-        <th scope="col">שם מלא</th>
-        <th scope="col">שם הקבוצה</th>
-        <th scope="col">סטטוס פעילות</th>
-
-      </tr>
-    </thead>
-</br>
-
-    <tbody>
-      {% for S in stu_in_group_list  %}
-      
-      <tr>
-        <td scope="row">{{loop.index}}</td>
-        <td> 
-          <a href="{{url_for('edit_stuingroup', id=S.StudentInGroup.id)}}">{{S.emails}}</a>
-        </td>
-        <td>
-          {{S.firstname}} {{S.lastname}}
-
-
-        </td>
-        <td>
-          {{S.name}}
-
-        </td>
-        <td>
-          {{S.statusg}}
-        </td>
-      </tr>
-      {% endfor %}
-
-    </tbody>
-  </table>
 
   <div class="jumbotron">
     <h5>רשימת חניכימ.ות שטרם שובצו בקבוצה:</h5>
@@ -101,6 +58,47 @@
     </table>
   </div>
 
+  <h5>רשימת חניכימ.ות לפי קבוצה. לעריכה לחצ.י על כתובת הדוא״ל:</h5>
+
+
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">דואר אלקטורני</th>
+        <th scope="col">שם מלא</th>
+        <th scope="col">שם הקבוצה</th>
+        <th scope="col">סטטוס פעילות</th>
+
+      </tr>
+    </thead>
+</br>
+
+    <tbody>
+      {% for S in stu_in_group_list  %}
+      
+      <tr>
+        <td scope="row">{{loop.index}}</td>
+        <td> 
+          <a href="{{url_for('edit_stuingroup', id=S.StudentInGroup.id)}}">{{S.emails}}</a>
+        </td>
+        <td>
+          {{S.firstname}} {{S.lastname}}
+
+
+        </td>
+        <td>
+          {{S.name}}
+
+        </td>
+        <td>
+          {{S.statusg}}
+        </td>
+      </tr>
+      {% endfor %}
+
+    </tbody>
+  </table>
 
 </div>
 {% endblock %}
