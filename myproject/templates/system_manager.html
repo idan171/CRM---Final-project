@@ -5,6 +5,7 @@
 </br>
   <h4>טבלת בקשות לפתיחת משתמש מערכת:</h4>
 
+  <input class="form-control" id="myInput" type="text" placeholder="Search..">
 
 
   <table class="table table-hover">
@@ -23,7 +24,6 @@
     </thead>
     <tbody id = "idan">
       {% for V in user_list  %}
-  
       <tr>
         <td scope="row">{{loop.index}}</td>
         <td>
@@ -36,10 +36,13 @@
           {{V.username}}
         </td>
         <td>
+          {{V.firstname}}
         </td>
         <td>
+          {{V.lastname}}
         </td>
          <td>
+          {{V.tel}}
         </td>
         <td>
           {{V.permission}}
@@ -53,4 +56,16 @@
 
 
 </div>
+
+<script>
+  $(document).ready(function(){
+    $("#myInput").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#idan tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+  });
+  </script>
+
 {% endblock %}
