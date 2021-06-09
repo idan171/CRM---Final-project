@@ -11,14 +11,12 @@
       {{ form.hidden_tag() }}
       {{ form.group_id.label }} {{ form.group_id() }}<br>
       <em class="redText">* </em>
-{{ form.student_emails.label }} {{ form.student_emails() }}<br>
+{{ form.student_emails.label }} {{ form.student_emails(value=con_to_update.emailc) }}<br>
       {{ form.statusg.label }} {{ form.statusg() }}<br>
 
 
       {{ form.submit() }}
   </form>
-</br>
-</br>
 
   <div class="jumbotron">
     <h5>רשימת חניכימ.ות שטרם שובצו בקבוצה:</h5>

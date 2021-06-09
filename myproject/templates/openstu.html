@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="jumbotron">
+  <h1 class="m-0 font-weight-bold text-primary">פתיחת תיק חניכ.ה</h1>
+</br>
+  <p>לאחר פגישת הכרות, השלמ.י את הפרטים הבאים:</p>  
+  
+  <style scoped>
+    .redText {color:red;}
+    </style>
+  <form method="POST">
+      {# This hidden_tag is a CSRF security feature. #}
+      {{ form.hidden_tag() }}
+
+      <em class="redText">* </em>{{ form.emails.label }} {{ form.emails(value=con_to_update.emailc) }}
+  </br>
+  <em class="redText">* </em>{{ form.firstname.label }} {{ form.firstname(value=con_to_update.firstname) }}
+  </br>
+  <em class="redText">* </em>{{ form.lastname.label }} {{ form.lastname(value=con_to_update.lastname) }}
+  </br>
+    {{ form.dateofbirth.label }}   <input type="date" id="dateofbirth" name="dateofbirth">
+
+  </br>
+    {{ form.pronouns.label }} {{ form.pronouns(value=con_to_update.pronounc) }}
+    </br>
+    {{ form.citys.label }} {{form.citys() }}
+    </br>
+    {{ form.addresss.label }} {{form.addresss() }}
+  </br>
+    {{ form.nutritions.label }} {{ form.nutritions() }}
+    </br>
+    {{ form.phonenums.label }} {{ form.phonenums(value=con_to_update.phonenumc) }}
+    </br>
+    {{ form.schoolname.label }} {{form.schoolname() }}
+    </br>
+    {{ form.parents.label }} {{form.parents() }}
+  </br>
+  {{ form.details.label }} {{form.details() }}
+
+    </br>
+      {{ form.submit() }}
+  </form>
+
+</div>
+  <img src="https://miro.medium.com/max/4242/1*9xQNT2BMQEBpQ6Sy0ubgFQ.jpeg" width="1000" height="500" class="rounded mx-auto d-block"  style="border:5px solid black" alt="Responsive image">
+
+
+{% endblock %}
+

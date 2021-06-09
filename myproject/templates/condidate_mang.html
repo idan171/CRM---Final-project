@@ -1,7 +1,11 @@
 {% extends "home.html" %}
 {% block content %}
 <div class="jumbotron">
-  <h1 class="m-0 font-weight-bold text-primary">רשימת מועמדימ.ות שממתינים ליצירת קשר</h1>
+  <h1 class="m-0 font-weight-bold text-primary">רשימת מועמדימ.ות שממתינים.ות ליצירת קשר</h1>
+</br>
+  <p>לעריכת סטטוס הפניה, לחצ.י על כתובת הדוא"ל:</p>
+  <p>לפתיחת תיק חניך, לחצ.י על שם המועמד.ת:</p>
+
     <ol>
      
       <table class="table table-hover">
@@ -28,7 +32,7 @@
               <a href="{{url_for('edit_condidate', id=stu.id)}}">{{stu.emailc}}</a>
             </td>
             <td>
-            {{stu.firstname}}
+              <a href="{{url_for('openstu', id=stu.id)}}">{{stu.firstname}}</a>
             </td>
             <td>
               {{stu.lastname}}

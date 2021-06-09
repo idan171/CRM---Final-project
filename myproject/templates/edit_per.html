@@ -6,6 +6,9 @@
   <h4>מתן הרשאות: מנהל / רכז / מדריך / חסום:</h4>
 </br>
 </br>
+<form method="POST">
+  {# This hidden_tag is a CSRF security feature. #}
+  {{ form.hidden_tag() }}
 
 
   {{ form.id.label }} {{ form.id(value=name_to_update.id) }}
@@ -14,11 +17,19 @@
 </br>
   {{ form.username.label }} {{ form.username(value=name_to_update.username) }}
   </br>
-  {{ form.permission.label }} {{form.permission(value=name_to_update.permission) }}
-  </br>
+  {{ form.firstname.label }}  {{ form.firstname(value=name_to_update.firstname) }}
+</br>
+{{ form.lastname.label }} {{ form.lastname(value=name_to_update.lastname) }}
+</br>
+{{ form.tel.label }} {{ form.tel(value=name_to_update.tel) }}
+</br>
+{{ form.permission.label }} {{ form.permission(value=name_to_update.permission) }}
+</br>
+
 
   </br>
     {{ form.submit() }}
 
+</form>
 </div>
 {% endblock %}

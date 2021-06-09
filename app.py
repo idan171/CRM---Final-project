@@ -92,10 +92,10 @@ def register():
         user = User(id=form.id.data,
                     email=form.email.data,
                     username=form.username.data,
-                    firstname=form.password.data,
-                    lastname=form.password.data,
-                    tel=form.password.data,
-                    permission=form.password.data,
+                    firstname=form.firstname.data,
+                    lastname=form.lastname.data,
+                    tel=form.tel.data,
+                    permission='בקשה חדשה',
                     password=form.password.data)
 
         db.session.add(user)
@@ -139,7 +139,8 @@ def add_stu():
 
 @app.route('/system_manager', methods=['GET', 'POST'])
 def system_manager():
-    user_list = User.query.all()
+    user_list = User.query.order_by(User.permission).all()
+
 
     return render_template('system_manager.html',user_list=user_list)
 
@@ -154,6 +155,9 @@ def edit_per(id):
         name_to_update.id = request.form['id']
         name_to_update.email = request.form['email']
         name_to_update.username = request.form['username']
+        name_to_update.firstname = request.form['firstname']
+        name_to_update.lastname = request.form['lastname']
+        name_to_update.tel = request.form['tel']
         name_to_update.permission = request.form['permission']
         
         try:
@@ -485,9 +489,9 @@ def new_condidate():
 @app.route('/condidate_mang', methods=['GET', 'POST'])
 def condidate_mang():
     condidates_list = Condidate.query.all()
-    condidates_list3 = Condidate.query.join(Group, Condidate.group_id==Group.id, isouter=True)\
-    .add_columns(Condidate.id, Condidate.emailc, Condidate.group_id, Condidate.pronounc, Condidate.phonenumc, Condidate.stimes, Condidate.text, Condidate.status,Group.name, Condidate.firstname, Condidate.lastname)\
-    .filter(Condidate.status != 'טופל').order_by(Condidate.group_id).all()
+    condidates_list3 = Condidate.query.join(Group, Condidate.group_id==Group.id, isouter=True).join(Student, Condidate.emailc==Student.emails, isouter=True)\
+    .add_columns(Condidate.id, Condidate.emailc, Condidate.group_id, Condidate.pronounc, Condidate.phonenumc, Condidate.stimes, Condidate.text, Condidate.status,Group.name, Condidate.firstname, Condidate.lastname, Student.emails)\
+    .filter(Condidate.status != 'טופל',Student.emails ==None).order_by(Condidate.group_id).all()
 
 
     form = NewCondidateForm()
@@ -526,9 +530,9 @@ def condidate_mang():
 @app.route('/edit_condidate/<int:id>', methods=['GET', 'POST'])
 def edit_condidate(id):
     condidates_list = Condidate.query.all()
-    condidates_list3 = (Condidate.query.join(Group, Condidate.group_id==Group.id, isouter=True)\
-    .add_columns(Condidate.id, Condidate.emailc, Condidate.group_id, Condidate.pronounc, Condidate.phonenumc, Condidate.stimes, Condidate.text, Condidate.status,Group.name, Condidate.firstname, Condidate.lastname)\
-    .filter(Condidate.status != 'טופל')).order_by(Condidate.group_id).all()
+    condidates_list3 = Condidate.query.join(Group, Condidate.group_id==Group.id, isouter=True).join(Student, Condidate.emailc==Student.emails, isouter=True)\
+    .add_columns(Condidate.id, Condidate.emailc, Condidate.group_id, Condidate.pronounc, Condidate.phonenumc, Condidate.stimes, Condidate.text, Condidate.status,Group.name, Condidate.firstname, Condidate.lastname, Student.emails)\
+    .filter(Condidate.status != 'טופל',Student.emails ==None).order_by(Condidate.group_id).all()
 
 
     form = NewCondidateForm()
@@ -551,6 +555,44 @@ def edit_condidate(id):
     return render_template('edit_condidate.html',form=form,con_to_update=con_to_update)
 
 
+@app.route('/openstu/<int:id>', methods=['GET', 'POST'])
+def openstu(id):
+    condidates_list = Condidate.query.all()
+    condidates_list3 = (Condidate.query.join(Group, Condidate.group_id==Group.id, isouter=True)\
+    .add_columns(Condidate.id, Condidate.emailc, Condidate.group_id, Condidate.pronounc, Condidate.phonenumc, Condidate.stimes, Condidate.text, Condidate.status,Group.name, Condidate.firstname, Condidate.lastname)\
+    .filter(Condidate.status != 'טופל')).order_by(Condidate.group_id).all()
+
+
+    form = AddForm()
+    con_to_update = Condidate.query.get_or_404(id)
+    if form.validate_on_submit():
+        new_s = Student(emails = request.form['emails'],
+                        firstname = request.form['firstname'],
+                        lastname = request.form['lastname'],
+                        dateofbirth = form.dateofbirth.data,
+                        pronouns = request.form['pronouns'],
+                        citys = form.citys.data,
+                        addresss = form.addresss.data,
+                        nutritions = form.nutritions.data,
+                        phonenums = request.form['phonenums'],
+                        schoolname = form.schoolname.data,
+                        dateaddeds = form.dateaddeds.data,                            statuss = form.statuss.data,
+                        parents = form.parents.data,
+                        details = form.details.data)
+    
+        try:
+            db.session.add(new_s)
+            db.session.commit()
+            flash("Condidate Updated Successfully!")
+            return redirect(url_for('student_in_group'))
+        except:
+             flash("Error! Looks like there is a problem, please try again!")
+             return render_template("openstu.html",form=form,con_to_update=con_to_update,condidates_list=condidates_list,condidates_list3=condidates_list3)
+
+
+    return render_template('openstu.html',form=form,con_to_update=con_to_update)
+
+
 @app.route('/update_inactive_users', methods=['GET'])
 def update_inactive_users():
 
@@ -567,7 +609,7 @@ def student_in_group():
     .filter(StudentInGroup.id == None)
     stu_in_group_list = StudentInGroup.query.join(Group, StudentInGroup.group_id==Group.id, isouter=True).join(Student, StudentInGroup.student_emails==Student.emails, isouter=True)\
     .add_columns(StudentInGroup.group_id, Student.emails, StudentInGroup.statusg, Group.id, Group.name,StudentInGroup.stimes,StudentInGroup.ftimef,Student.firstname, Student.lastname)\
-    .filter(StudentInGroup.group_id == Group.id)
+    .filter(StudentInGroup.group_id == Group.id).order_by(StudentInGroup.group_id).all()
     #.paginate(page, 1, False)
     form = AddStuGroupForm()
     
@@ -589,6 +631,42 @@ def student_in_group():
 
     return render_template('student_in_group.html',form=form,stu_in_group_list=stu_in_group_list,groups=groups,students_list=students_list,students_list2=students_list2,students_list3=students_list3)
 
+app.route('/student_in_group2/<int:id>', methods=['GET', 'POST'])
+def student_in_group2(id):
+    groups = Group.query.all()
+    students_list = Student.query.all()
+    students_list3 = StudentInGroup.query.all()
+    students_list2 = Student.query.join(StudentInGroup, Student.emails==StudentInGroup.student_emails, isouter=True)\
+    .add_columns(Student.emails, Student.firstname,Student.lastname,Student.citys,Student.phonenums,StudentInGroup.id,Student.statuss)\
+    .filter(StudentInGroup.id == None)
+    stu_in_group_list = StudentInGroup.query.join(Group, StudentInGroup.group_id==Group.id, isouter=True).join(Student, StudentInGroup.student_emails==Student.emails, isouter=True)\
+    .add_columns(StudentInGroup.group_id, Student.emails, StudentInGroup.statusg, Group.id, Group.name,StudentInGroup.stimes,StudentInGroup.ftimef,Student.firstname, Student.lastname)\
+    .filter(StudentInGroup.group_id == Group.id)
+    #.paginate(page, 1, False)
+    con_to_update = Condidate.query.get_or_404(id)
+
+    form = AddStuGroupForm()
+    
+    if form.is_submitted():
+        form.group_id.data = int(form.group_id.data)
+        if form.validate():
+            stimes = date.today()
+            ftimef = ''#form.ftimef.data
+            student_emails = request.form['student_emails']
+            group_id = form.group_id.data
+            statusg = form.statusg.data
+            
+            new_studentingroup = StudentInGroup(stimes,ftimef,student_emails,group_id,statusg)
+            db.session.add(new_studentingroup)
+            db.session.commit()
+            print('added')
+                
+        return render_template('student_in_group2.html',form=form,stu_in_group_list=stu_in_group_list,groups=groups,students_list=students_list,students_list2=students_list2,students_list3=students_list3,con_to_update=con_to_update)
+
+    return render_template('student_in_group2.html',form=form,stu_in_group_list=stu_in_group_list,groups=groups,students_list=students_list,students_list2=students_list2,students_list3=students_list3,con_to_update=con_to_update)
+
+
+
 
 @app.route('/edit_stuingroup/<int:id>', methods=['GET', 'POST'])
 def edit_stuingroup(id):
@@ -598,11 +676,11 @@ def edit_stuingroup(id):
     .filter(StudentInGroup.id == None)
     stu_in_group_list = StudentInGroup.query.join(Group, StudentInGroup.group_id==Group.id, isouter=True).join(Student, StudentInGroup.student_emails==Student.emails, isouter=True)\
     .add_columns(StudentInGroup.group_id, Student.emails, StudentInGroup.statusg, Group.id, Group.name,StudentInGroup.stimes,StudentInGroup.ftimef,Student.firstname, Student.lastname)\
-    .filter(StudentInGroup.group_id == Group.id)
+    .filter(StudentInGroup.group_id == Group.id).order_by(StudentInGroup.group_id).all()
 
     searchstu_in_group_list = StudentInGroup.query.join(Group, StudentInGroup.group_id==Group.id, isouter=True).join(Student, StudentInGroup.student_emails==Student.emails, isouter=True)\
     .add_columns(StudentInGroup.group_id, Student.emails, StudentInGroup.statusg, Group.id, Group.name,StudentInGroup.stimes,StudentInGroup.ftimef,Student.firstname, Student.lastname)\
-    .filter(StudentInGroup.group_id == Group.id)
+    .filter(StudentInGroup.group_id == Group.id).order_by(StudentInGroup.group_id).all()
     form = AddStuGroupForm()
     line_to_update = StudentInGroup.query.get_or_404(id)
     if request.method == "POST":
