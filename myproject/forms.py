@@ -200,7 +200,7 @@ class MessageForme(FlaskForm):
 
 
 class MFileForm(FlaskForm):
-    IDM = StringField('ID of Meetings:') 
+    IDM = StringField('מזהה פגישה:') 
     FileName = StringField('שם הקובץ:') 
     FileDescription = StringField('תאור הקובץ:')
     TheFile = FileField('מסמך:')

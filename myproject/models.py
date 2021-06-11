@@ -42,6 +42,8 @@ class User(db.Model, UserMixin):
     def check_password(self,password):
         # https://stackoverflow.com/questions/23432478/flask-generate-password-hash-not-constant-output
         return check_password_hash(self.password_hash,password)
+        
+volunteers = db.relationship('volunteers',backref='users',lazy='dynamic')
 
 
 class VolunteerDocuments(db.Model):
@@ -91,7 +93,7 @@ class MFile(db.Model):
     IDM = db.Column(db.Integer,db.ForeignKey('meetings.IDM'))
     Filename = db.Column(db.Text)
     FileDescription = db.Column(db.Text)
-    TheFile = db.Column(db.LargeBinary)
+    TheFile = db.Column(db.LargeBinary, nullable=True)
     AddTime = db.Column(db.Text)
 
     def __init__(self,IDM,FileName,FileDescription,image,AddTime):
@@ -120,7 +122,6 @@ class Volunteers(db.Model):
     DateAdded = db.Column(db.Text)
     
     Message = db.relationship('Message',backref='volunteers',lazy='dynamic')
-    User = db.relationship('User',backref='volunteers',lazy='dynamic')
     volunteersingroups = db.relationship('VolunteersInGroups',backref='volunteers',lazy='dynamic')
     volunteerDocuments = db.relationship('VolunteerDocuments',backref='volunteers',lazy='dynamic')
     volunteersinPoss = db.relationship('VolunteersInPoss',backref='volunteers',lazy='dynamic')

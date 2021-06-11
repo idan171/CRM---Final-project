@@ -1,5 +1,5 @@
 from logging import ERROR
-from re import template
+from re import T, template
 
 from sqlalchemy.sql.elements import Null
 from myproject.forms import LoginForm, MessageForme, RegistrationForm, AddForm , DelForm, AddGroupForm, AddStuGroupForm, NewCondidateForm, DelGroupForm, AddVolunteerForm, VolunteersInGroupsForm, VolunteerDocumentsForm, AddPossForm, MeetingsForm, MFileForm, VolunteersInPossForm 
@@ -213,9 +213,13 @@ def edit_meet(IDM):
     .add_columns(Meetings.IDM, Meetings.Mdate, Meetings.Mdate ,Meetings.Mtime ,Meetings.IDG ,Meetings.Occurence ,Meetings.Platform ,Meetings.Rate, Meetings.title ,Meetings.Pros ,Meetings.Cons ,Meetings.attending, Group.name,Student.firstname,Student.lastname)\
     .filter(Meetings.IDM == IDM).all()
 
+    meetings_list7 = Meetings.query.join(Group, Meetings.IDG==Group.id).join(Student, Meetings.attending.like(f'%{Student.emails}%'), isouter=True)\
+    .add_columns(Meetings.IDM, Meetings.Mdate, Meetings.Mdate ,Meetings.Mtime ,Meetings.IDG ,Meetings.Occurence ,Meetings.Platform ,Meetings.Rate, Meetings.title ,Meetings.Pros ,Meetings.Cons ,Meetings.attending, Group.name,Student.firstname,Student.lastname)\
+    .filter(Meetings.IDM == IDM).all()
+
     meetings_list3 = Meetings.query.join(Group, Meetings.IDG==Group.id).join(Student, Meetings.attending==Student.emails, isouter=True)\
         .add_columns(Meetings.Mdate, Meetings.IDM, Meetings.Mtime, Group.id, Group.name, Meetings.Pros ,Meetings.Cons , Meetings.Occurence, Meetings.Platform, Meetings.Rate, Student.firstname,Student.lastname, Meetings.title )\
-        .filter(Meetings.IDG == Group.id)
+        .filter(Meetings.IDG == Group.id).order_by(Meetings.IDG).all()
 
     meeting_with_all_studens = Meetings.query.join(Group, Meetings.IDG==Group.id).join(Student, Meetings.attending.like("%%"), isouter=False)\
     .add_columns(Meetings.IDM, Meetings.Mdate, Meetings.Mdate ,Meetings.Mtime ,Meetings.IDG ,Meetings.Occurence ,Meetings.Platform ,Meetings.Rate, Meetings.title ,Meetings.Pros ,Meetings.Cons ,Meetings.attending, Group.name,Student.firstname ,Student.lastname,Student.emails )\
@@ -235,7 +239,7 @@ def edit_meet(IDM):
 
     print(*meetings_list3, sep = "\n")   
     
-    return render_template('edit_meet.html',meetings_list6=correct_meetings,meetings_list3=meetings_list3,students=students)
+    return render_template('edit_meet.html',meetings_list7=meetings_list7,meetings_list6=correct_meetings,meetings_list3=meetings_list3,students=students)
 
 
 
@@ -366,7 +370,7 @@ def meetings_list():
     meetings_list2 = Meetings.query.all()
     meetings_list3 = Meetings.query.join(Group, Meetings.IDG==Group.id, isouter=True).join(Student, Student.emails == Meetings.attending, isouter=True)\
         .add_columns(Meetings.Mdate, Meetings.IDM,Meetings.attending, Group.id, Group.name, Meetings.Occurence, Meetings.Platform, Meetings.Rate, Student.firstname, Meetings.title )\
-        .filter(Meetings.IDG == Group.id)
+        .filter(Meetings.IDG == Group.id).order_by(Meetings.IDG).all()
     return render_template('meetings_list.html',meetings_list2=meetings_list2,meetings_list3=meetings_list3)
 
 
@@ -526,7 +530,6 @@ def condidate_mang():
 #read with filter:  students = Student.query.filter_by(citys = 'Ramat Gan').all()
 
 
-
 @app.route('/edit_condidate/<int:id>', methods=['GET', 'POST'])
 def edit_condidate(id):
     condidates_list = Condidate.query.all()
@@ -538,15 +541,14 @@ def edit_condidate(id):
     form = NewCondidateForm()
     con_to_update = Condidate.query.get_or_404(id)
     if request.method == "POST":
-        con_to_update.group_id = request.form['group_id']
+        con_to_update.group_id = int(request.form['group_id'])
         con_to_update.text = request.form['text']
         con_to_update.status = request.form['status']
     
         try:
             db.session.commit()
             flash("Condidate Updated Successfully!")
-            return render_template("condidate_mang.html",form=form,con_to_update=con_to_update,condidates_list=condidates_list,condidates_list3=condidates_list3)
-
+            return redirect(url_for('condidate_mang'))
         except:
              flash("Error! Looks like there is a problem, please try again!")
              return render_template("edit_condidate.html",form=form,con_to_update=con_to_update,condidates_list=condidates_list,condidates_list3=condidates_list3)
@@ -643,10 +645,10 @@ def student_in_group2(id):
     .add_columns(StudentInGroup.group_id, Student.emails, StudentInGroup.statusg, Group.id, Group.name,StudentInGroup.stimes,StudentInGroup.ftimef,Student.firstname, Student.lastname)\
     .filter(StudentInGroup.group_id == Group.id)
     #.paginate(page, 1, False)
-    con_to_update = Condidate.query.get_or_404(id)
 
     form = AddStuGroupForm()
-    
+    con_to_update = Condidate.query.get_or_404(id)
+
     if form.is_submitted():
         form.group_id.data = int(form.group_id.data)
         if form.validate():
@@ -690,8 +692,7 @@ def edit_stuingroup(id):
         try:
             db.session.commit()
             flash("Student in Group Updated Successfully!")
-            return render_template("student_in_group.html",form=form,line_to_update=line_to_update,stu_in_group_list=stu_in_group_list,searchstu_in_group_list=searchstu_in_group_list,students_list=students_list,students_list2=students_list2)
-
+            return redirect(url_for('student_in_group'))
         except:
              flash("Error! Looks like there is a problem, please try again!")
              return render_template("edit_stuingroup.html",form=form,line_to_update=line_to_update,stu_in_group_list=stu_in_group_list,searchstu_in_group_list=searchstu_in_group_list,students_list=students_list,students_list2=students_list2)
@@ -927,12 +928,14 @@ def studentli():
 def del_stu():
     students_list = Student.query.all()
 
+
     form = DelForm()
 
     if form.validate_on_submit():
         emails = form.student_emails.data
         stu = Student.query.get(emails)
         db.session.delete(stu)
+
         db.session.commit()
 
         return redirect(url_for('list_stu'))
@@ -1258,29 +1261,41 @@ def addmeetings():
     return render_template('meetings.html',form=form,meetings2=meetings2,student_list=student_list,student_list_thin=json.dumps(students_thin_list))
 
 
-@app.route('/meetings_file',methods=['GET', 'POST'])
-def meetings_file():
+@app.route('/meetings_file/<int:IDM>',methods=['GET', 'POST'])
+def meetings_file(IDM):
 
-    the_file = MFile.query.all()
+
+    the_file = Meetings.query.join(Group, Meetings.IDG==Group.id).join(Student, Meetings.attending.like(f'%{Student.emails}%'), isouter=True).join(MFile, Meetings.IDM==MFile.IDM)\
+    .add_columns(Meetings.IDM, Meetings.Mdate, Meetings.Mdate ,Meetings.Mtime ,Meetings.IDG ,Meetings.Occurence ,Meetings.Platform ,Meetings.Rate, Meetings.title ,Meetings.Pros ,Meetings.Cons,MFile.AddTime ,Meetings.attending, Group.name,Student.firstname,Student.lastname)\
+    .filter(Meetings.IDM == IDM).all()
     meetings = Meetings.query.all()
 
     form = MFileForm()
+    name_to_update = Meetings.query.get_or_404(IDM)
+
     if form.validate_on_submit():
-        IDM = form.IDM.data
-        FileName = form.FileName.data
+        IDM = request.form['IDM']
+        Filename = form.FileName.data
         FileDescription = form.FileDescription.data
-        TheFile = images.save(form.TheFile.data)
+        if form.TheFile.data != "":
+            TheFile = images.save(form.TheFile.data)
+        else: 
+            TheFile = None
         AddTime = date.today()
 
         # Add new "meetings file" to database
-        new_meetings_file = MFile(IDM,FileName,FileDescription,TheFile,AddTime)
+        new_meetings_file = MFile(IDM,Filename,FileDescription,TheFile,AddTime)
         db.session.add(new_meetings_file)
         db.session.commit()
 
-
-        return redirect(url_for('meetings_file'))
+        return redirect(url_for('meetings_list'))
         
-    return render_template('meetings_file.html',form=form,the_file=the_file,meetings=meetings)
+    return render_template('meetings_file.html',form=form,the_file=the_file,meetings=meetings,name_to_update=name_to_update)
+
+
+
+
+
 
 
 @app.route('/management_dashbord')

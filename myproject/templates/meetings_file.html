@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="jumbotron">
-  <h1 class="m-0 font-weight-bold text-primary">הוספת קובץ לפעולה</h1>
+  <h1 class="m-0 font-weight-bold text-primary">תיוק קובץ לפעולה</h1>
 </br>
   <form method="POST" enctype="multipart/form-data">
     {{form.csrf_token}}
     {{form.hidden_tag()}}
 
-    {{form.IDM.label}} {{form.IDM()}} <br>
+    <em class="redText">* </em>{{form.IDM.label}} {{form.IDM(value=name_to_update.IDM)}} <br>
     <em class="redText">* </em>{{form.FileName.label}} {{form.FileName()}} <br>
     {{form.FileDescription.label}} {{form.FileDescription()}} <br>
     <em class="redText">* </em>{{form.TheFile.label}} {{form.TheFile()}} <br>
@@ -16,16 +16,7 @@
       {{ form.submit() }}
   </form>
 </div>
-<table>
-  <tr>
-    <td>
-      <div class="jumbotron">
-        <h2>  רשימת מסמכים  </h2>
-        <ul>
-          {% for F in the_file  %}
-          <li>{{F}}</li>
-          {% endfor %}
-        </ul>
+
       
       </div>
     </td>

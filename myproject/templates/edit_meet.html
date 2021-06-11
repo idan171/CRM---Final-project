@@ -16,12 +16,13 @@
         <th scope="col">נושא</th>
         <th scope="col">פלטפורמה</th>
         <th scope="col">דירוג (1-5)</th>
+        <th scope="col">טעינת קובץ</th>
 
 
       </tr>
     </thead>
     <tbody>
-      {% for S in meetings_list3  %}
+      {% for S in meetings_list7  %}
 
       <tr>
         <td>{{S.Mdate}}</td>
@@ -31,6 +32,7 @@
         <td>{{S.title}}</td>
         <td>  {{S.Platform}}</td>
         <td>  {{S.Rate}}</td>
+        <td><a href="{{ url_for('meetings_file', IDM=S.IDM) }}" ustify-content-center class="btn btn-info btn-sm" role="button">הוספה</a>  </td>
 
         {% endfor %}
 
@@ -48,7 +50,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for S in meetings_list3  %}
+      {% for S in meetings_list7  %}
 
       <tr>
         <td>  {{S.Pros}}
@@ -79,12 +81,12 @@
     </tr>
   </thead>
   <tbody>
-    {% for S in meetings_list6  %}
+    {% for H in meetings_list6  %}
 
     <tr>
-      <td>  {{S.firstname}}
+      <td>  {{H.firstname}}
       </td>
-      <td>  {{S.lastname}}
+      <td>  {{H.lastname}}
       </td>
     </tr>
     {% endfor %}
