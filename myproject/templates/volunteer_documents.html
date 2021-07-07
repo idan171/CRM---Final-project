@@ -3,7 +3,8 @@
 <div class="jumbotron">
   <h1 class="m-0 font-weight-bold text-primary">הוספת מסמך</h1>
 </br>
-  <h5>מלא.י את הפרטים הבאים:</h5>
+
+  <p class="font-weight-light">מלא.י את הפרטים הבאים:</p>
   <form method="POST" enctype="multipart/form-data">
       {# This hidden_tag is a CSRF security feature. #}
       {{form.hidden_tag()}}
@@ -18,12 +19,33 @@
 <div class="d-flex justify-content-center" >
                     <a href="{{ url_for('docs') }}" ustify-content-center class="btn btn-success btn-sm" role="button">ייצוא לאקסל - דו״ח פערי מסמכים </a>  
                   </div>
-</br>
-<p>חיפוש מסמכים בטבלה:</p>
+<script>
+  $(document).ready(function(){
+    $("#myInput").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#idan tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+  });
+  </script>
 
-<input class="form-control" id="myInput" type="text" placeholder="Search..">
 
-<table class="table table-hover">
+
+
+
+
+
+
+
+<div class="jumbotron">
+  <h5><div class="p-2 mb-2 bg-success text-white">רשומות מסמכים</div></h5>
+  <p>לצפייה בכרטיס מתנדב.ת לחצ.י על תעודת הזות:</p>
+
+  <div class="table-responsive">
+
+
+  <table id="example_table"   class="table table-hover table-bordered table-secondary border-success">
   <thead>
     <tr>
       <th scope="col">#</th>
@@ -60,18 +82,21 @@
     {% endfor %}
 
   </tbody>
-
-
+  </table>
+</div>
 </div>
 
 <script>
-  $(document).ready(function(){
-    $("#myInput").on("keyup", function() {
-      var value = $(this).val().toLowerCase();
-      $("#idan tr").filter(function() {
-        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-      });
-    });
-  });
-  </script>
+  $(document).ready(function () {
+$('#example_table').DataTable({
+"pagingType": "full_numbers" // "simple" option for 'Previous' and 'Next' buttons only
+});
+$('.dataTables_length').addClass('bs-select');
+});
+</script>
+
+
+
+
+
 {% endblock %}

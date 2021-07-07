@@ -1,67 +1,76 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="jumbotron">
-  <h1 class="m-0 font-weight-bold text-primary">פירוט מתנדבימ.ות ועובדימ.ות לפי תפקיד</h1>
-</br>
-  <p>חיפוש לפי שם / תעודת זהות / תפקיד</p>
-  
-  <form method ="POST">
-    <input type="text" autofocus="autofocus" name="vol_string">
-    <input type="submit" formaction="/search_volunteer"  value="חיפוש">
+  <h5><div class="p-2 mb-2 bg-success text-white">מתנדבימ.ות בארגון לפי תפקיד</div></h5>
+  <p class="font-weight-light">לצפייה / עריכת כרטיס מתנדב.ת - לחצ.י על תעודת הזהות:</p>
+  <p class="font-weight-light">לעדכון סטטוס תפקיד - לחצ.י על הסטטוס:</p>
 
-  </form>
-</br>
-<p>לצפיה או עריכת פרטי המתנדב.ת, לחצ.י על ת״ז המתנדב.ת. לשינוי סטטוס התפקיד - לחצ.י על הסטטוס:</p>
+  <div class="table-responsive">
 
-  <table class="table table-hover">
-    <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">תעודת זהות</th>
-        <th scope="col">שם פרטי</th>
-        <th scope="col">שם משפחה</th>
-        <th scope="col">תפקיד</th>
-        <th scope="col">מועד התחלה בתפקיד</th>
-        <th scope="col">סטטוס בתפקיד</th>
-        <th scope="col">סטטוס מתנדב</th>
 
-      </tr>
-    </thead>
-    <tbody>
-      {% for V in volunteers_poss_list2  %}
+  <table id="example_table"   class="table table-hover table-bordered table-secondary border-success">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">תעודת זהות</th>
+      <th scope="col">שם פרטי</th>
+      <th scope="col">שם משפחה</th>
+      <th scope="col">תפקיד</th>
+      <th scope="col">מועד התחלה בתפקיד</th>
+      <th scope="col">סטטוס בתפקיד</th>
+      <th scope="col">סטטוס מתנדב</th>
 
-      <tr>
-        <td scope="row">{{loop.index}}</td>
-        <td> 
-          <a href="{{url_for('edit_volunteer', IDV=V.IDV)}}">{{V.IDV}}</a>
+    </tr>
+  </thead>
+  <tbody>
+    {% for V in volunteers_poss_list2  %}
 
-        </td>
-        <td>
-        {{V.FnameV}}
-        </td>
-        <td>
-          {{V.SnameV}}
-        </td>
-        <td>
-          {{V.PossName}}
-        </td>
-        <td>
-          {{V.TimeS}}
-        </td>
-        <td>
-          {%if V.Statusvp == "פעיל" or V.Statusvp == "לא פעיל" %}
-          <a href="{{url_for('edit_poss', id=V.id)}}">{{V.Statusvp}}</a>
-          {%else%}
-          {{V.Statusvp}}
-          {%endif%}
-        </td>
-        <td>
-          {{V.StatusV}}
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
+    <tr>
+      <td scope="row">{{loop.index}}</td>
+      <td> 
+        <a href="{{url_for('edit_volunteer', IDV=V.IDV)}}">{{V.IDV}}</a>
+
+      </td>
+      <td>
+      {{V.FnameV}}
+      </td>
+      <td>
+        {{V.SnameV}}
+      </td>
+      <td>
+        {{V.PossName}}
+      </td>
+      <td>
+        {{V.TimeS}}
+      </td>
+      <td>
+        {%if V.Statusvp == "פעיל" or V.Statusvp == "לא פעיל" %}
+        <a href="{{url_for('edit_poss', id=V.id)}}">{{V.Statusvp}}</a>
+        {%else%}
+        {{V.Statusvp}}
+        {%endif%}
+      </td>
+      <td>
+        {{V.StatusV}}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
   </table>
-
 </div>
+</div>
+
+<script>
+  $(document).ready(function () {
+$('#example_table').DataTable({
+"pagingType": "full_numbers" // "simple" option for 'Previous' and 'Next' buttons only
+});
+$('.dataTables_length').addClass('bs-select');
+});
+</script>
+
+
+
+
+
 {% endblock %}

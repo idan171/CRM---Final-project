@@ -108,7 +108,7 @@ class MFile(db.Model):
 
 
 class Volunteers(db.Model):
-    IDV = db.Column(db.Integer,primary_key = True)
+    IDV = db.Column(db.Integer,primary_key = True, nullable=False)
     emailv = db.Column(db.Text)
     FnameV = db.Column(db.Text)
     SnameV = db.Column(db.Text)
@@ -166,7 +166,7 @@ class Poss(db.Model):
 class Student(db.Model):
 
     __tablename__ = 'students'
-    emails = db.Column(db.String(64),primary_key = True)
+    emails = db.Column(db.String(64),primary_key = True, nullable=False)
     firstname = db.Column(db.Text)
     lastname = db.Column(db.Text)
     dateofbirth = db.Column(db.Text)

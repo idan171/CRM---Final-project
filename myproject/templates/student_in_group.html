@@ -2,6 +2,7 @@
 {% block content %}
 <div class="jumbotron">
   <h1 class="m-0 font-weight-bold text-primary">שיבוץ חניכ.ה בקבוצה</h1>
+  
   <style scoped>
     .redText {color:red;}
     </style>
@@ -9,9 +10,13 @@
   <form method="POST">
       {# This hidden_tag is a CSRF security feature. #}
       {{ form.hidden_tag() }}
+      <em class="redText">* </em>
+
       {{ form.group_id.label }} {{ form.group_id() }}<br>
       <em class="redText">* </em>
 {{ form.student_emails.label }} {{ form.student_emails() }}<br>
+<em class="redText">* </em>
+
       {{ form.statusg.label }} {{ form.statusg() }}<br>
 
 
@@ -20,87 +25,59 @@
 </br>
 </br>
 
-  <div class="jumbotron">
-    <h5>רשימת חניכימ.ות שטרם שובצו בקבוצה:</h5>
-  
-    <table class="table table-hover">
-      <thead>
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col">דואר אלקטורני</th>
-          <th scope="col">שם פרטי</th>
-          <th scope="col">שם משפחה</th>
-          <th scope="col">מספר טלפון נייד</th>
-  
-        </tr>
-      </thead>
-  </br>
-  
-      <tbody>
-        {% for stu in students_list2  %}
-        <tr>
-          <td scope="row">{{loop.index}}</td>
-          <td> 
-           {{stu.emails}}
-          </td>
-          <td>
-          {{stu.firstname}}
-          </td>
-          <td>
-            {{stu.lastname}}
-          </td>
-          <td>
-            {{stu.phonenums}}
-          </td>
-     
-        </tr>
-        {% endfor %}
-  
-      </tbody>
-    </table>
-  </div>
 
-  <h5>רשימת חניכימ.ות לפי קבוצה. לעריכה לחצ.י על כתובת הדוא״ל:</h5>
+<h5><div class="p-2 mb-2 bg-info text-black">רשימת חניכימ.ות שטרם שובצו לקבוצה </div></h5>
+
+  <div class="table-responsive">
 
 
-  <table class="table table-hover">
-    <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">דואר אלקטורני</th>
-        <th scope="col">שם מלא</th>
-        <th scope="col">שם הקבוצה</th>
-        <th scope="col">סטטוס פעילות</th>
+  <table id="example_table"   class="table table-hover table-bordered table-secondary border-info">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">דואר אלקטורני</th>
+      <th scope="col">שם פרטי</th>
+      <th scope="col">שם משפחה</th>
+      <th scope="col">מספר טלפון נייד</th>
 
-      </tr>
-    </thead>
+    </tr>
+  </thead>
 </br>
 
-    <tbody>
-      {% for S in stu_in_group_list  %}
-      
-      <tr>
-        <td scope="row">{{loop.index}}</td>
-        <td> 
-          <a href="{{url_for('edit_stuingroup', id=S.StudentInGroup.id)}}">{{S.emails}}</a>
-        </td>
-        <td>
-          {{S.firstname}} {{S.lastname}}
+  <tbody>
+    {% for stu in students_list2  %}
+    <tr>
+      <td scope="row">{{loop.index}}</td>
+      <td> 
+       {{stu.emails}}
+      </td>
+      <td>
+      {{stu.firstname}}
+      </td>
+      <td>
+        {{stu.lastname}}
+      </td>
+      <td>
+        {{stu.phonenums}}
+      </td>
+ 
+    </tr>
+    {% endfor %}
 
-
-        </td>
-        <td>
-          {{S.name}}
-
-        </td>
-        <td>
-          {{S.statusg}}
-        </td>
-      </tr>
-      {% endfor %}
-
-    </tbody>
+  </tbody>
   </table>
-
 </div>
+</div>
+</div>
+
+<script>
+  $(document).ready(function () {
+$('#example_table').DataTable({
+"pagingType": "full_numbers" // "simple" option for 'Previous' and 'Next' buttons only
+});
+$('.dataTables_length').addClass('bs-select');
+});
+</script>
+
+
 {% endblock %}

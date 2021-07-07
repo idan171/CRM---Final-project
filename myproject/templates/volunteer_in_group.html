@@ -3,7 +3,7 @@
 <div class="jumbotron">
   <h1 class="m-0 font-weight-bold text-primary">שיבוץ מתנדב.ת בקבוצה</h1>
 </br>
-  <p>מלא את הפרטים הבאים</p>
+  <p class="font-weight-light">מלא את הפרטים הבאים</p>
   <form method="POST">
       {# This hidden_tag is a CSRF security feature. #}
       {{ form.hidden_tag() }}
@@ -17,12 +17,12 @@
       {{ form.submit() }}
   </form>
 </br>
-</br>
-<h6>לעריכה, לחץ על פרטי החניך:</h6>
-</br>
-<h7>מדריכימ.ות שטרם שובצו לקבוצה:</h7>
 
-<table class="table table-hover">
+  <h5><div class="p-2 mb-2 bg-success text-white">מדריכימ.ות שטרם שובצו בקבוצה</div></h5>
+  <div class="table-responsive">
+
+
+  <table id="example_table2"   class="table table-hover table-bordered table-secondary border-success">
   <thead>
     <tr>
       <th scope="col">#</th>
@@ -65,64 +65,92 @@
   </tr>
   {% endfor %}
 
-</tbody>
-</table>
-</br>
-</br>
-<h7>מדריכימ.ות בקבוצה:</h7>
-
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">ת״ז של המדריכ.ה</th>
-            <th scope="col">שם פרטי</th>
-            <th scope="col">שם משפחה</th>
-            <th scope="col">מספר מזהה קבוצה</th>
-            <th scope="col">שם הקבוצה</th>
-            <th scope="col">סטטוס חניכ.ה בקבוצה</th>
-
-          </tr>
-        </thead>
-      </br>
-
-
-        <tbody>
-          {% for V in vol_in_group_list  %}
-          <tr>
-            <td scope="row">{{loop.index}}</td>
-            <td> 
-              <a href="{{url_for('edit_volingroup', id=V.VolunteersInGroups.id)}}">{{V.IDV}}</a>
-            </td>
-            <td>
-              {{V.FnameV}}
-
-            </td>
-            <td>
-              {{V.SnameV}}
-
-            </td>
-            <td>
-              {{V.IDG}}
-
-            </td>
-
-          </td>
-          <td>
-            {{V.name}}
-
-          </td>
-          <td>
-            {{V.statusV}}
-
-          </td>
-          </tr>
-          {% endfor %}
-
-        </tbody>
-      </table>
-
+  </tbody>
+  </table>
 </div>
+
+<script>
+  $(document).ready(function () {
+$('#example_table2').DataTable({
+"pagingType": "full_numbers" // "simple" option for 'Previous' and 'Next' buttons only
+});
+$('.dataTables_length').addClass('bs-select');
+});
+</script>
+
+</br>
+</br>
+
+  <h5><div class="p-2 mb-2 bg-success text-white">מדריכימ.ות בקבוצה</div></h5>
+  <p class="font-weight-light">לעריכה, לחצ.י על תעודת הזהות:</p>
+
+  <div class="table-responsive">
+
+
+  <table id="example_table"   class="table table-hover table-bordered table-secondary border-success">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">ת״ז של המדריכ.ה</th>
+      <th scope="col">שם פרטי</th>
+      <th scope="col">שם משפחה</th>
+      <th scope="col">מספר מזהה קבוצה</th>
+      <th scope="col">שם הקבוצה</th>
+      <th scope="col">סטטוס חניכ.ה בקבוצה</th>
+
+    </tr>
+  </thead>
+</br>
+
+
+  <tbody>
+    {% for V in vol_in_group_list  %}
+    <tr>
+      <td scope="row">{{loop.index}}</td>
+      <td> 
+        <a href="{{url_for('edit_volingroup', id=V.VolunteersInGroups.id)}}">{{V.IDV}}</a>
+      </td>
+      <td>
+        {{V.FnameV}}
+
+      </td>
+      <td>
+        {{V.SnameV}}
+
+      </td>
+      <td>
+        {{V.IDG}}
+
+      </td>
+
+    </td>
+    <td>
+      {{V.name}}
+
+    </td>
+    <td>
+      {{V.statusV}}
+
+    </td>
+    </tr>
+    {% endfor %}
+
+  </tbody>
+  </table>
+</div>
+</div>
+
+<script>
+  $(document).ready(function () {
+$('#example_table').DataTable({
+"pagingType": "full_numbers" // "simple" option for 'Previous' and 'Next' buttons only
+});
+$('.dataTables_length').addClass('bs-select');
+});
+</script>
+
+
+
 
 
 {% endblock %}

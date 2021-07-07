@@ -1,7 +1,7 @@
 {% extends "home.html" %}
 {% block content %}
-<div class="jumbotron">
-  <h1 class="m-0 font-weight-bold text-primary">השאר פרטים</h1>
+<div class="jumbotron" style="background-color:#ffebfc;">
+  <h1 class="m-0 font-weight-bold text-primary">מלא.י פרטים ליצירת קשר</h1>
   <p>מלא.י את כל השדות:</p>
   <form method="POST">
       {# This hidden_tag is a CSRF security feature. #}
@@ -24,4 +24,7 @@
       {{ form.submit() }}
   </form>
 </div>
+
+<img src="http://www.athleteally.org/wp-content/uploads/2021/02/inclusive-flag.jpg"750" height="500" class="rounded mx-auto d-block"  style="border:5px solid black" alt="Responsive image">
+
 {% endblock %}

@@ -1,78 +1,71 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="jumbotron">
-  <h1 class="m-0 font-weight-bold text-primary">חיפוש במאגר פעולות </h1>
-</br>
-
-  <form method ="POST">
-    <input type="text" autofocus="autofocus" name="voli_string">
-    <input type="submit" formaction="/search_meeting"  value="חיפוש">
-
-  </form>
-</br>
-
-  <h6>לצפיה בכרטיס הפעולה, לחצ.י על התאריך:</h6>
-
-  <input class="form-control" id="myInput" type="text" placeholder="Search..">
 
 
-  <table class="table table-hover">
-    <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">תאריך</th>
-        <th scope="col">שם הקבוצה</th>
-        <th scope="col">בוצעה / בוטלה</th>
-        <th scope="col">פלטפורמה</th>
-        <th scope="col">נושא הפעולה / סיבת הביטול</th>
-        <th scope="col">דירוג (1-5)</th>
+<h5><div class="p-2 mb-2 bg-primary text-white">מאגר פעולות - צפייה בכרטיס</div></h5>
+<p class="font-weight-light">לפתיחת הכרטיס, לחצ.י על התאריך הרצוי :</p>
 
-      </tr>
-    </thead>
-
-</br>
-</br>
-    <tbody id ="idan">
-      {% for S in meetings_list3  %}
-      
-      <tr>
-        <td scope="row">{{loop.index}}</td>
-        <td>
-          <a href="{{url_for('edit_meet', IDM=S.IDM)}}">{{S.Mdate}}</a>
-        </td>
-        <td>
-          {{S.name}}
-        </td>
-        <td>
-          {{S.Occurence}}
-        </td>
-        <td>
-          {{S.Platform}}
-        </td>
-        <td>
-          {{S.title}}
-        </td>
-        <td>
-          {{S.Rate}}
-        </td>
-      </tr>
-      {% endfor %}
-
-    </tbody>
-  </table>
+<div class="table-responsive">
 
 
+<table id="example_table"   class="table table-hover table-bordered table-secondary border-primary">
+<thead>
+  <tr>
+    <th scope="col">#</th>
+    <th scope="col">תאריך</th>
+    <th scope="col">שם הקבוצה</th>
+    <th scope="col">בוצעה / בוטלה</th>
+    <th scope="col">פלטפורמה</th>
+    <th scope="col">נושא הפעולה / סיבת הביטול</th>
+    <th scope="col">דירוג (1-5)</th>
+
+  </tr>
+</thead>
+
+<tbody id ="idan">
+  {% for S in meetings_list3  %}
+  
+  <tr>
+    <td scope="row">{{loop.index}}</td>
+    <td>
+      <a href="{{url_for('edit_meet', IDM=S.IDM)}}">{{S.Mdate}}</a>
+    </td>
+    <td>
+      {{S.name}}
+    </td>
+    <td>
+      {{S.Occurence}}
+    </td>
+    <td>
+      {{S.Platform}}
+    </td>
+    <td>
+      {{S.title}}
+    </td>
+    <td>
+      {{S.Rate}}
+    </td>
+  </tr>
+  {% endfor %}
+
+</tbody>
+</table>
 </div>
+</div>
+
 <script>
-  $(document).ready(function(){
-    $("#myInput").on("keyup", function() {
-      var value = $(this).val().toLowerCase();
-      $("#idan tr").filter(function() {
-        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-      });
-    });
-  });
-  </script>
+$(document).ready(function () {
+$('#example_table').DataTable({
+"pagingType": "full_numbers" // "simple" option for 'Previous' and 'Next' buttons only
+});
+$('.dataTables_length').addClass('bs-select');
+});
+</script>
+
+
+
+
 
 
 <img src="https://res.cloudinary.com/jerrick/image/upload/v1553546163/ebtgrkwiyb9jdbnj633e.png" width="900" height="500" class="rounded mx-auto d-block"  style="border:5px solid black" alt="Responsive image">

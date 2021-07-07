@@ -3,7 +3,7 @@
 <div class="jumbotron">
   <h1 class="m-0 font-weight-bold text-primary">שיבוץ מתנדב.ת בתפקיד</h1>
 </br>
-  <p>מלא.י את הפרטים הבאים</p>
+  <p class="font-weight-light">מלא.י את הפרטים הבאים</p>
   <form method="POST">
       {# This hidden_tag is a CSRF security feature. #}
       {{ form.hidden_tag() }}
@@ -18,57 +18,69 @@
       {{ form.submit(value='שיבוץ') }}
   </form>
 </div>
+
 <div class="jumbotron">
-  <h3 class="m-0 font-weight-bold text-primary">רשימת המתנה - מתנדבימ.ות שעברו הליך מיון וטרם שובצו בתפקיד</h3>
+  <h5><div class="p-2 mb-2 bg-success text-white">מתנדבימ.ות שעברו תהליך מיון וטרם שובצו בתפקיד</div></h5>
+  <div class="table-responsive">
 
-  <table class="table table-hover">
-    <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">תעודת זהות</th>
-        <th scope="col">שם פרטי</th>
-        <th scope="col">שם משפחה</th>
-        <th scope="col">לשון פניה</th>
-        <th scope="col">מספר טלפון נייד</th>
-        <th scope="col">מועד מעבר מיונים</th>
 
-      </tr>
-    </thead>
+  <table id="example_table"   class="table table-hover table-bordered table-secondary border-success">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">תעודת זהות</th>
+      <th scope="col">שם פרטי</th>
+      <th scope="col">שם משפחה</th>
+      <th scope="col">לשון פניה</th>
+      <th scope="col">מספר טלפון נייד</th>
+      <th scope="col">מועד מעבר מיונים</th>
+
+    </tr>
+  </thead>
 </br>
 
-    <tbody>
-      {% for v in volunteers_poss_list2  %}
-      <tr>
-        <td scope="row">{{loop.index}}</td>
-        <td> 
-          {{v.IDV}}
-         </td>
-        <td> 
-         {{v.FnameV}}
-        </td>
-        <td>
-        {{v.SnameV}}
-        </td>
-        <td>
-          {{v.PronounsV}}
-        </td>
-        <td>
-          {{v.PhoneNumV}}
-        </td>
-        <td>
-          {{v.DateAdded}}
-        </td>
-      </tr>
-      {% endfor %}
+  <tbody>
+    {% for v in volunteers_poss_list2  %}
+    <tr>
+      <td scope="row">{{loop.index}}</td>
+      <td> 
+        {{v.IDV}}
+       </td>
+      <td> 
+       {{v.FnameV}}
+      </td>
+      <td>
+      {{v.SnameV}}
+      </td>
+      <td>
+        {{v.PronounsV}}
+      </td>
+      <td>
+        {{v.PhoneNumV}}
+      </td>
+      <td>
+        {{v.DateAdded}}
+      </td>
+    </tr>
+    {% endfor %}
 
-    </tbody>
+  </tbody>
   </table>
-
-
-
-
 </div>
-</td>
+</div>
+
+<script>
+  $(document).ready(function () {
+$('#example_table').DataTable({
+"pagingType": "full_numbers" // "simple" option for 'Previous' and 'Next' buttons only
+});
+$('.dataTables_length').addClass('bs-select');
+});
+</script>
+
+
+
+
 
 
 

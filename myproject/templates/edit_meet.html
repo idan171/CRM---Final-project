@@ -1,13 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="jumbotron">
-  <h1>כרטיס פעולה</h1>
-
-
+  <h5><div class="p-2 mb-2 bg-primary text-white">כרטיס פעולה</div></h5>
 
   <div class="table-responsive">
   <table class="table">
-    <thead class="table-dark">
+    <thead class="table-primary">
       <tr>
         <th scope="col">תאריך</th>
         <th scope="col">שעות הפעילות</th>
@@ -32,7 +30,7 @@
         <td>{{S.title}}</td>
         <td>  {{S.Platform}}</td>
         <td>  {{S.Rate}}</td>
-        <td><a href="{{ url_for('meetings_file', IDM=S.IDM) }}" ustify-content-center class="btn btn-info btn-sm" role="button">הוספה</a>  </td>
+        <td><a href="{{ url_for('meetings_file', IDM=S.IDM) }}" ustify-content-center class="btn btn-warning btn-sm" role="button">הוספה</a>  </td>
 
         {% endfor %}
 
@@ -40,7 +38,7 @@
     </tbody>
   </table>
   <table class="table">
-    <thead class="table-dark">
+    <thead class="table-primary">
       <tr>
         <th scope="col">שימור</th>
         <th scope="col">שיפור</th>
@@ -67,14 +65,15 @@
 </br>
 </br>
 
-<h4>נוכחות</h4>
+<h4>נוכחות בפעולה</h4>
 
 </table>
 <table class="table">
-  <thead class="table-dark">
+  <thead class="table-primary">
     <tr>
-      <th scope="col">שם</th>
-      <th scope="col">מספר מזהה</th>
+      <th scope="col">#</th>
+      <th scope="col">שם פרטי</th>
+      <th scope="col">שם משפחה</th>
      
 
 
@@ -84,6 +83,7 @@
     {% for H in meetings_list6  %}
 
     <tr>
+      <td scope="row">{{loop.index}}</td>
       <td>  {{H.firstname}}
       </td>
       <td>  {{H.lastname}}

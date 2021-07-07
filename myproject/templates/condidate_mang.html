@@ -1,60 +1,84 @@
 {% extends "home.html" %}
 {% block content %}
 <div class="jumbotron">
-  <h1 class="m-0 font-weight-bold text-primary">רשימת מועמדימ.ות שממתינים.ות ליצירת קשר</h1>
+
+
+    <h5><div class="p-2 mb-2 bg-info text-black">רשימת מועמדימ.ות - בטיפול</div></h5>
+    <h7>לעריכת סטטוס הפנייה, לחצ.י על כתובת הדוא"ל:</h7>
 </br>
-  <p>לעריכת סטטוס הפניה, לחצ.י על כתובת הדוא"ל:</p>
-  <p>לפתיחת תיק חניך, לחצ.י על שם המועמד.ת:</p>
+    <h7>לפתיחת תיק חניכ.ה לחצ.י על שם המועמד.ת:</h7>
 
-    <ol>
-     
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">דואר אלקטורני</th>
-            <th scope="col">שם פרטי</th>
-            <th scope="col">שם משפחה</th>
-            <th scope="col">קבוצה</th>
-            <th scope="col">מספר טלפון נייד</th>
-            <th scope="col">מועד השארת פרטים</th>
+    <div class="table-responsive">
+    
+    
+    <table id="example_table"   class="table table-hover table-bordered table-secondary border-info">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">דואר אלקטורני</th>
+        <th scope="col">שם פרטי</th>
+        <th scope="col">שם משפחה</th>
+        <th scope="col">קבוצה</th>
+        <th scope="col">מספר טלפון נייד</th>
+        <th scope="col">מועד השארת פרטים</th>
+
+
+      </tr>
+    </thead>
+</br>
+
+    <tbody>
+      {% for stu in condidates_list3  %}
+      <tr>
+        <td scope="row">{{loop.index}}</td>
+        <td> 
+          <a href="{{url_for('edit_condidate', id=stu.id)}}">{{stu.emailc}}</a>
+        </td>
+        <td>
+          <a href="{{url_for('openstu', id=stu.id)}}">{{stu.firstname}}</a>
+        </td>
+        <td>
+          {{stu.lastname}}
+          </td>
+        <td>
+          {{stu.name}}
+        </td>
+        <td>
+          {{stu.phonenumc}}
+        </td>
+        <td>
+          {{stu.stimes}}
+
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+    </table>
+    </div>
+    
+    <script>
+    $(document).ready(function () {
+    $('#example_table').DataTable({
+    "pagingType": "full_numbers" // "simple" option for 'Previous' and 'Next' buttons only
+    });
+    $('.dataTables_length').addClass('bs-select');
+    });
+    </script>
+    
+    
 
     
-          </tr>
-        </thead>
-    </br>
-    
-        <tbody>
-          {% for stu in condidates_list3  %}
-          <tr>
-            <td scope="row">{{loop.index}}</td>
-            <td> 
-              <a href="{{url_for('edit_condidate', id=stu.id)}}">{{stu.emailc}}</a>
-            </td>
-            <td>
-              <a href="{{url_for('openstu', id=stu.id)}}">{{stu.firstname}}</a>
-            </td>
-            <td>
-              {{stu.lastname}}
-              </td>
-            <td>
-              {{stu.name}}
-            </td>
-            <td>
-              {{stu.phonenumc}}
-            </td>
-            <td>
-              {{stu.stimes}}
 
-            </td>
-          </tr>
-          {% endfor %}
-    
-        </tbody>
-      </table>
+
+
+
+
+
+
+
 
       <div class="d-flex justify-content-center" >
-        <a href="{{ url_for('condiex') }}" ustify-content-center class="btn btn-success btn-md" role="button">ייצוא לאקסל - דו״ח מתעניינימ.ות</a>  
+        <a href="{{ url_for('condiex') }}" ustify-content-center class="btn btn-outline-primary btn-md" role="button">ייצוא לאקסל - דו״ח מתעניינימ.ות</a>  
       </div>
 
 
@@ -70,8 +94,8 @@
 
 
      </div>
-<div class="jumbotron">
-  <h1 class="m-0 font-weight-bold text-primary">הוספת פניה יזומה</h1>
+<div class="jumbotron" style="background-color:#dbbfab;">
+  <h1 class="m-0 font-weight-bold text-primary">רישום פנייה יזומה</h1>
 </br>
   <p>מלא.י את השדות הבאים:</p>
   <form method="POST">

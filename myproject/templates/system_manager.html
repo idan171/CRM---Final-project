@@ -3,69 +3,66 @@
 <div class="jumbotron">
   <h1 class="m-0 font-weight-bold text-primary">מנהל המערכת - ניהול הרשאות</h1>
 </br>
-  <h4>טבלת בקשות לפתיחת משתמש מערכת:</h4>
+  <h5><div class="p-2 mb-2 bg-dark text-white">טבלת בקשות לפתיחת הרשאות משתמשים במערכת</div></h5>
+  <p>לעריכה, לחצ.י על כתובת הדוא"ל:</p>
 
-  <input class="form-control" id="myInput" type="text" placeholder="Search..">
-
-
-  <table class="table table-hover">
-    <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">דואר אלקטרוני</th>
-        <th scope="col">תעודת זהות</th>
-        <th scope="col">שם משתמש</th>
-        <th scope="col">שם פרטי</th>
-        <th scope="col">שם משפחה</th>
-        <th scope="col">מספר נייד</th>
-        <th scope="col">הרשאות</th>
-
-      </tr>
-    </thead>
-    <tbody id = "idan">
-      {% for V in user_list  %}
-      <tr>
-        <td scope="row">{{loop.index}}</td>
-        <td>
-          <a href="{{url_for('edit_per', id=V.id)}}">{{V.id}}</a>
-        </td>
-        <td>
-          {{V.email}}
-        </td>
-        <td>
-          {{V.username}}
-        </td>
-        <td>
-          {{V.firstname}}
-        </td>
-        <td>
-          {{V.lastname}}
-        </td>
-         <td>
-          {{V.tel}}
-        </td>
-        <td>
-          {{V.permission}}
-        </td>
-      </tr>
-      {% endfor %}
-  
-    </tbody>
-  
-  
+  <div class="table-responsive">
 
 
+  <table id="example_table"   class="table table-hover table-bordered table-secondary border-dark">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">דואר אלקטרוני</th>
+      <th scope="col">תעודת זהות</th>
+      <th scope="col">שם משתמש</th>
+      <th scope="col">שם פרטי</th>
+      <th scope="col">שם משפחה</th>
+      <th scope="col">מספר נייד</th>
+      <th scope="col">הרשאות</th>
+
+    </tr>
+  </thead>
+  <tbody id = "idan">
+    {% for V in user_list  %}
+    <tr>
+      <td scope="row">{{loop.index}}</td>
+      <td>
+        <a href="{{url_for('edit_per', id=V.id)}}">{{V.id}}</a>
+      </td>
+      <td>
+        {{V.email}}
+      </td>
+      <td>
+        {{V.username}}
+      </td>
+      <td>
+        {{V.firstname}}
+      </td>
+      <td>
+        {{V.lastname}}
+      </td>
+       <td>
+        {{V.tel}}
+      </td>
+      <td>
+        {{V.permission}}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+  </table>
+</div>
 </div>
 
 <script>
-  $(document).ready(function(){
-    $("#myInput").on("keyup", function() {
-      var value = $(this).val().toLowerCase();
-      $("#idan tr").filter(function() {
-        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-      });
-    });
-  });
-  </script>
+  $(document).ready(function () {
+$('#example_table').DataTable({
+"pagingType": "full_numbers" // "simple" option for 'Previous' and 'Next' buttons only
+});
+$('.dataTables_length').addClass('bs-select');
+});
+</script>
+
 
 {% endblock %}

@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="jumbotron">
-    <h1>כתיבת הודעה למדריכים בעמוד הבית</h1>
-    <p>מלא את פרתיך ואת פרטי ההודעה</p>
+  <h1 class="m-0 font-weight-bold text-primary">כתיבת הודעה למדריכים בעמוד הבית</h1>
+
+    <p class="font-weight-light">מלא את פרטיך ואת פרטי ההודעה</p>
     <form method="POST">
         {# This hidden_tag is a CSRF security feature. #}
         {{ form.hidden_tag() }}
@@ -22,7 +23,7 @@
  
     
       <div class="alert alert-success" role="alert">
-        <h4 class="alert-heading">רשימת הודעות </h4>
+        <h4 class="alert-heading">הודעות שמוצגות למשתמשים כעת</h4>
         {% for M in old_message  %}
         <p>{{M.Content}} </br> מועד פרסום: {{M.Mdate}} </br>דוא״ל: {{M.IDV}}</p>
         <hr>

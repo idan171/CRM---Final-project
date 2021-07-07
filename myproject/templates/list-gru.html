@@ -1,50 +1,62 @@
 {% extends "base.html" %}
 {% block content %}
+
 <div class="jumbotron">
-  <h1 class="m-0 font-weight-bold text-primary">קבוצות הנוער בארגון:</h1>
+  <h5><div class="p-2 mb-2 bg-warning text-black">רשימת קבוצות הנוער בארגון </div></h5>
+  <p class="font-weight-light">לעריכת פרטי הקבוצה, לחצ.י על מזהה קבוצה</p>
 
-</br>
-
-  <table class="table table-hover">
-    <thead>
-      <tr>
-        <th scope="col">מזהה קבוצה</th>
-        <th scope="col">שם קבוצה</th>
-        <th scope="col">אזורֿ/תחום</th>
-        <th scope="col">עיר</th>
-        <th scope="col">שכבות גיל</th>
+  <div class="table-responsive">
 
 
-      </tr>
-    </thead>
-    <tbody>
-      {% for gru in groups  %}
-      <tr>
-        <td> 
-          <a href="{{url_for('edit_group', id=gru.id)}}"> {{gru.id}}</a>
-        </td>
-        <td>
-           {{gru.name}} 
-        </td>
-        <td>
-          {{gru.regionorsubject}}
-        </td>
-        <td>
-          {{gru.city}}
-        </td>
+  <table id="example_table"   class="table table-hover table-bordered table-secondary border-warning">
+  <thead>
+    <tr>
+      <th scope="col">מזהה קבוצה</th>
+      <th scope="col">שם קבוצה</th>
+      <th scope="col">אזורֿ/תחום</th>
+      <th scope="col">עיר</th>
+      <th scope="col">שכבות גיל</th>
 
-        <td>
-          {{gru.agesingroup}}
-        </td>
-      </tr>
-      {% endfor %}
 
-    </tbody>
+    </tr>
+  </thead>
+  <tbody>
+    {% for gru in groups  %}
+    <tr>
+      <td> 
+        <a href="{{url_for('edit_group', id=gru.id)}}"> {{gru.id}}</a>
+      </td>
+      <td>
+         {{gru.name}} 
+      </td>
+      <td>
+        {{gru.regionorsubject}}
+      </td>
+      <td>
+        {{gru.city}}
+      </td>
+
+      <td>
+        {{gru.agesingroup}}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
   </table>
-
-
-
 </div>
+</div>
+
+<script>
+  $(document).ready(function () {
+$('#example_table').DataTable({
+"pagingType": "full_numbers" // "simple" option for 'Previous' and 'Next' buttons only
+});
+$('.dataTables_length').addClass('bs-select');
+});
+</script>
+
+
+
 
 <img src="https://external-preview.redd.it/DsskVg2w6ZGnbGlBlKu9MHR5RKLESUTXevMHoZzAX4E.jpg?auto=webp&s=5a46afeae451df70a83da782462b02a9ad2b260e" width="750" height="500" class="rounded mx-auto d-block"  style="border:5px solid black" alt="Responsive image">
 

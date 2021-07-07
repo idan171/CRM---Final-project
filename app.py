@@ -1,6 +1,5 @@
 from logging import ERROR
 from re import T, template
-
 from sqlalchemy.sql.elements import Null
 from myproject.forms import LoginForm, MessageForme, RegistrationForm, AddForm , DelForm, AddGroupForm, AddStuGroupForm, NewCondidateForm, DelGroupForm, AddVolunteerForm, VolunteersInGroupsForm, VolunteerDocumentsForm, AddPossForm, MeetingsForm, MFileForm, VolunteersInPossForm 
 from flask import render_template, redirect, request, url_for, flash,abort,Response,make_response
@@ -70,7 +69,7 @@ def login():
             #Log in the user
 
             login_user(user)
-            flash('Logged in successfully.')
+            flash("ברוכימ.ות הבאימ.ות! התחברת בהצלחה")
 
             # If a user was trying to visit a page that requires a login
             # flask saves that URL as 'next'.
@@ -132,6 +131,8 @@ def add_stu():
         # Add new Student to database
         db.session.add(new_stu)
         db.session.commit()
+        flash("נפתח תיק חניכ.ה בהצלחה!")
+
         return redirect(url_for('student_in_group'))
 
     return render_template('add.html',form=form)
@@ -162,7 +163,7 @@ def edit_per(id):
         
         try:
             db.session.commit()
-            flash("Student Updated Successfully!")
+            flash("הרשאות עודכנו בהצלחה!")
             return render_template("system_manager.html",form=form,name_to_update=name_to_update,user_list=user_list)
 
         except:
@@ -194,7 +195,7 @@ def edit_stu(emails):
 
         try:
             db.session.commit()
-            flash("Student Updated Successfully!")
+            flash("הפרטים עודכנו בהצלחה!")
             return render_template("list.html",form=form,name_to_update=name_to_update,students_list=students_list)
 
         except:
@@ -291,7 +292,7 @@ def edit_group(id):
 
         try:
             db.session.commit()
-            flash("Student Updated Successfully!")
+            flash("פרטי הקבוצה עודכנו בהצלחה!")
             return render_template("list-gru.html",form=form,gru_to_update=gru_to_update,groups=groups)
 
         except:
@@ -321,7 +322,7 @@ def edit_volingroup(id):
       
         try:
             db.session.commit()
-            flash("Student in group Updated Successfully!")
+            flash("הפרטים עודכנו בהצלחה!")
             return render_template("volunteer_in_group.html",form=form,volingro_to_update=volingro_to_update,vol_in_group_list=vol_in_group_list)
 
         except:
@@ -398,7 +399,7 @@ def edit_volunteer(IDV):
         vol_to_update.StatusV = request.form['StatusV']
         try:
             db.session.commit()
-            flash("Volunteer Updated Successfully!")
+            flash("פרטי המתנדב.ת עודכנו בהצלחה!")
             return render_template("list_volunteers.html",form=form,vol_to_update=vol_to_update,volunteers_list=volunteers_list,volunteers_poss_list2=volunteers_poss_list2)
 
         except:
@@ -423,7 +424,7 @@ def edit_poss(id):
    
         try:
             db.session.commit()
-            flash("Volunteer Updated Successfully!")
+            flash("הפרטים עודכנו בהצלחה!")
             return render_template("list_volunteers.html",form=form,pos_to_update=pos_to_update,volunteers_poss_list2=volunteers_poss_list2,volunteers_poss=volunteers_poss)
 
         except:
@@ -547,7 +548,7 @@ def edit_condidate(id):
     
         try:
             db.session.commit()
-            flash("Condidate Updated Successfully!")
+            flash("סטטוס הפניה עודכן בהצלחה!")
             return redirect(url_for('condidate_mang'))
         except:
              flash("Error! Looks like there is a problem, please try again!")
@@ -585,7 +586,7 @@ def openstu(id):
         try:
             db.session.add(new_s)
             db.session.commit()
-            flash("Condidate Updated Successfully!")
+            flash("נפתח תיק חניכ.ה בהצלחה!")
             return redirect(url_for('student_in_group'))
         except:
              flash("Error! Looks like there is a problem, please try again!")
@@ -605,6 +606,7 @@ def update_inactive_users():
 def student_in_group():
     groups = Group.query.all()
     students_list = Student.query.all()
+    stu_in_group_list1 = StudentInGroup.query.all()
     students_list3 = StudentInGroup.query.all()
     students_list2 = Student.query.join(StudentInGroup, Student.emails==StudentInGroup.student_emails, isouter=True)\
     .add_columns(Student.emails, Student.firstname,Student.lastname,Student.citys,Student.phonenums,StudentInGroup.id,Student.statuss)\
@@ -627,11 +629,12 @@ def student_in_group():
             new_studentingroup = StudentInGroup(stimes,ftimef,student_emails,group_id,statusg)
             db.session.add(new_studentingroup)
             db.session.commit()
-            print('added')
-                
-        return render_template('student_in_group.html',form=form,stu_in_group_list=stu_in_group_list,groups=groups,students_list=students_list,students_list2=students_list2,students_list3=students_list3)
+        
+        flash("החניכ.ה שובצ.ה בהצלחה!")
+        
+        return redirect(url_for('list_stu_in_group'))
 
-    return render_template('student_in_group.html',form=form,stu_in_group_list=stu_in_group_list,groups=groups,students_list=students_list,students_list2=students_list2,students_list3=students_list3)
+    return render_template('student_in_group.html',form=form,stu_in_group_list=stu_in_group_list,groups=groups,students_list=students_list,students_list2=students_list2,students_list3=students_list3,stu_in_group_list1=stu_in_group_list1)
 
 app.route('/student_in_group2/<int:id>', methods=['GET', 'POST'])
 def student_in_group2(id):
@@ -691,7 +694,7 @@ def edit_stuingroup(id):
 
         try:
             db.session.commit()
-            flash("Student in Group Updated Successfully!")
+            flash("הפרטים עודכנו בהצלחה!")
             return redirect(url_for('student_in_group'))
         except:
              flash("Error! Looks like there is a problem, please try again!")
@@ -927,6 +930,7 @@ def studentli():
 @app.route('/delete', methods=['GET', 'POST'])
 def del_stu():
     students_list = Student.query.all()
+    groups_list = StudentInGroup.query.all()
 
 
     form = DelForm()
@@ -934,12 +938,17 @@ def del_stu():
     if form.validate_on_submit():
         emails = form.student_emails.data
         stu = Student.query.get(emails)
+        stu2 = StudentInGroup.query.filter_by(student_emails=stu.emails).first()
+
+        print(stu2)
         db.session.delete(stu)
+        db.session.delete(stu2)
 
         db.session.commit()
+        flash("החניכ.ה נמחק.ה מרשומות המערכת")
 
         return redirect(url_for('list_stu'))
-    return render_template('delete.html',students_list=students_list,form=form)
+    return render_template('delete.html',students_list=students_list,groups_list=groups_list,form=form)
 
 @app.route('/delete_student_gru', methods=['GET', 'POST'])
 def delete_student_gru1():
@@ -1132,6 +1141,7 @@ def volunteer_documents():
         volunteer_documents = VolunteerDocuments(IDV,Dname,DocDescription,Document,DateAdded)
         db.session.add(volunteer_documents)
         db.session.commit()
+        flash("הקובץ עלה בהצלחה!")
 
         
         return redirect(url_for('volunteer_documents'))
@@ -1274,7 +1284,7 @@ def meetings_file(IDM):
     name_to_update = Meetings.query.get_or_404(IDM)
 
     if form.validate_on_submit():
-        IDM = request.form['IDM']
+        IDM = name_to_update.IDM
         Filename = form.FileName.data
         FileDescription = form.FileDescription.data
         if form.TheFile.data != "":
@@ -1287,6 +1297,8 @@ def meetings_file(IDM):
         new_meetings_file = MFile(IDM,Filename,FileDescription,TheFile,AddTime)
         db.session.add(new_meetings_file)
         db.session.commit()
+        flash("הקובץ עלה בהצלחה!")
+
 
         return redirect(url_for('meetings_list'))
         
