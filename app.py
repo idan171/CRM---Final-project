@@ -180,6 +180,9 @@ def edit_stu(emails):
     students_list = Student.query.all()
     form = AddForm()
     name_to_update = Student.query.get_or_404(emails)
+    form.pronouns.default = name_to_update.pronouns
+    form.nutritions.default = name_to_update.nutritions
+    form.process()
     if request.method == "POST":
 
         name_to_update.firstname = request.form['firstname']
@@ -192,7 +195,6 @@ def edit_stu(emails):
         name_to_update.schoolname = request.form['schoolname']
         name_to_update.parents = request.form['parents']
         name_to_update.details = request.form['details']
-
         try:
             db.session.commit()
             flash("הפרטים עודכנו בהצלחה!")
@@ -285,6 +287,9 @@ def edit_group(id):
     groups = Group.query.all()
     form = AddGroupForm()
     gru_to_update = Group.query.get_or_404(id)
+    form.agesingroup.default = gru_to_update.agesingroup
+
+    form.process()
     if request.method == "POST":
 
         gru_to_update.name = request.form['name']
@@ -315,6 +320,10 @@ def edit_volingroup(id):
     #editvol_in_group_list = VolunteersInGroups.query.all()
     form = VolunteersInGroupsForm()
     volingro_to_update = VolunteersInGroups.query.get_or_404(id)
+    form.IDG.default = volingro_to_update.IDG
+    form.statusV.default = volingro_to_update.statusV
+
+    form.process()
     if request.method == "POST":
         volingro_to_update.IDG = request.form['IDG']
         volingro_to_update.IDV = request.form['IDV']
@@ -386,6 +395,11 @@ def edit_volunteer(IDV):
     volunteers_list = Volunteers.query.all()
     form = AddVolunteerForm()
     vol_to_update = Volunteers.query.get_or_404(IDV)
+    form.PronounsV.default = vol_to_update.PronounsV
+    form.NutritionV.default = vol_to_update.NutritionV
+    form.StatusV.default = vol_to_update.StatusV
+
+    form.process()
     if request.method == "POST":
         vol_to_update.emailv = request.form['emailv']
         vol_to_update.FnameV = request.form['FnameV']
@@ -418,6 +432,10 @@ def edit_poss(id):
     volunteers_poss = VolunteersInPoss.query.all()
     form = VolunteersInPossForm()
     pos_to_update = VolunteersInPoss.query.get_or_404(id)
+    form.IDP.default = pos_to_update.IDP
+    form.Statusvp.default = pos_to_update.Statusvp
+
+    form.process()
     if request.method == "POST":
         pos_to_update.IDP = request.form['IDP']
         pos_to_update.Statusvp = request.form['Statusvp']
@@ -524,6 +542,7 @@ def condidate_mang():
 
             db.session.commit()
 
+            flash("הפרטים התווספו בהצלחה!")
 
             return redirect(url_for('condidate_mang'))
     return render_template('condidate_mang.html',form=form,condidates_list=condidates_list,condidates_list3=condidates_list3)
@@ -541,6 +560,11 @@ def edit_condidate(id):
 
     form = NewCondidateForm()
     con_to_update = Condidate.query.get_or_404(id)
+    form.pronounc.default = con_to_update.pronounc
+    form.status.default = con_to_update.status
+    form.group_id.default = con_to_update.group_id
+
+    form.process()
     if request.method == "POST":
         con_to_update.group_id = int(request.form['group_id'])
         con_to_update.text = request.form['text']
@@ -564,11 +588,13 @@ def openstu(id):
     condidates_list3 = (Condidate.query.join(Group, Condidate.group_id==Group.id, isouter=True)\
     .add_columns(Condidate.id, Condidate.emailc, Condidate.group_id, Condidate.pronounc, Condidate.phonenumc, Condidate.stimes, Condidate.text, Condidate.status,Group.name, Condidate.firstname, Condidate.lastname)\
     .filter(Condidate.status != 'טופל')).order_by(Condidate.group_id).all()
-
-
     form = AddForm()
     con_to_update = Condidate.query.get_or_404(id)
-    if form.validate_on_submit():
+    
+    form.pronouns.default = con_to_update.pronounc
+    form.process()
+
+    if request.method == "POST":
         new_s = Student(emails = request.form['emails'],
                         firstname = request.form['firstname'],
                         lastname = request.form['lastname'],
@@ -579,7 +605,8 @@ def openstu(id):
                         nutritions = form.nutritions.data,
                         phonenums = request.form['phonenums'],
                         schoolname = form.schoolname.data,
-                        dateaddeds = form.dateaddeds.data,                            statuss = form.statuss.data,
+                        dateaddeds = form.dateaddeds.data,                            
+                        statuss = form.statuss.data,
                         parents = form.parents.data,
                         details = form.details.data)
     
@@ -587,6 +614,7 @@ def openstu(id):
             db.session.add(new_s)
             db.session.commit()
             flash("נפתח תיק חניכ.ה בהצלחה!")
+
             return redirect(url_for('student_in_group'))
         except:
              flash("Error! Looks like there is a problem, please try again!")
