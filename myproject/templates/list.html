@@ -14,6 +14,8 @@
       <th scope="col">דואר אלקטורני</th>
       <th scope="col">שם פרטי</th>
       <th scope="col">שם משפחה</th>
+      <th scope="col">לשון פניה</th>
+      <th scope="col">עיר מגורים</th>
       <th scope="col">מספר טלפון נייד</th>
       <th scope="col">הסרה</th>
 
@@ -33,6 +35,12 @@
       </td>
       <td>
         {{stu.lastname}}
+      </td>
+      <td>
+        {{stu.pronouns}}
+      </td>
+      <td>
+        {{stu.citys}}
       </td>
       <td>
         {{stu.phonenums}}
@@ -56,5 +64,7 @@ $('#example_table').DataTable({
 $('.dataTables_length').addClass('bs-select');
 });
 </script>
+
+
 
 {% endblock %}
