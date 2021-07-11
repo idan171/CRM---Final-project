@@ -30,7 +30,7 @@
                     labels: ['טרם שובצו בתפקיד',{% for stu in listposs  %} "{{stu.PossName}}",{% endfor %}],
                     datasets: [{
                         data: [{{a}},{{guides}}, {{writers}}, {{educations}}, {{activation}}, {{waiting}},{{b}},{{c}},{{d}}],
-                        backgroundColor: ["rgba(255, 0, 0, 0.5)", "rgba(100, 255, 0, 0.5)", "rgba(200, 50, 255, 0.5)", "rgba(0, 100, 255, 0.5)", "rgba(256, 165, 100, 100)", "rgba(200, 200, 200, 200)", "rgba(32, 500, 6, 1)", "rgba(100, 20, 40, 1)", "rgba(87, 154, 33, 1)"],
+                        backgroundColor: ["rgba(228, 3, 3)", "rgba(255, 140, 0)", "rgba(255, 237, 0)", "rgba(0, 128, 38 )", "rgba( 0, 77, 255)", "rgba(117, 7, 135)", "rgba(32, 500, 6, 1)", "rgba(100, 20, 40, 1)", "rgba(87, 154, 33, 1)"],
                         borderWidth: 1,
                         borderColor:'#777',
                         hoverBorderWidth:2,
@@ -39,7 +39,7 @@
                 },
                 options: {
                     title: {
-                        display: true,
+                        display: false,
                         text: 'פילוח מתנדבימ.ות'
                     }
                 }
@@ -52,19 +52,28 @@
                     labels: canceled_meetings_labels,
                     datasets: [{
                         data: canceled_meetings_values,
+                        label:'מספר פעולות',
                         backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850","#ff33cc","#ffff00","#66ff33","66ffcc","ff33cc"],
                         borderWidth: 1,
                         borderColor:'#777',
                         hoverBorderWidth:2,
                         hoverBorderColor:'#000'
+                        
                     }]
                 },
                 options: {
-                    title: {
-                        display: true,
-                       text: 'פילוח פעולות'
-                    }
-                }
+                  scales: {
+        	yAxes: [{
+            	ticks: {
+                	beginAtZero: true
+            	}
+        	}]
+    	}
+                    
+      },
+                    
+                
+                
             });
         });
     </script>
@@ -76,8 +85,23 @@
                 <div class="card-header" style= "text-align: center;">פילוח מתנדבימ.ות</div>
                 <div class="card-body" >
                   <div class="d-flex justify-content-center" >
-                    <a href="{{ url_for('formp') }}" ustify-content-center class="btn btn-dark btn-sm" role="button">ייצוא לאקסל - דו״ח מתנדבים בתפקיד</a>  
+                    <a href="{{ url_for('formp') }}" ustify-content-center class="btn btn-outline-primary btn-sm" role="button">ייצוא לאקסל - דו״ח מתנדבימ.ות בתפקיד</a> 
+                  
                   </div>
+                  <div style="height:1px;font-size:1px;">&nbsp;</div>
+                  <div class="d-flex justify-content-center" >
+                    <a href="{{ url_for('docs') }}" ustify-content-center class="btn btn-outline-primary btn-sm" role="button">ייצוא לאקסל - מסמכי מתנדבימ.ות</a>  
+                  </div>
+<script>
+  $(document).ready(function(){
+    $("#myInput").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#idan tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+  });
+  </script>
                     <div class="chartjs-size-monitor" style=" overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
                         <div class="chartjs-size-monitor-expand" style="overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
                             <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
@@ -91,12 +115,13 @@
              
 
       </div>
+      
 
       <div class="col-lg-6 col-md-6 col-sm-12">
         <div class="card-header"style= "text-align: center;">פילוח חניכימ.ות </div>
         <div class="card-body" >
           <div class="d-flex justify-content-center" >
-            <a href="{{ url_for('studentli') }}" ustify-content-center class="btn btn-dark btn-sm" role="button">ייצוא לאקסל - דו״ח חניכימ.ות</a>  
+            <a href="{{ url_for('studentli') }}" ustify-content-center class="btn btn-outline-primary btn-sm" role="button">ייצוא לאקסל - דו״ח חניכימ.ות</a>  
           </div>
           <canvas id="mychart"></canvas>
         </div>
@@ -104,10 +129,10 @@
         
       <div class="col-lg-12 col-md-12 col-sm-12">
         
-        <div class="card-header" style="text-align: center;">פילוח ביטולי פעולות - חודש אחרון</div>
+        <div class="card-header" style="text-align: center;">פילוח ביטולי פעולות - קבוצות בהן בוטלה פעולה בחודש אחרון</div>
         <div class="card-body" >
           <div class="d-flex justify-content-center" >
-            <a href="{{ url_for('action') }}" ustify-content-center class="btn btn-dark btn-sm" role="button">ייצוא לאקסל - דו״ח פעולות </a>  
+            <a href="{{ url_for('action') }}" ustify-content-center class="btn btn-outline-primary btn-sm" role="button">ייצוא לאקסל - דו״ח פעולות </a>  
           </div>
             <div class="chartjs-size-monitor" style=" overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
                 <div class="chartjs-size-monitor-expand" style="overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
@@ -172,7 +197,7 @@
         },
         options: {
                     title: {
-                        display: true,
+                        display: false,
                         text: 'פילוח חניכימ.ות לפי איזורים ותחומים'
             }
           }
@@ -181,6 +206,9 @@
       });
 
     </script>
+
+
+
 </body>
 
 

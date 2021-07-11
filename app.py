@@ -582,18 +582,24 @@ def edit_condidate(id):
     return render_template('edit_condidate.html',form=form,con_to_update=con_to_update)
 
 
+
 @app.route('/openstu/<int:id>', methods=['GET', 'POST'])
 def openstu(id):
     condidates_list = Condidate.query.all()
     condidates_list3 = (Condidate.query.join(Group, Condidate.group_id==Group.id, isouter=True)\
     .add_columns(Condidate.id, Condidate.emailc, Condidate.group_id, Condidate.pronounc, Condidate.phonenumc, Condidate.stimes, Condidate.text, Condidate.status,Group.name, Condidate.firstname, Condidate.lastname)\
     .filter(Condidate.status != 'טופל')).order_by(Condidate.group_id).all()
+
     form = AddForm()
     con_to_update = Condidate.query.get_or_404(id)
     
+    form.emails.default = con_to_update.emailc
+    form.firstname.default = con_to_update.firstname
+    form.lastname.default = con_to_update.lastname
     form.pronouns.default = con_to_update.pronounc
-    form.process()
+    form.phonenums.default = con_to_update.phonenumc
 
+    form.process()
     if request.method == "POST":
         new_s = Student(emails = request.form['emails'],
                         firstname = request.form['firstname'],
@@ -605,30 +611,61 @@ def openstu(id):
                         nutritions = form.nutritions.data,
                         phonenums = request.form['phonenums'],
                         schoolname = form.schoolname.data,
-                        dateaddeds = form.dateaddeds.data,                            
+                        dateaddeds = date.today(),                        
                         statuss = form.statuss.data,
                         parents = form.parents.data,
                         details = form.details.data)
-    
-        try:
-            db.session.add(new_s)
-            db.session.commit()
-            flash("נפתח תיק חניכ.ה בהצלחה!")
+        print('b')
+        db.session.add(new_s)
+        con_to_update.status = 'טופל'
 
-            return redirect(url_for('student_in_group'))
-        except:
-             flash("Error! Looks like there is a problem, please try again!")
-             return render_template("openstu.html",form=form,con_to_update=con_to_update,condidates_list=condidates_list,condidates_list3=condidates_list3)
+        db.session.commit()
+        db.session.flush()
+        flash("נפתח תיק חניכ.ה בהצלחה!")
 
+        return redirect(url_for('student_in_group'))
+        
 
-    return render_template('openstu.html',form=form,con_to_update=con_to_update)
+    return render_template('openstu.html',form=form,con_to_update=con_to_update,condidates_list=condidates_list,condidates_list3=condidates_list3)
 
 
 @app.route('/update_inactive_users', methods=['GET'])
 def update_inactive_users():
+    stu_in_group_list = StudentInGroup.query.all()
+
+    for row in stu_in_group_list:
+        stu_in_group_id = row.id
+        group_id=row.group_id
+        student_email = row.student_emails
+        stu_to_update = StudentInGroup.query.get_or_404(stu_in_group_id)
+        stu_to_update.statusg = 'פעיל'
+        db.session.commit()
+    
+        meetings_list = Group.query.join(Meetings, Meetings.IDG==Group.id, isouter=True)\
+        .add_columns(Meetings.attending, Meetings.Mdate, Meetings.IDM, Group.id, Group.name, Meetings.Occurence, Meetings.Platform, Meetings.Rate, Meetings.title )\
+        .filter(Meetings.Mdate >= (datetime.today() - timedelta(days=30)),Group.id == Meetings.IDG, Group.id==group_id).order_by(Meetings.IDG)
+
+        users_attended = []
+        if len(list(meetings_list)) == 0:
+            continue
+
+        for meeting in meetings_list:
+            if meeting.attending != '':
+                users_attended.extend(meeting.attending.split(','))
+
+
+        users_attended = list(set(users_attended))
+
+
+        if student_email not in users_attended:
+            stu_to_update = StudentInGroup.query.get_or_404(stu_in_group_id)
+            stu_to_update.statusg = 'לא פעיל'
+            db.session.commit()
+            db.session.flush()
 
     print('updating users...')
     return '0'
+
 
 @app.route('/student_in_group', methods=['GET', 'POST'])
 def student_in_group():
@@ -637,7 +674,7 @@ def student_in_group():
     stu_in_group_list1 = StudentInGroup.query.all()
     students_list3 = StudentInGroup.query.all()
     students_list2 = Student.query.join(StudentInGroup, Student.emails==StudentInGroup.student_emails, isouter=True)\
-    .add_columns(Student.emails, Student.firstname,Student.lastname,Student.citys,Student.phonenums,StudentInGroup.id,Student.statuss)\
+    .add_columns(Student.emails, Student.firstname,Student.lastname,Student.citys,Student.phonenums,Student.pronouns,StudentInGroup.id,Student.statuss)\
     .filter(StudentInGroup.id == None)
     stu_in_group_list = StudentInGroup.query.join(Group, StudentInGroup.group_id==Group.id, isouter=True).join(Student, StudentInGroup.student_emails==Student.emails, isouter=True)\
     .add_columns(StudentInGroup.group_id, Student.emails, StudentInGroup.statusg, Group.id, Group.name,StudentInGroup.stimes,StudentInGroup.ftimef,Student.firstname, Student.lastname)\

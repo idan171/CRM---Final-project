@@ -108,7 +108,8 @@ class MFile(db.Model):
 
 
 class Volunteers(db.Model):
-    IDV = db.Column(db.Integer,primary_key = True, nullable=False)
+
+    IDV = db.Column(db.Integer,primary_key= True, nullable=False,unique=True)
     emailv = db.Column(db.Text)
     FnameV = db.Column(db.Text)
     SnameV = db.Column(db.Text)
